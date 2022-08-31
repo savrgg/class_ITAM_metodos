@@ -74,6 +74,8 @@ ggplot(plot_data, aes(x = initial_volume)) +
 b1 <- cov(urchins$width,urchins$initial_volume)/var(urchins$initial_volume)
 b0 <- mean(urchins$width)-b1*mean(urchins$initial_volume)
 
+
+
 # ¿cómo podemos medir el error? lo veremos más adelante...
 # TSS (Total Sum of Squares)
 tss = sum((urchins$width-mean(urchins$width))**2)

@@ -1,9 +1,7 @@
 library(tidymodels)
 library(readr)
 
-
-
-datos <- read_csv("~/Repos/class_ITAM_metodos/train.csv")
+datos <- read_csv("~/Repos/class_ITAM_metodos/notas_r/train.csv")
 
 datos_o <- 
   datos %>% 
@@ -22,10 +20,10 @@ datos_o <-
            ),
          Title = gsub('(.*, )|(\\..*)', '', Name))
 
-#var_p <- "Sex"
+var_p <- "Sex"
 #var_p <- "Pclass"
 #var_p <- "Age"
-var_p <- "Title"
+#var_p <- "Title"
 
 
 datos_o %>% 
