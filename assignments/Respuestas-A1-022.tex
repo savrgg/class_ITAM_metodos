@@ -1,0 +1,79 @@
+
+
+\documentclass{oxmathproblems}
+\usepackage{blindtext}
+\usepackage{hyperref}
+\usepackage{geometry}
+%define the page header/title info
+\course{ITAM - Métodos Estadísticos para C.Pol y R.I.}
+\oxfordterm{Respuestas: Repaso de Estadística 2}
+\sheetnumber{1}
+
+\sheettitle{}
+
+\extrawidth{2cm}
+
+\begin{document}
+\begin{questions}
+
+
+
+\miquestion 
+
+
+
+\miquestion 
+
+\begin{itemize}
+\item a) %Si $Y_1$,$Y_2$, (...) $Y_9$  denota el contenido en onzas de las botellas que se van a observar, entonces sabemos que las $Y_i$ están distribuidas normalmente con media $\mu$ y varianza $\sigma^2$ $=$ 1 para $i $=$ 1,2, (...),9$. Por lo cual $\bar{y}$ posee una distribución muestral normal con media $$\mu_\bar{y} = \mu$$ y varianza 
+
+
+$$\sigma^2_{\bar{y}} =  \frac{\sigma^2}{n}= 1/9 $$
+
+\text{Tenemos que:}
+
+%$$ P(\abs{\bar{y} (-) \mu} \leq 0.3) = $$
+
+$$ P(-0.3 \leq (bar{y}-\mu) \leq 0.3) 
+= P(\frac{-0.3}{\sigma/n} \leq \frac{(bar{y}-\mu)}{\sigma/n} \leq \frac{0.3}{\sigma/n})
+$$
+
+\text{Como $\bar{y}$ se distribuye como una normal estándar, se deduce que: }
+%$$ P(\abs{\bar{y}-\mu} \leq 0.3)  = $$
+
+$P(\frac{-0.3}{1/9} \leq Z \leq \frac{0.3}{1/9})$
+
+= $P(-0.9 \leq Z \leq 0.9) $ 
+
+\text{Por simetría de una normal estándar, entonces: }
+
+$$P(-0.9 \leq Z \leq 0.9)  = 1- 2P(Z \leq 0.9) = 1- 2(0.1841) = 0.6318
+$$
+
+\text{En conclusión: si tomamos una muestra aleatoria de tamaño 9 de forma
+
+iterada solo el .6318 la media muestral se encuentra a no más de 0.3 onzas de la verdadera media poblacional} 
+
+
+
+\miquestion
+
+
+\miquestion
+\miquestion
+
+
+
+
+
+
+\textbf{Bibliografía}
+Wackerly. (2008). Estadística Matemática con Aplicaciones (7.a ed.). Cengage Learning.
+
+
+
+\end{questions}
+\end{document}
+
+
+
