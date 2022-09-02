@@ -1,29 +1,8 @@
 ---
-title: "Respuestas Assigment 01 O22"
-output:
-  pdf_document: default
-  html_document: default
+title: "Respuesta Tarea 1 O22"
+output: pdf_document
 date: '2022-09-02'
 ---
-
-\documentclass{oxmathproblems}
-\usepackage{blindtext}
-\usepackage{hyperref}
-\usepackage{geometry}
-%define the page header/title info
-\course{ITAM - Métodos Estadísticos para C.Pol y R.I.}
-\oxfordterm{Repaso de Estadística 2}
-\sheetnumber{1}
-
-\sheettitle{}
-
-\extrawidth{2cm}
-
-\begin{document}
-
-
-
-
 
 
 
