@@ -1,6 +1,6 @@
 
 
-\documentclass{oxmathproblems}
+\documentclass{../oxmathproblems}
 \usepackage{blindtext}
 \usepackage{hyperref}
 \usepackage{geometry}
@@ -20,12 +20,38 @@
 
 \miquestion 
 
+\text{Sabemos que }
+\text{para determinar el sesgo}
+
+$$ Bias (\hat{\mu_1}) = E(\hat{\mu_1}) - \mu_1 $$ 
+
+\text{Entonces: }
+
+$$ E(\hat{\mu_1}) = E(\bar{y}) = E(\frac{y_1+y_2+y_3}{3})  $$ 
+
+$$ = \frac{1}{3} ((E(y_1+y_2+y_3)) $$ 
+
+\text{Se puede resolver de dos formas: primero }
+
+$$
+= \frac{1}{3} * 3E(y_i) = E(Y_i) = \mu_i
+$$ 
+
+\text{o bien: }
+
+$$ \frac{1}{3} ((E(y_1+y_2+y_3)) = \frac{1}{3} (\mu_1 + \mu_2 + \mu_3) = \frac{1}{3}* 3 \mu_i = \mu_i $$ 
+
+\text{Entonces: }
+
+$$ Bias (\hat{\mu_1}) = E(\hat{\mu_1}) - \mu_1 = \mu_i - \mu_i = 0 $$ 
+
+\text{Por lo tanto, el estimador es insesgado}
 
 
 \miquestion 
 
 \begin{itemize}
-\item a) Si $Y_1$,$Y_2$, (...) $Y_9$  denota el contenido en onzas de las botellas que se van a observar, entonces sabemos que las $Y_i$ están distribuidas normalmente con media $\mu$ y varianza $\sigma^2$ $=$ 1 para $i $=$ 1,2, (...),9$. Por lo cual $\bar{y}$ posee una distribución muestral normal con media $$\mu_\bar{y} = \mu$$ y varianza 
+\item a) Si $Y_1$,$Y_2$, (...) $Y_9$  denota el contenido en onzas de las botellas que se van a observar, entonces sabemos que las $Y_i$ están distribuidas normalmente con media $\mu$ y varianza $\sigma^2$ $=$ 1 para $i $=$ 1,2, (...),9$. Por lo cual $\bar{y}$ posee una distribución muestral normal con media $$\mu_{\bar{y}} = \mu$$ y varianza 
 
 
 $$\sigma^2_{\bar{y}} =  \frac{\sigma^2}{n}= 1/9 $$
@@ -35,7 +61,7 @@ $$\sigma^2_{\bar{y}} =  \frac{\sigma^2}{n}= 1/9 $$
 %$$ P(\abs{\bar{y} (-) \mu} \leq 0.3) = $$
 
 $$ P(-0.3 \leq (bar{y}-\mu) \leq 0.3) 
-= P(\frac{-0.3}{\sigma/n} \leq \frac{(bar{y}-\mu)}{\sigma/n} \leq \frac{0.3}{\sigma/n})
+= P(\frac{-0.3}{\sigma/n} \leq \frac{(\bar{y}-\mu)}{\sigma/n} \leq \frac{0.3}{\sigma/n})
 $$
 
 \text{Como $\bar{y}$ se distribuye como una normal estándar, se deduce que: }
@@ -50,8 +76,8 @@ $P(\frac{-0.3}{1/9} \leq Z \leq \frac{0.3}{1/9})$
 $$P(-0.9 \leq Z \leq 0.9)  = 1- 2P(Z \leq 0.9) = 1- 2(0.1841) = 0.6318
 $$
 
-\text{En conclusión: si tomamos una muestra aleatoria de tamaño 9 de forma
-iterada solo el .6318 la media muestral se encuentra a no más de 0.3 onzas de la verdadera media poblacional} 
+En conclusión: si tomamos una muestra aleatoria de tamaño 9 de forma
+iterada solo el .6318 la media muestral se encuentra a no más de 0.3 onzas de la verdadera media poblacional
 
 \item b)
 \text{Ahora buscamos: }
@@ -60,7 +86,7 @@ iterada solo el .6318 la media muestral se encuentra a no más de 0.3 onzas de l
 
 \text{Entonces al estandarizar: }
 
-$ P(\frac{-0.3}{\sigma/n} \leq \frac{(bar{y}-\mu)}{\sigma/n} \leq \frac{0.3}{\sigma/n}) 
+$ P(\frac{-0.3}{\sigma/n} \leq \frac{(\bar{y}-\mu)}{\sigma/n} \leq \frac{0.3}{\sigma/n}) 
 $ 
 $ 
 = P( -0.3\sqrt{n} \leq Z \leq 0.3\sqrt{n} ) = 0.95 
@@ -68,12 +94,12 @@ $
 
 \text{Entonces al buscar en tablas: }
 
-$P( -1.96 \leq Z \leq 1.96 ) = 0.95 
-$ 
+$$P( -1.96 \leq Z \leq 1.96 ) = 0.95 
+$$ 
 
 \text{ Para obtener el tamaño de una muestra:}
 
-$  -0.3\sqrt{n} = 1.96 #
+$$  -0.3\sqrt{n} = 1.96$$
 
 \text{ o bien, lo que es equivalente:}
 $
@@ -88,7 +114,9 @@ $ n  = 43 $
 
 \miquestion 
 \text{Denote a $\bar{y}$ como la media muestral de tamaño $ n = 100 $ calificaciones de una población con media $\mu = 60 $ y varianza  $\sigma^2 = 64$. }
+
 \text{Queremos calcular }
+
  $ P( \bar{y} \leq 58) $. \text{Dado que sigue una distribución que se puede aproximar a una normal estándar }
  
  \text{tenemos:}
@@ -98,9 +126,62 @@ $$
  
 
 
-\miquestion
+\miquestion Como $n_1 = 6 $ y $n_2 = 10$ y las varianzas son iguales, entonces: 
 
-\miquestion
+$$\frac{S_1^2/\sigma_1^2 }{S_2^2/\sigma_2^2 }  = \frac{S_1^2}{S_2^2}  $$  
+
+\text{Sabemos que tiene una distribución F con $n_1 -1 = 5 $ grados de libertad en el numerador y  $n_2 -1 = 9$ grados de libertad en el denominador. Asimismo,}
+
+$$ P(\frac{S_1^2}{S_2^2} \leq b) =  1- P(\frac{S_1^2}{S_2^2} > b)  $$ 
+
+\text{Por tanto, queremos determinar el número de b que delimita un área en 
+la cola superior que acumula el 0.05 bajo la función
+de densidad de F con 5 grados de libertad en el numerador y 
+9 grados de libertad
+en el denominador. Con base en tablas el valor que le corresponde es  }
+
+$ b = 3.48$ 
+
+
+
+\miquestion Tenemos que, si denotamos con $Y_i$ el tiempo de servicio i-ésimo cliente, entonces queremos calcular:
+
+ 
+$$ 
+P(\sum_{i=1}^{100} Y_i \leq 120) = P (\bar{y} \leq \frac{120}{100}) = P(\bar{y} \leq 1.20)
+ $$ 
+
+\text{Dado que el tamaño de muestra es lo suficientemente grande podemos aplicar el TLC (Teorema Central del Límite): nos dice que como $\bar{y}$ está distribuida aproximadamente como una normal con media = 1.5 y varianza 1.0/100} 
+
+\text{Entonces: }
+
+$$ 
+P(\bar{y} \leq 1.20) = P(\frac{\bar{y}-\mu}{\sigma/\sqrt(n)} \leq \frac{1.2-1.5}{1/\sqrt(100)}) $$
+
+$$ \approx P(Z \leq (1.2-1.5)*10) = P(Z \leq -3) = .0013
+$$ 
+
+\text{Dado que, la probabilidad de que 100 clientes puedan ser atendidos en menos de dos horas es aproximadamente 0.0013. Esta probabilidad pequeña indica que es prácticamente imposible atender a 100 clientes en menos de dos horas }
+
+
+\miquestion Sea Y el número de votantes de la CDMX que están a favor de la candidata A. 
+Debemos calcular $ P(\frac{y}{n} \geq 0.55) $  cuando $p$ es la probabilidad de que un votante seleccionado aleatoriamente de la CDMX esté a favor de la candidata A. 
+
+\text{ Si consideramos los $n = 100 $ votantes de la CDMX como una muestra aleatoria de la ciudad, entonces $Y$ tiene una distribución binomial con $n = 100$ y $p = 0.5$}
+
+
+\text{ Dado que el tamaño de muestra es suficientemente grande, aplicamos TCL esto implica que $\bar{x} = Y/n$ está distribuida normalmente}
+
+\text{Entonces: }
+
+$ p = 0.5$  y la varianza: (pq/n) = (.5)(.5) = 0.0025 
+
+\text{por tanto}
+
+$ P( \frac{y}{n} \geq .55 ) =$ $ P ( \frac{y/n -\mu}{\sqrt\sigma} \geq \frac{.55-.50}{0.05} $
+
+$ \approx P( Z \geq 1) = 0.1587 $ 
+
 
 
 
@@ -109,7 +190,6 @@ $$
 
 \textbf{Bibliografía}
 Wackerly. (2008). Estadística Matemática con Aplicaciones (7.a ed.). Cengage Learning.
-
 
 
 \end{questions}
