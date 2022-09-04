@@ -88,12 +88,13 @@ rse = round(sqrt(sum_squares),4)
 r2 <- (tss-rss)/tss
 # adjR2: 
 1-((1-r2)*(72-1))/(72-1-1)
+
 glance(lm_fit)
+tidy(lm_fit)
 
-
-
-
-
+sqrt(
+  sum((urchins$width-predict(lm_fit, new_data = urchins %>% select(-width)))**2)
+)/(70)
 
 
 
