@@ -68,7 +68,6 @@ ggplot(plot_data, aes(x = investment)) +
 b1 <- cov(marketing_youtube$sales,marketing_youtube$investment)/var(marketing_youtube$investment)
 b0 <- mean(marketing_youtube$sales)-b1*mean(marketing_youtube$investment)
 
-
 # 6 - ¿Qué pasa si sacamos de una muestra?
   
 marketing_youtube_sample = marketing_youtube[sample(1:nrow(marketing_youtube), size = 100),]
@@ -82,6 +81,23 @@ ggplot(plot_data, aes(x = investment)) +
   geom_hline(yintercept = mean(marketing_youtube_sample$sales), linetype = 2, color = "firebrick4")+
   labs(y = "Venta", x = "Inversión") +
   theme_minimal()
+
+
+
+x <- c(-2, -1, 0, 1, 2)
+y <- c(0, 0, 1, 1, 3)
+d <- data.frame(x = x, y =y)
+lm_fit <- 
+  linear_reg() %>% 
+  fit(y ~ x, data = d)
+
+# 2 - visualizar y graficar 
+tidy(lm_fit)
+
+
+
+
+
 
 
 
