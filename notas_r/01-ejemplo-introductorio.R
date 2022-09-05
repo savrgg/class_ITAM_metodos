@@ -92,9 +92,7 @@ r2 <- (tss-rss)/tss
 glance(lm_fit)
 tidy(lm_fit)
 
-sqrt(
-  sum((urchins$width-predict(lm_fit, new_data = urchins %>% select(-width)))**2)
-)/(70)
+sqrt(sum((urchins$width-predict(lm_fit, new_data = urchins %>% select(-width)))**2))/(70)
 
 
 
