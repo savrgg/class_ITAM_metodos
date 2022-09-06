@@ -57,20 +57,10 @@ $$ \hat{y} = a + bx $$
  \text{o bien:} 
  
 $$ \hat{y} = \beta_0 + \beta_1x = 40.78424 + 0.76556x$$ 
-
-\item Para determinar si hay una relación lineal significativa entre las calificaciones realizamos una prueba de hipótesis: 
-
-\text{La hipótesis a probar son}
-
-$H0: \beta = 0$ \text{contra}  $Ha: \beta  \neq 0$
-
-\text{ y el valor observado del estadístic de prueba se calcula como: }
+\item %Calcular el coeficiente de correlación 
 
 
-$ t = \frac{b- 0}{\sqrt MSE/S_xx} = \frac{0.7656 - 0}{\sqrt 75.7532/2474} = 4.38 $ 
-
-\text{con}  $(n-2) = 8$  \text{grados de libertad. Con } $ \alpha = 0.05$, \text{se puede rechazar Ho cuando} $t > 2.306$  o $t < -2.306$ 
-\text{Como el valor observado (el estadístico de prueba) cae en la región de rechazo, Ho es rechazada y se puede concluir}
+\item %HACER LA PRUEBA DE HIPÓTESIS PARA EL COEFICIENTE DE CORRELACIÓN 
 
 \text{que "hay una relación lineal significativa entre las calificaciones esperadas y la puntuación final del examen.}
 
@@ -110,13 +100,89 @@ $r = \frac{328}{\sqrt{60.4*2610}} = 0.8261 $
 \item 
 \text{Para probar si es significativamente diferente de cero, tenemos: }
 
-$ Ho: $
+$ H_o: \rho = 0 $  \text{contra}  $ H_a : \rho \neq 0 $ 
 
+\text{ El valor del estadístico de prueba es} 
 
+$ t = r\sqrt \frac{n-2}{1-r^2}$ 
+
+$ = 0.8261*\sqrt(\frac{10-2}{1-(0.8261)^2}) = 4.15  $ 
+
+\text{La $t$ observada o el valor de tablas: tiene una distribución, con $ n = 10$,  de 8 grados de libertad. }
+
+\text{ Dado que la $t$ observada es mayor que}
+
+$ t_0.005 = 3.355 $ 
+
+\text{y el $valor p$ es menor a $2(0.005) = 0.01$, entonces rechazamos Ho. Concluimos que la correlación es 
+}
+
+\text{significativamente diferente de 0}
 
 \end{itemize}
 
+\miquestion 
+\begin{itemize}
+\item 
 
+\text{Tenemos  que: }
+
+$$ \hat{\beta_1} = \frac{S_xy}{S_xx} $$ 
+$$ \hat{\beta_0} = \bar{y} -\hat{\beta_1}\bar{x}  $$
+
+\text{Entonces: }
+
+
+$ S_{xx} = \sum{x_i^2} - \frac{\sum{x_i}^2}{n}$  
+
+$ S_{xy} = \sum{x_iy_i} - \frac{\sum{x_i}\sum{y_i}}{n} $
+
+$ S_{yy} = \sum{y_i^2} - \frac{\sum{y_i}^2}{n}$  
+
+$$ \hat{\beta_1} = \frac{7- \frac{1}{5}(0)(5)}{10- \frac{1}{5}(0)^2} = 0.7  
+$$ 
+
+\text{Ahora: }
+
+$ \bar{y} = \frac{\sum(y_i)}{n} = 0.7 $
+
+$ \bar{x} = \frac{\sum(x_i)}{n} =  0 $ 
+
+$$
+\hat{\beta_0} = \frac{5}{5} - (0.7)(0) = 1 
+$$ 
+\text{Entonces, la recta de regresión de mínimos cuadrados es:} 
+
+
+$$ \hat{y} = \bar{y} +\hat{\beta_0}x $$ 
+
+$$  \hat{y} = 1 + 0.7x $$ 
+
+\item Ahora, para determinar el intervalo de confianza al 90$\%$ para E(y) cuando x= 1 tenemos que: 
+
+$ E(y) = \beta_0 + \beta_1x$ 
+
+\text{Para estimar dicho valor fijo, usaremos el estimador insesgado } 
+$ \hat{E(Y)} = \hat{\beta_0} + \hat{\beta_1}x* $ \text{Entonces:} 
+
+$ \hat{E(Y)} = 1+ 0.7x* $ 
+\text{En este caso, } $ x* = 1$ \text{y como $n= 5$,} $\bar{x} = 0 $ y $S_xx = 10 $ 
+
+
+\text{Entonces, el error estándar es}
+
+$ \frac{1}{n} + \frac{(x-\bar{x})^2}{S_xx} = \frac{1}{5} + \frac{(1-0)^2}{10} = 0.3 $
+
+\text{Ahora bien, el valor de la $t_0.05$ de tablas es con n-2= 3 graods de libertad es 2.353}
+
+
+\text{El intervalo está dado por: }
+$$ 
+\hat{\beta_0} + \hat{\beta_1}x* \pm t_{\alpha/2} *S* \sqrt {\frac{1}{n} + \frac{(x-\bar{x})^2}{S_xx}}
+$$ 
+
+
+\end{itemize}
 
 
 \textbf{Bibliografía}
