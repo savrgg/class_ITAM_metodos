@@ -1,0 +1,130 @@
+\documentclass{../oxmathproblems}
+\usepackage{blindtext}
+\usepackage{hyperref}
+\usepackage{geometry}
+%define the page header/title info
+\course{ITAM - Métodos Estadísticos para C.Pol y R.I.}
+\oxfordterm{Assignment 02 - Respuestas  }
+\sheetnumber{1}
+
+\sheettitle{}
+
+\extrawidth{3cm}
+
+\begin{document}
+\begin{questions}
+
+
+\miquestion 
+\begin{itemize}
+\item 
+Sabemos que: 
+
+\text {Los estimadores de mínimos cuadrados de $\alpha$ y $\beta$ son}
+
+$$ b = \frac{S_{xy}}{S_{xx}} $$  \text {y} 
+$$a = \bar{y} - b\bar{x}$$
+
+\text {Entonces, para encontrar la recta de predicción de mínimos cuadrados para los datos de la tabla: } 
+
+\textbf {Paso 1: }
+
+$ S_{xx} = \sum{x_i^2} - \frac{\sum{x_i}^2}{n} = 23 634 - \frac{460^2}{10} = 2474$
+
+$ S_{xy} = \sum{x_iy_i} - \frac{\sum{x_i}\sum{y_i}}{n} $
+
+$ = 36 854 - \frac{460*760}{10} = 1894 $ 
+
+
+$ \bar{y} = \frac{\sum{y_i}}{n} = \frac{760}{10} = 76 $ 
+
+$  \bar{x} = \frac{\sum{x_i}}{n} = \frac{460}{10} = 46$ 
+
+
+\textbf {Paso 2: }
+
+$ b = \frac{S_{xy}}{S_{xx}}  = \frac{1894}{2474} = 0.76556 $
+
+\text{y} 
+
+$$a = \bar{y} - b\bar{x} = 76 - (0.76556)(46) = 40.78424 $$
+
+\text{Entonces, la recta de regresión de mínimos cuadrados es:} 
+
+
+$$ \hat{y} = a + bx $$  
+
+ \text{o bien:} 
+ 
+$$ \hat{y} = \beta_0 + \beta_1x = 40.78424 + 0.76556x$$ 
+
+\item Para determinar si hay una relación lineal significativa entre las calificaciones realizamos una prueba de hipótesis: 
+
+\text{La hipótesis a probar son}
+
+$H0: \beta = 0$ \text{contra}  $Ha: \beta  \neq 0$
+
+\text{ y el valor observado del estadístic de prueba se calcula como: }
+
+
+$ t = \frac{b- 0}{\sqrt MSE/S_xx} = \frac{0.7656 - 0}{\sqrt 75.7532/2474} = 4.38 $ 
+
+\text{con}  $(n-2) = 8$  \text{grados de libertad. Con } $ \alpha = 0.05$, \text{se puede rechazar Ho cuando} $t > 2.306$  o $t < -2.306$ 
+\text{Como el valor observado (el estadístico de prueba) cae en la región de rechazo, Ho es rechazada y se puede concluir}
+
+\text{que "hay una relación lineal significativa entre las calificaciones esperadas y la puntuación final del examen.}
+
+\item Para estimar el promedio de las calificaciones cuyo aprovechamiento es de 50, con un intervalo de confianza debemos: 
+
+\text{La estimación puntual de}  $ E(y\mid x_0 = 50) $ \text{el promedio de calificación es: }
+
+$ \hat{y} = 40.78424 + 0.76556(50) = 79.06 $ 
+\end{itemize} 
+
+\miquestion 
+\begin{itemize}
+\item 
+
+\text{Sabemos que: }
+
+$ S_{xx} = \sum{x_i^2} - \frac{\sum{x_i}^2}{n}$  
+
+$ S_{xy} = \sum{x_iy_i} - \frac{\sum{x_i}\sum{y_i}}{n} $
+
+$ S_{yy} = \sum{y_i^2} - \frac{\sum{y_i}^2}{n}$  
+
+\text{Entonces: }
+$S_{xx} = 60.4$ 
+$S_{xy} = 328 $ 
+
+$S_{yy} = 2610 $
+
+$$ r = \frac{S_{xy}}{ \sqrt{S_{xx}S_{yy}}} $$ 
+
+\text{Entonces: }
+
+$r = \frac{328}{\sqrt{60.4*2610}} = 0.8261 $ 
+
+\text{El valor obtenido para r es cerca a 1, indica que hay una relación lineal positiva bastante fuerte entre estatura  y peso.}
+
+\item 
+\text{Para probar si es significativamente diferente de cero, tenemos: }
+
+$ Ho: $
+
+
+
+\end{itemize}
+
+
+
+
+\textbf{Bibliografía}
+Wackerly. (2008). Estadística Matemática con Aplicaciones (7.a ed.). Cengage Learning.
+
+
+\end{questions}
+\end{document}
+
+
+
