@@ -68,3 +68,6 @@ datos_o %>%
             porc_sobr = sobreviven/num_pasajeros) %>% 
   arrange(desc(porc_sobr)) %>% data.frame()
 
+
+
+
