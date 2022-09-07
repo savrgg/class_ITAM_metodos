@@ -215,9 +215,27 @@ pre code {
 
 
 <!-- rnb-text-begin -->
+<div id="introducción" class="section level2">
+<h2>Introducción</h2>
+<p>El problema presentado en este ejercicio es determinar si existe una relación lineal entre la edad de un niño y su altura. Se tiene la intuición que a mayor edad, más alto es. A continuación se presentan los datos de edad (meses) y altura (cm) en una muestra de 12 niños</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInNwZWNfdGJsX2RmIiwidGJsX2RmIiwidGJsIiwiZGF0YS5mcmFtZSJdLCJucm93IjoxMiwibmNvbCI6Miwic3VtbWFyeSI6eyJBIHRpYmJsZSI6WyIxMiDDlyAyIl19fSwicmRmIjoiSDRzSUFBQUFBQUFBQTExUk8wN0RRQkFkLzRKaUpRR0pBOURTeEFYaEUzN1NGaWdWRlRaU0NwckZjV3dMczQ1c1IxQlNVU0Z4R0c1QURYZmdBSlJBR1RQcm5aWEFJNjNmek50NU0zN2FpN1BweUoyNkFHQ0JiWmhnT1ppQ2N4bE1obU1BMjhUQ0FCdTZFdSt4YVJNVFNRN3c5TmdPTk1GR2hMdUVlNFQ3aEFlRVk4SkR3aVBDWThJVHdsUFFvZmI0bmJrTTVqTjE3ejlTL2ZTRzhjNzhsNUVNNW4rcWV1djc5ZmxxKzRjRkU5VVhuQ3MrS0ZWZlFQM0JCNjM1WjlRUi9EWXFNZGxvekNyUzRuRkVhU2VKMGppcFdxcHVrZDk1V3RtWHlnZjgxSFg5MVI0ZlpyelU0elhwem5qRnZYbUJlcXhXTGNsYXZxalNYS0RJbEEvZ3RNUkcwU0xXbDBMK3lXd1lKa3R4TTVUUDVEYlhLdnFVOS83a3BscHAxalRLMFdZakVhZENXM2N5ZmgxbFZBelFjV1BZV3hTcHFMUVRaRXV2eWl1dSs5d3d6elRUZUlQVkx5aGQreGQzQWdBQSJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGF0YSA8LSByZWFkX2NzdihcImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9zYXZyZ2cvY2xhc3NfSVRBTV9tZXRvZG9zL21haW4vbm90YXNfci9hZ2VhbmRoZWlnaHQuY3N2XCIpXG5gYGAifQ== -->
+<pre class="r"><code>data &lt;- read_csv(&quot;https://raw.githubusercontent.com/savrgg/class_ITAM_metodos/main/notas_r/ageandheight.csv&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiUm93czogMTIgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuZGJsICgyKTogYWdlLCBoZWlnaHRcblxu4oS5IFVzZSBgc3BlYygpYCB0byByZXRyaWV2ZSB0aGUgZnVsbCBjb2x1bW4gc3BlY2lmaWNhdGlvbiBmb3IgdGhpcyBkYXRhLlxu4oS5IFNwZWNpZnkgdGhlIGNvbHVtbiB0eXBlcyBvciBzZXQgYHNob3dfY29sX3R5cGVzID0gRkFMU0VgIHRvIHF1aWV0IHRoaXMgbWVzc2FnZS5cbiJ9 -->
+<pre><code>Rows: 12 Columns: 2
+── Column specification ───────────────────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+dbl (2): age, height
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGF0YVxuYGBgIn0= -->
+<pre class="r"><code>data</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInNwZWNfdGJsX2RmIiwidGJsX2RmIiwidGJsIiwiZGF0YS5mcmFtZSJdLCJucm93IjoxMiwibmNvbCI6Miwic3VtbWFyeSI6eyJBIHRpYmJsZSI6WyIxMiDDlyAyIl19fSwicmRmIjoiSDRzSUFBQUFBQUFBQTExUnUwN0RRQkRjMkw2Z1dFbEE0Z05vYVdJSnpDTzhwQ3RRS2lwc3BCUTBSK0lrRnVZYzJZNUlTVVdGeE1md0I5VHdEM3dBSlZERzdQbjJKUEJLOXN6TzdkeDY1TXZ6b2U4T1hRQ3d3V2xZWURPa3dLN0NRYThQNEZqWU5NQ0Jsc0lsRG0waVVXSVhuemJmaGFxNFQ3aEh1RTk0UUhoSTJDYzhJandtUENFOEpUd0RVM3BQMEp5bzRnSFg1OEVqOVU5dldPODhlUEZWOGVCVDkxdmZyOC9YMno4OEhPaTU4RUxyWWE3blFwb1BQMmpOdjZCTWlyc29SN0pSaGRXaUxhWVIwZVlzaXFlem91WnFaZW05WjV3ZDVYekFWMW1XWC9YclI0bkl6ZlZHZE1laUVONGtRejkycTVwbExaMFhjU3JSWktrZndHcm1SbFlUMWhkU2ZjbTRONW90NUcxdlJ5Mm9qblYxaUxmL2NFdXZ0RXE2aXBtd2taekcwa1JuaWJpSkVtcTZtTGdLN00yeldCWW1DYXE1VjZTRk1IUHVLRTJNVW1XRDFTOU9PeG15ZHdJQUFBPT0ifQ== -->
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["age"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["height"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"18","2":"76.10"},{"1":"19","2":"77.00"},{"1":"20","2":"78.10"},{"1":"21","2":"78.20"},{"1":"22","2":"78.80"},{"1":"23","2":"79.70"},{"1":"24","2":"7.99"},{"1":"25","2":"81.10"},{"1":"26","2":"81.20"},{"1":"27","2":"81.80"},{"1":"28","2":"82.80"},{"1":"29","2":"83.50"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[12]},"pages":{}}}
@@ -226,9 +244,42 @@ pre code {
 <!-- rnb-frame-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+<ol style="list-style-type: decimal">
+<li>Determine por medio de una gráfica si es razonable pensar en que existe una relación lineal entre las variables</li>
+</ol>
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGF0YSAlPiVcbiAgZ2dwbG90KGFlcyh4ID0gYWdlLCB5ID0gaGVpZ2h0KSkrXG4gIGdlb21fcG9pbnQoKStcbiAgZ2VvbV9zbW9vdGgobWV0aG9kID0gXCJsbVwiLCBzZSA9IEYpXG5cbmBgYCJ9 -->
+<pre class="r"><code>data %&gt;%
+  ggplot(aes(x = age, y = height))+
+  geom_point()+
+  geom_smooth(method = &quot;lm&quot;, se = F)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiYGdlb21fc21vb3RoKClgIHVzaW5nIGZvcm11bGEgJ3kgfiB4J1xuIn0= -->
+<pre><code>`geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<ol start="2" style="list-style-type: decimal">
+<li>Determine con una Prueba de Hipótesis si existe una relación lineal entre las variables.</li>
+</ol>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+</div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiRWplcmNpY2lvIHByw6FjdGljYSIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKYGBge3J9CmRhdGEgPC0gcmVhZF9jc3YoImFnZWFuZGhlaWdodC5jc3YiKQpgYGAKCg==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiRWplcmNpY2lvIHByw6FjdGljYSIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQojIyBJbnRyb2R1Y2Npw7NuCgpFbCBwcm9ibGVtYSBwcmVzZW50YWRvIGVuIGVzdGUgZWplcmNpY2lvIGVzIGRldGVybWluYXIgc2kgZXhpc3RlIHVuYSByZWxhY2nDs24gbGluZWFsIGVudHJlIGxhIGVkYWQgZGUgdW4gbmnDsW8geSBzdSBhbHR1cmEuIFNlIHRpZW5lIGxhIGludHVpY2nDs24gcXVlIGEgbWF5b3IgZWRhZCwgbcOhcyBhbHRvIGVzLiBBIGNvbnRpbnVhY2nDs24gc2UgcHJlc2VudGFuIGxvcyBkYXRvcyBkZSBlZGFkIChtZXNlcykgeSBhbHR1cmEgKGNtKSBlbiB1bmEgbXVlc3RyYSBkZSAxMiBuacOxb3MKCmBgYHtyfQpkYXRhIDwtIHJlYWRfY3N2KCJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vc2F2cmdnL2NsYXNzX0lUQU1fbWV0b2Rvcy9tYWluL25vdGFzX3IvYWdlYW5kaGVpZ2h0LmNzdiIpCmRhdGEKYGBgCgoxLiBEZXRlcm1pbmUgcG9yIG1lZGlvIGRlIHVuYSBncsOhZmljYSBzaSBlcyByYXpvbmFibGUgcGVuc2FyIGVuIHF1ZSBleGlzdGUgdW5hIHJlbGFjacOzbiBsaW5lYWwgZW50cmUgbGFzIHZhcmlhYmxlcwpgYGB7cn0KZGF0YSAlPiUKICBnZ3Bsb3QoYWVzKHggPSBhZ2UsIHkgPSBoZWlnaHQpKSsKICBnZW9tX3BvaW50KCkrCiAgZ2VvbV9zbW9vdGgobWV0aG9kID0gImxtIiwgc2UgPSBGKQpgYGAKCjIuIERldGVybWluZSBjb24gdW5hIFBydWViYSBkZSBIaXDDs3Rlc2lzIHNpIGV4aXN0ZSB1bmEgcmVsYWNpw7NuIGxpbmVhbCBlbnRyZSBsYXMgdmFyaWFibGVzLgoKYGBge3J9CmBgYApgYGB7cn0KYGBgCmBgYHtyfQpgYGAKYGBge3J9CmBgYApgYGB7cn0KYGBgCgoKCgoKCgoKCg==</div>
 
 
 

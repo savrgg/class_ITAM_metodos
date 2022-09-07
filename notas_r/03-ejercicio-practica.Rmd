@@ -2,8 +2,41 @@
 title: "Ejercicio práctica"
 output: html_notebook
 ---
+## Introducción
+
+El problema presentado en este ejercicio es determinar si existe una relación lineal entre la edad de un niño y su altura. Se tiene la intuición que a mayor edad, más alto es. A continuación se presentan los datos de edad (meses) y altura (cm) en una muestra de 12 niños
 
 ```{r}
-data <- read_csv("ageandheight.csv")
+data <- read_csv("https://raw.githubusercontent.com/savrgg/class_ITAM_metodos/main/notas_r/ageandheight.csv")
+data
 ```
+
+1. Determine por medio de una gráfica si es razonable pensar en que existe una relación lineal entre las variables
+```{r}
+data %>%
+  ggplot(aes(x = age, y = height))+
+  geom_point()+
+  geom_smooth(method = "lm", se = F)
+```
+
+2. Determine con una Prueba de Hipótesis si existe una relación lineal entre las variables.
+
+```{r}
+```
+```{r}
+```
+```{r}
+```
+```{r}
+```
+```{r}
+```
+
+
+
+
+
+
+
+
 
