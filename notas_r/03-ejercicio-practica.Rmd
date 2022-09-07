@@ -1,0 +1,9 @@
+---
+title: "Ejercicio práctica"
+output: html_notebook
+---
+
+```{r}
+data <- read_csv("ageandheight.csv")
+```
+
