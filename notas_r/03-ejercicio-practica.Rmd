@@ -11,31 +11,125 @@ data <- read_csv("https://raw.githubusercontent.com/savrgg/class_ITAM_metodos/ma
 data
 ```
 
-1. Determine por medio de una gráfica si es razonable pensar en que existe una relación lineal entre las variables
+####  1. Determine por medio de una gráfica si es razonable pensar en que existe una relación lineal entre las variables (variable independiente: edad)
 ```{r}
 data %>%
   ggplot(aes(x = age, y = height))+
   geom_point()+
-  geom_smooth(method = "lm", se = F)
+  geom_smooth(method = "lm", se = F)+
+  theme_minimal()+
+  labs(x = "Edad (meses)",
+       y = "Altura (cm)",
+       title = "Relación lineal entre altura y edad de niños",
+       subtitle = "Muestra de la altura y edad de 12 niños")
 ```
 
-2. Determine con una Prueba de Hipótesis si existe una relación lineal entre las variables.
+Al comparar gráficamente los datos, podemos observar que los datos si se ajustan por medio de una línea. 
+
+#### 2. Determine con una Prueba de Hipótesis si existe una relación lineal entre las variables.
+
+Para determinar si existe una relación lineal, se construye una Prueba de Hipótesis del coeficiente de correlación. Recordando, el coeficiente de correlación mide solamente la asociación lineal, mas no la pendiente de la linea
+
+Sea $H_0: \rho = 0$ y $H_1: \rho \neq 0$, entonces: 
 
 ```{r}
+n = nrow(data)
+ybar = mean(data$height)
+xbar = mean(data$age)
+sxy = cov(data$age, data$height)
+sx2 = var(data$age)
+sy2 = var(data$height)
+rxy = sxy/(sqrt(sx2)*sqrt(sy2))
+T_corr = (rxy*sqrt(n-2))/sqrt(1-rxy**2)
+T_corr
+2*(1-pt(T_corr, df = n-2))
 ```
+
+El $valor-p$ es cercano a 0, entonces rechazamos $H_0: \rho = 0$, por lo que rechazamos que la correlación sea cero.
+
+#### 3. Utilicé tidymodels (lm) para realizar la regresión lineal, analice los resultados obtenidos
 ```{r}
+lm_fit <- 
+  linear_reg() %>% 
+  fit(height ~ age, data = data)
+
+tidy(lm_fit)  
+data.frame(glance(lm_fit))
 ```
+
+
+#### 4. Determine analíticamente los coeficientes $\hat{\beta}_0$ y $\hat{\beta}_1$
 ```{r}
+B1 <- sxy/sx2
+B0 <- ybar - B1*xbar
+B1
+B0
 ```
+### 5. Calcule analíticamente TSS, ESS, RSS, $R^2$ y $adjR^2$
+
 ```{r}
+yhat <- predict(lm_fit, new_data = data %>% select(age))
+TSS <- sum((data$height-ybar)**2)
+ESS <- sum((yhat-ybar)**2)
+RSS <- sum((data$height-yhat)**2)
+R2 <- ESS/TSS
+adjR2 <- 1- ((1-R2)*(n-1))/(n-1-1)
 ```
+
+### 6. Calcule analíticametne $\hat{\sigma^2}$, $\hat{V(\hat{\beta_0})}$, $\hat{V(\hat{\beta_1})}$
 ```{r}
+sigma2hat <- RSS/(n-2)
+sigmahat <- sqrt(sigma2hat)
+
+sigma2_B0 <- sigma2hat*(1/n + (xbar*xbar)/(sx2*(n-1)))
+sigma2_B1 <- sigma2hat/(sx2*(n-1))
+
+sigma_B0 <- sqrt(sigma2_B0)
+sigma_B1 <- sqrt(sigma2_B1)
+
+sigma_B0
+sigma_B1
+```
+
+### 7. Determine si el valor de los coeficientes es significativo (realice una prueba para cada uno)
+```{r}
+T_B1 = (B1-0)/sqrt(sigma2_B1)
+T_B0 = (B0-0)/sqrt(sigma2_B0)
+
+T_B1
+T_B0
+
+2*(1-pt(T_B1, df = n-2))
+2*(1-pt(T_B0, df = n-2))
+```
+
+El valor-p de ambas pruebas es cercano a 0, por lo que podemos rechazar que $H_0: \beta_1 = 0$ y $H_0: \beta_0 = 0$
+
+### 8. Comprueba que:
+a) Suma de residuales es igual a 0
+```{r}
+sum(data$height-yhat)
+```
+
+b) Residuos no están correlacionados a X
+```{r}
+cor(data$age, data$height-yhat)
+```
+
+c) Residuos no están correlacionados a $\hat{Y}$
+```{r}
+cor(yhat, data$height-yhat)
+```
+
+### 9. Determine si el de $R^2$ es significativo
+```{r}
+Fest = (ESS/1)/(RSS/(n-2))
+Fest
+pf(Fest, df1 = 1, df2 = (n-2), lower.tail = F)
 ```
 
 
-
-
-
+El $valor-p$ es cercano a 0,por lo que podemos rechazar $H_0: \rho^2 = 0$ vs $H_1: \rho^2 > 0$.
 
 
 

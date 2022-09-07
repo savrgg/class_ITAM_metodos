@@ -1,0 +1,40 @@
+---
+title: "Ejercicio práctica"
+output: html_notebook
+---
+
+#### Introducción
+
+El problema presentado en este ejercicio es determinar si existe una relación lineal entre la edad de un niño y su altura. Se tiene la intuición que a mayor edad, más alto es. A continuación se presentan los datos de edad (meses) y altura (cm) en una muestra de 12 niños
+
+```{r}
+data <- read_csv("https://raw.githubusercontent.com/savrgg/class_ITAM_metodos/main/notas_r/ageandheight.csv")
+data
+```
+
+######  1. Determine por medio de una gráfica si es razonable pensar en que existe una relación lineal entre las variables (variable independiente: edad)
+
+######  2. Determine con una Prueba de Hipótesis si existe una relación lineal entre las variables.
+
+######  3. Utilicé tidymodels (lm) para realizar la regresión lineal, analice los resultados obtenidos
+
+######  4. Calcule analíticamente los coeficientes $\hat{\beta}_0$ y $\hat{\beta}_1$
+
+######  5. Calcule analíticamente TSS, ESS, RSS, $R^2$ y $adjR^2$
+
+######  6. Calcule analíticamente $\hat{\sigma^2}$, $\hat{V(\hat{\beta_0})}$, $\hat{V(\hat{\beta_1})}$
+
+######  7. Determine si el valor de los coeficientes es significativo (realice una prueba de hipótesis para cada uno)
+
+######  8. Determine si el de $R^2$ es significativo
+
+######  9. Comprueba que:
+a) Suma de residuales es igual a 0
+b) Residuos no están correlacionados a X
+c) Residuos no están correlacionados a $\hat{Y}$
+
+
+
+
+
+

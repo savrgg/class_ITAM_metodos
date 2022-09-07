@@ -50,7 +50,7 @@ sy2 = var(d$y)
 sxy = cov(d$x, d$y)
 ```
 
-### Inciso 2: Calcule $\beta_0$ y $\beta_1$:
+### Inciso 2: Calcule $\hat{\beta}_0$ y $\hat{\beta}_1$:
 ```{r}
 B1 <- sxy/sx2
 B0 <- ybar - B1*xbar
