@@ -1,6 +1,14 @@
+---
+title: "Alimentación en Erizos de Mar"
+output: html_notebook
+---
 
-# 01) load libraries and data ---------------------------------------------
+## Introducción
+En esta práctica se calculará una regresión lineal en donde la variable dependiente es el ancho de las suturas de los erizos de mar y la variable independiente el tipo de alimentación y el peso inicial. Debido que hasta ahora solo se ha visto regresiones lineales con variables numéricas, se considerará unicamente en el análisis el peso inicial.
 
+Adicionalmente se calculará: TSS, ESS, RSS, $R^2$ y $\hat{\sigma}^2$
+
+```{r}
 library(tidymodels)  # package that imports useful packages for modeling
 library(readr)       # for importing data
 library(dotwhisker)  # visualize regression results
@@ -8,16 +16,21 @@ library(dotwhisker)  # visualize regression results
 # 72 urchins ==
 # experimental feeding regime group
 urchins <-
-  read_csv("notas_r/urchins.csv") %>% 
+  read_csv("urchins.csv") %>% 
   setNames(c("food_regime", "initial_volume", "width")) %>% 
   mutate(food_regime = factor(food_regime, levels = c("Initial", "Low", "High")))
 
-# urchins[c(1,72,68),] %>% set_names("Régimen alimenticio", "Volumen inicial", "Ancho de sutura") %>% flextable::flextable()
+urchins
+```
 
-# 02) exploratory data analysis -------------------------------------------
+## Exploratory Data Analysis
 
+Como primer paso se realizará un análisis exploratorio de datos, donde se pondrá por tipo de alimentación los puntos entre volumen inicial y el peso del erizo: 
+
+```{r}
 urchins %>% 
-  ggplot(aes(x = initial_volume, y = width, group = food_regime, col = food_regime)) + 
+  ggplot(aes(x = initial_volume, y = width, 
+             group = food_regime, col = food_regime)) + 
   geom_point() + 
   geom_smooth(method = lm, se = FALSE) +
   facet_wrap(~food_regime)+
@@ -30,7 +43,14 @@ urchins %>%
        x = "Volumen Inicial",
        y = "Ancho de suturas")+
   scale_color_viridis_d(option = "plasma", end = .7)
+```
+En este sentido vemos que la pendiente con alimentación alta es mayor, lo cual hace sentido debido a que mejor alimentación más ancho será la sutura, en cambio, para una alimentación baja, la pendiente es cercana a 0. 
 
+## Regresión lineal para width de erizos
+
+Ahora se realizará la regresión con tidymodels: 
+
+```{r}
 # experimental feeding regime group (food_regime: either Initial, Low, or High),
 # size in milliliters at the start of the experiment (initial_volume)
 # suture width at the end of the experiment (width).
@@ -41,8 +61,13 @@ lm_fit <-
   fit(width ~ initial_volume, data = urchins)
 
 # 2 - visualizar y graficar 
+glance(lm_fit)
 tidy(lm_fit)
+```
 
+La recta (estimación puntual y por intervalos) la podemos ver en la siguiente gráfica:
+
+```{r}
 # 3 - graficar predicciones
 new_points <- expand.grid(initial_volume = 0:50)
 mean_pred <- predict(lm_fit, new_data = new_points)
@@ -69,30 +94,39 @@ ggplot(plot_data, aes(x = initial_volume)) +
   geom_smooth(data = urchins,aes(x = initial_volume, y = width), method = "lm")+
   labs(y = "Ancho de suturas", x = "Volumen Inicial") +
   theme_minimal()
+```
 
+## Coeficientes de $\beta_0$ y $\beta_1$
+
+Podemos calcular los coeficientes de $\beta_0$ y $\beta_1$ con las fórmulas:
+```{r}
 # 5 - ¿cómo se ven los coeficientes con las fórmulas?
 b1 <- cov(urchins$width,urchins$initial_volume)/var(urchins$initial_volume)
 b0 <- mean(urchins$width)-b1*mean(urchins$initial_volume)
+b1
+b0
+```
 
+Ahora para poder calcular la $R^2$ necesitamos calcular:
 
+## TSS, ESS y RSS
 
-# ¿cómo podemos medir el error? lo veremos más adelante...
+```{r}
+yhat <- predict(lm_fit, new_data = urchins %>% select(-width))
+
 # TSS (Total Sum of Squares)
-tss = sum((urchins$width-mean(urchins$width))**2)
+tss <- sum((urchins$width-mean(urchins$width))**2)
 # RSS (Residual Sum of Squares)
-rss = sum((urchins$width-predict(lm_fit, new_data = urchins %>% select(-width)))**2)
-# RSE: Residual Standard Error (sigma) TTS
-sum_squares = sum((urchins$width-predict(lm_fit, new_data = urchins %>% select(-width)))**2)/(72-2)
-rse = round(sqrt(sum_squares),4)
-# R2: (TTS-RSS)/TTS
+rss <- sum((urchins$width-yhat)**2)
+# ESS: (Explained Sum of Squares) 
+ess <- sum((urchins$width-yhat)**2)
+# sigma_hat
+rse <- round(sqrt(ess/(72-2)),4)
 r2 <- (tss-rss)/tss
-# adjR2: 
-1-((1-r2)*(72-1))/(72-1-1)
 
-glance(lm_fit)
-tidy(lm_fit)
-
-sqrt(sum((urchins$width-predict(lm_fit, new_data = urchins %>% select(-width)))**2))/(70)
-
-
-
+tss
+rss
+ess
+rse
+r2
+```
