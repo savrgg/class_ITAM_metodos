@@ -173,13 +173,124 @@ $ \hat{E(Y)} = 1+ 0.7x* $
 
 $ \frac{1}{n} + \frac{(x-\bar{x})^2}{S_xx} = \frac{1}{5} + \frac{(1-0)^2}{10} = 0.3 $
 
-\text{Ahora bien, el valor de la $t_0.05$ de tablas es con n-2= 3 graods de libertad es 2.353}
+\text{Ahora bien, el valor de la $t_0.05$ de tablas es con n-2= 3 grados de libertad es 2.353}
 
 
 \text{El intervalo está dado por: }
 $$ 
 \hat{\beta_0} + \hat{\beta_1}x* \pm t_{\alpha/2} *S* \sqrt {\frac{1}{n} + \frac{(x-\bar{x})^2}{S_xx}}
 $$ 
+
+\text{sustituyendo:  }
+$$
+((1+(0.7)(1)) \pm (2.353)(0.606)\sqrt{0.3}
+$$
+$
+= 1.7 \pm 0.781 
+$ 
+\text{El intervalo está dado por:  }
+$$ (0.919,2.481) $$ 
+\text{Es decir:   }
+\text{Con un nivel de confianza de 90\%  cuando la variable independiente tome el valor de 1, la variable dependiente variará entre 0.919 y 2.481}
+
+\item Para demostrar que la pendiente difiere de cero dicho ejercicio implica una prueba de hipótesis
+
+
+$ H_o: \beta_1 = 0 $  \text{contra}  $ H_a : \beta_1 \neq 0 $ 
+
+\text{ El valor del estadístico de prueba es} 
+
+$ t = \frac{\hat{\beta_1}}{s\sqrt{c_{11}}}$ 
+
+\text{ Sustituyendo tenemos:}
+
+$$ c_{11} = \frac{1}{S_xx} = 1/10 = 0.1 $$ 
+
+$ t = \frac{0.7-0}{0.606\sqrt{0.1}}  = 3.65 $ 
+
+\text{ Ahora, si tomamos con un $\alpha = 0.05$, el valor de t de tablas , $t_{\alpha/2} = t_{0.025} $ con 3 grados de libertad es $3.182$ } 
+
+\text{Bajo la hipótesis alternativa la región de rechazo está dado por: }
+$$ -3.182 \leq t \geq 3.182  $$ 
+
+\text{Ahora bien, dado que es una prieba de dos colas para calcular el valor p: }
+
+$$ valor p = 2P(t > 3.65) $$ 
+
+$$ = 0.01 < P(t > 3.65) < 0.025 $$ 
+\text{Entonces: } 
+$$ = 0.02 < valor p < 0.05 $$ 
+
+\text{Dado que el p value es menor a 0.1, rechazamos la hipótesis nula } 
+
+\item  Para calcular el intervalo de confianza para $\beta_1$ tenemos: 
+
+\text { El valor de tablas para $t_{0.025} $ con 3 grados de libertad es 3.182. Entonces el intervalo de confianza está dado por} 
+
+$$ \hat{\beta_1} \pm t_{0.025} *s* \sqrt {c_{11}} $$ 
+\text {siendo $c_{11}  = 1/ S_{xx} $}
+
+\text{Susituyendo, obtenemos } 
+
+$$ 0.7 \pm (3.182)(0.606)\sqrt{0.1} $$ 
+
+\text{O bien, } 
+
+$$ 0.7 \pm 0.610 $$
+
+\text{El parámetro de $\beta_1$ variará entre 0.9 y 1.31 unidades } 
+
+
+\item Para determinar el pronóstico puntual cuando x = 2 con un nivel de confianza de 0.90. Tenemos:
+
+$$ \hat{\beta_0} = 1$$
+$$ \hat{\beta_1} = 0.7 $$ 
+
+\text{ De modo que el valor pronósticado para Y cuando $ x = 2 $ es } 
+ $$ \hat{\beta_0} + \hat{\beta_1}x* = 1 + (0.7)(2) = 2.4 $$ 
+ 
+ 
+\text{ Además,  el intervalo de predicción está dado por: } 
+
+$$ \hat{\beta_0} +\hat{\beta_1}x* \pm t_{\alpha/2} S \sqrt{1+\frac{1}{n} + \frac{(x*-\bar{x})^2}{S_{xx}}}$$ 
+
+\text{ Sustituyendo, tenemos: } 
+
+$$ 2.4 \pm (2.353)(0.606)\sqrt{1+0.6} $$ 
+
+$$ 2.4 \pm 1.804 $$ 
+\end{itemize}
+
+\miquestion 
+\begin{itemize}
+\item Para ajustar el modelo de regresión de mínimos cuadrados: 
+
+$ S_{xx} = \sum{x_i^2} - \frac{\sum{x_i}^2}{n}$  
+
+$ S_{xy} = \sum{x_iy_i} - \frac{\sum{x_i}\sum{y_i}}{n} $
+
+$ S_{yy} = \sum{y_i^2} - \frac{\sum{y_i}^2}{n}$  
+
+$$ \hat{\beta_1} = \frac{S_xy}{S_xx} $$ 
+$$ \hat{\beta_0} = \bar{y} -\hat{\beta_1}\bar{x}  $$
+
+\text{Sustituyendo, obtenemos: } 
+
+$ S_{xy} = 8.709 - \frac{1}{6}(8.74)(6.148) = - 0.247 $ 
+
+$ S_{xx} = 12.965 - \frac{1}{6}(8.74)^2 = 0.234 $ 
+
+$ S_{yy} = 6.569 - \frac{1}{6}(6.148)^2 = 0.269 $ 
+
+$$ \hat{\beta_1} = \frac{- 0.247}{0.234} = -1.056  $$ 
+$$ \hat{\beta_0} =\frac{6.148}{6} - (-1.056)(\frac{8.74}{6}) = 2.563 $$ 
+
+\text{Entonces, la recta de minimos cuadrados está dada por }
+
+$$ \hat{\beta_0} + \hat{\beta_1}x =  -1.056 + 2.563x $$  
+
+\item Prueba de hipótesis para $\beta_1$ 
+
 
 
 \end{itemize}
