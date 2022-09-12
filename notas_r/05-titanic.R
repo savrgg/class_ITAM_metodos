@@ -67,6 +67,10 @@ datos_o %>%
             sobreviven = sum(Survived_prev),
             porc_sobr = sobreviven/num_pasajeros) %>% 
   arrange(desc(porc_sobr)) %>% data.frame()
+lm_model <- 
+  linear_reg() %>% 
+  fit(datos_o %>% select(Survived))
+
 
 
 
