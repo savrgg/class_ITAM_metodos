@@ -116,5 +116,25 @@ r_ryhat = cor(yhat, d$y-yhat)
 ### Inciso 8: Prueba F
 ```{r}
 Fest = (ESS/1)/(RSS/3)
+Fest
 pf(Fest, df1 = 1, df2 = 3, lower.tail = F)
+```
+
+
+
+### Inciso 9: Prueba F
+```{r}
+mean_pred <- predict(lm_fit, new_data = data.frame(x = c(0,3)))
+int_pred <- predict(lm_fit, new_data = data.frame(x = c(0,3)), 
+                    type = "conf_int", level = .95)
+plot_data <- 
+  data.frame(x = c(0,3)) %>% 
+  bind_cols(mean_pred) %>% 
+  bind_cols(int_pred) %>% 
+  mutate(
+    error_pred = sigmahat*sqrt((1/5)+(((x-xbar)**2)/(sx2*(5-1)))),
+    pred_lower_formula = .pred-qt(.975, df = 3)*error_pred,
+    pred_upper_formula = .pred+qt(.975, df = 3)*error_pred)
+
+plot_data
 ```
