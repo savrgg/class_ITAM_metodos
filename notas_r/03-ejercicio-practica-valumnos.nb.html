@@ -262,11 +262,11 @@ dbl (2): age, height
 <div id="calcule-analíticamente-hatsigma2-hatvhatbeta_0-hatvhatbeta_1" class="section level6">
 <h6>6. Calcule analíticamente <span class="math inline">\(\hat{\sigma^2}\)</span>, <span class="math inline">\(\hat{V(\hat{\beta_0})}\)</span>, <span class="math inline">\(\hat{V(\hat{\beta_1})}\)</span></h6>
 </div>
-<div id="determine-si-el-valor-de-los-coeficientes-es-significativo-realice-una-prueba-de-hipótesis-para-cada-uno" class="section level6">
-<h6>7. Determine si el valor de los coeficientes es significativo (realice una prueba de hipótesis para cada uno)</h6>
+<div id="determine-si-el-valor-de-los-coeficientes-es-significativo-realice-una-prueba-de-hipótesis-para-cada-uno-determine-su-intervalo-de-confianza-al-95" class="section level6">
+<h6>7. Determine si el valor de los coeficientes es significativo (realice una prueba de hipótesis para cada uno), determine su intervalo de confianza al 95%</h6>
 </div>
-<div id="determine-si-el-de-r2-es-significativo" class="section level6">
-<h6>8. Determine si el de <span class="math inline">\(R^2\)</span> es significativo</h6>
+<div id="determine-si-el-de-r2-es-significativo-calcula-su-intervalo-de-confianza-al-95" class="section level6">
+<h6>8. Determine si el de <span class="math inline">\(R^2\)</span> es significativo, calcula su intervalo de confianza al 95%</h6>
 </div>
 <div id="comprueba-que" class="section level6">
 <h6>9. Comprueba que:</h6>
@@ -275,11 +275,20 @@ dbl (2): age, height
 <li>Residuos no están correlacionados a X</li>
 <li>Residuos no están correlacionados a <span class="math inline">\(\hat{Y}\)</span></li>
 </ol>
+</div>
+<div id="calcula-la-predicción-a-la-media-para-una-edad-25-años.-calcule-el-ic-al-95." class="section level6">
+<h6>10. Calcula la predicción a la media para una edad 25 años. Calcule el IC al 95%.</h6>
+</div>
+<div id="calcula-la-predicción-individual-para-un-valor-de-30-años.-calcule-el-ic-al-95." class="section level6">
+<h6>11. Calcula la predicción individual para un valor de 30 años. Calcule el IC al 95%.</h6>
+</div>
+<div id="determine-con-una-prueba-de-hipótesis-jarque-bera-si-es-posible-concluir-que-los-datos-se-distribuyen-normal." class="section level6">
+<h6>12. Determine con una prueba de hipótesis Jarque-Bera si es posible concluir que los datos se distribuyen normal.</h6>
 <!-- rnb-text-end -->
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiRWplcmNpY2lvIHByw6FjdGljYSIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKIyMjIyBJbnRyb2R1Y2Npw7NuCgpFbCBwcm9ibGVtYSBwcmVzZW50YWRvIGVuIGVzdGUgZWplcmNpY2lvIGVzIGRldGVybWluYXIgc2kgZXhpc3RlIHVuYSByZWxhY2nDs24gbGluZWFsIGVudHJlIGxhIGVkYWQgZGUgdW4gbmnDsW8geSBzdSBhbHR1cmEuIFNlIHRpZW5lIGxhIGludHVpY2nDs24gcXVlIGEgbWF5b3IgZWRhZCwgbcOhcyBhbHRvIGVzLiBBIGNvbnRpbnVhY2nDs24gc2UgcHJlc2VudGFuIGxvcyBkYXRvcyBkZSBlZGFkIChtZXNlcykgeSBhbHR1cmEgKGNtKSBlbiB1bmEgbXVlc3RyYSBkZSAxMiBuacOxb3MKCmBgYHtyfQpkYXRhIDwtIHJlYWRfY3N2KCJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vc2F2cmdnL2NsYXNzX0lUQU1fbWV0b2Rvcy9tYWluL25vdGFzX3IvYWdlYW5kaGVpZ2h0LmNzdiIpCmRhdGEKYGBgCgojIyMjIyMgIDEuIERldGVybWluZSBwb3IgbWVkaW8gZGUgdW5hIGdyw6FmaWNhIHNpIGVzIHJhem9uYWJsZSBwZW5zYXIgZW4gcXVlIGV4aXN0ZSB1bmEgcmVsYWNpw7NuIGxpbmVhbCBlbnRyZSBsYXMgdmFyaWFibGVzICh2YXJpYWJsZSBpbmRlcGVuZGllbnRlOiBlZGFkKQoKIyMjIyMjICAyLiBEZXRlcm1pbmUgY29uIHVuYSBQcnVlYmEgZGUgSGlww7N0ZXNpcyBzaSBleGlzdGUgdW5hIHJlbGFjacOzbiBsaW5lYWwgZW50cmUgbGFzIHZhcmlhYmxlcy4KCiMjIyMjIyAgMy4gVXRpbGljw6kgdGlkeW1vZGVscyAobG0pIHBhcmEgcmVhbGl6YXIgbGEgcmVncmVzacOzbiBsaW5lYWwsIGFuYWxpY2UgbG9zIHJlc3VsdGFkb3Mgb2J0ZW5pZG9zCgojIyMjIyMgIDQuIENhbGN1bGUgYW5hbMOtdGljYW1lbnRlIGxvcyBjb2VmaWNpZW50ZXMgJFxoYXR7XGJldGF9XzAkIHkgJFxoYXR7XGJldGF9XzEkCgojIyMjIyMgIDUuIENhbGN1bGUgYW5hbMOtdGljYW1lbnRlIFRTUywgRVNTLCBSU1MsICRSXjIkIHkgJGFkalJeMiQKCiMjIyMjIyAgNi4gQ2FsY3VsZSBhbmFsw610aWNhbWVudGUgJFxoYXR7XHNpZ21hXjJ9JCwgJFxoYXR7VihcaGF0e1xiZXRhXzB9KX0kLCAkXGhhdHtWKFxoYXR7XGJldGFfMX0pfSQKCiMjIyMjIyAgNy4gRGV0ZXJtaW5lIHNpIGVsIHZhbG9yIGRlIGxvcyBjb2VmaWNpZW50ZXMgZXMgc2lnbmlmaWNhdGl2byAocmVhbGljZSB1bmEgcHJ1ZWJhIGRlIGhpcMOzdGVzaXMgcGFyYSBjYWRhIHVubykKCiMjIyMjIyAgOC4gRGV0ZXJtaW5lIHNpIGVsIGRlICRSXjIkIGVzIHNpZ25pZmljYXRpdm8KCiMjIyMjIyAgOS4gQ29tcHJ1ZWJhIHF1ZToKYSkgU3VtYSBkZSByZXNpZHVhbGVzIGVzIGlndWFsIGEgMApiKSBSZXNpZHVvcyBubyBlc3TDoW4gY29ycmVsYWNpb25hZG9zIGEgWApjKSBSZXNpZHVvcyBubyBlc3TDoW4gY29ycmVsYWNpb25hZG9zIGEgJFxoYXR7WX0kCgoKCgoKCg==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiRWplcmNpY2lvIHByw6FjdGljYSIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKIyMjIyBJbnRyb2R1Y2Npw7NuCgpFbCBwcm9ibGVtYSBwcmVzZW50YWRvIGVuIGVzdGUgZWplcmNpY2lvIGVzIGRldGVybWluYXIgc2kgZXhpc3RlIHVuYSByZWxhY2nDs24gbGluZWFsIGVudHJlIGxhIGVkYWQgZGUgdW4gbmnDsW8geSBzdSBhbHR1cmEuIFNlIHRpZW5lIGxhIGludHVpY2nDs24gcXVlIGEgbWF5b3IgZWRhZCwgbcOhcyBhbHRvIGVzLiBBIGNvbnRpbnVhY2nDs24gc2UgcHJlc2VudGFuIGxvcyBkYXRvcyBkZSBlZGFkIChtZXNlcykgeSBhbHR1cmEgKGNtKSBlbiB1bmEgbXVlc3RyYSBkZSAxMiBuacOxb3MKCmBgYHtyfQpkYXRhIDwtIHJlYWRfY3N2KCJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vc2F2cmdnL2NsYXNzX0lUQU1fbWV0b2Rvcy9tYWluL25vdGFzX3IvYWdlYW5kaGVpZ2h0LmNzdiIpCmRhdGEKYGBgCgojIyMjIyMgIDEuIERldGVybWluZSBwb3IgbWVkaW8gZGUgdW5hIGdyw6FmaWNhIHNpIGVzIHJhem9uYWJsZSBwZW5zYXIgZW4gcXVlIGV4aXN0ZSB1bmEgcmVsYWNpw7NuIGxpbmVhbCBlbnRyZSBsYXMgdmFyaWFibGVzICh2YXJpYWJsZSBpbmRlcGVuZGllbnRlOiBlZGFkKQoKIyMjIyMjICAyLiBEZXRlcm1pbmUgY29uIHVuYSBQcnVlYmEgZGUgSGlww7N0ZXNpcyBzaSBleGlzdGUgdW5hIHJlbGFjacOzbiBsaW5lYWwgZW50cmUgbGFzIHZhcmlhYmxlcy4KCiMjIyMjIyAgMy4gVXRpbGljw6kgdGlkeW1vZGVscyAobG0pIHBhcmEgcmVhbGl6YXIgbGEgcmVncmVzacOzbiBsaW5lYWwsIGFuYWxpY2UgbG9zIHJlc3VsdGFkb3Mgb2J0ZW5pZG9zCgojIyMjIyMgIDQuIENhbGN1bGUgYW5hbMOtdGljYW1lbnRlIGxvcyBjb2VmaWNpZW50ZXMgJFxoYXR7XGJldGF9XzAkIHkgJFxoYXR7XGJldGF9XzEkCgojIyMjIyMgIDUuIENhbGN1bGUgYW5hbMOtdGljYW1lbnRlIFRTUywgRVNTLCBSU1MsICRSXjIkIHkgJGFkalJeMiQKCiMjIyMjIyAgNi4gQ2FsY3VsZSBhbmFsw610aWNhbWVudGUgJFxoYXR7XHNpZ21hXjJ9JCwgJFxoYXR7VihcaGF0e1xiZXRhXzB9KX0kLCAkXGhhdHtWKFxoYXR7XGJldGFfMX0pfSQKCiMjIyMjIyAgNy4gRGV0ZXJtaW5lIHNpIGVsIHZhbG9yIGRlIGxvcyBjb2VmaWNpZW50ZXMgZXMgc2lnbmlmaWNhdGl2byAocmVhbGljZSB1bmEgcHJ1ZWJhIGRlIGhpcMOzdGVzaXMgcGFyYSBjYWRhIHVubyksIGRldGVybWluZSBzdSBpbnRlcnZhbG8gZGUgY29uZmlhbnphIGFsIDk1JQoKIyMjIyMjICA4LiBEZXRlcm1pbmUgc2kgZWwgZGUgJFJeMiQgZXMgc2lnbmlmaWNhdGl2bywgY2FsY3VsYSBzdSBpbnRlcnZhbG8gZGUgY29uZmlhbnphIGFsIDk1JQoKIyMjIyMjICA5LiBDb21wcnVlYmEgcXVlOgphKSBTdW1hIGRlIHJlc2lkdWFsZXMgZXMgaWd1YWwgYSAwCmIpIFJlc2lkdW9zIG5vIGVzdMOhbiBjb3JyZWxhY2lvbmFkb3MgYSBYCmMpIFJlc2lkdW9zIG5vIGVzdMOhbiBjb3JyZWxhY2lvbmFkb3MgYSAkXGhhdHtZfSQKCiMjIyMjIyAgMTAuIENhbGN1bGEgbGEgcHJlZGljY2nDs24gYSBsYSBtZWRpYSBwYXJhIHVuYSBlZGFkIDI1IGHDsW9zLiBDYWxjdWxlIGVsIElDIGFsIDk1JS4KCiMjIyMjIyAgMTEuIENhbGN1bGEgbGEgcHJlZGljY2nDs24gaW5kaXZpZHVhbCBwYXJhIHVuIHZhbG9yIGRlIDMwIGHDsW9zLiBDYWxjdWxlIGVsIElDIGFsIDk1JS4KCiMjIyMjIyAgMTIuIERldGVybWluZSBjb24gdW5hIHBydWViYSBkZSBoaXDDs3Rlc2lzIEphcnF1ZS1CZXJhIHNpIGVzIHBvc2libGUgY29uY2x1aXIgcXVlIGxvcyBkYXRvcyBzZSBkaXN0cmlidXllbiBub3JtYWwuCgoKCg==</div>
 
 
 
