@@ -1,0 +1,75 @@
+
+\documentclass{../oxmathproblems}
+\usepackage{blindtext}
+\usepackage{hyperref}
+\usepackage{geometry}
+%define the page header/title info
+\course{ITAM - Métodos Estadísticos para C.Pol y R.I.}
+\oxfordterm{Assignment 03 }
+\sheetnumber{1}
+
+\sheettitle{}
+
+\extrawidth{3cm}
+
+\begin{document}
+\begin{questions}
+
+\miquestion Es frecuente que a los auditores se les exija comparar el valor auditado (o de lista) de un artículo de inventario contra el valor en libros. Si una empresa está llevando su inventario y libros actualizados, debería haber una fuerte relación lineal entre dichos valores. Una empresa muestreó diez artículos de inventario y obtuvo los valores auditado y en libros que se dan en la tabla siguiente. 
+
+\begin{tabular}{|c|c|c|}
+\hline
+Artículo & Valor en libros $(x_i)$ & Valor auditado$(y_i)$ \\ \hline
+1 & 9 & 10\\
+2 & 14 & 12\\
+3 & 7 & 9\\ 
+4 & 29  & 27\\ 
+6 & 45 & 47\\ 
+7 & 109 & 112\\ 
+8 & 40 & 36\\ 
+9 & 238 & 241\\ 
+10 & 60 & 59\\
+11 & 170 & 167\\
+12 & 1 & 250\\
+13 & 30 & 780\\
+\hline
+\end{tabular}
+
+
+\textbf {Sección 1} 
+
+\begin{enumerate}
+  \item Mediante el método de mínimos cuadrados encuentre los estimadores de los paramétros $\beta_0$ y $\beta_1$. (Enuncie los supuestos que aplican). 
+  \item Determine el valor de TSS, ESS, RSS  $R^2$ ,$R^2$ ajustada   e interprete 
+  \item Determine las varianzas de los estimadores ($\hat{\beta_0}$ y $\hat{\beta_1}$) y la covarianza  ($\hat{\beta_0}$ y $\hat{\beta_1}$), determine $\hat{\sigma^2}$ y $\hat{\sigma}$ y qué concluye a partir de ello.
+  \item Realice una prueba de hipótesis para la correlación entre el valor en libros $(x_i)$ y el valor auditado $(y_i)$
+  \item Realice una prueba de hipótesis para determinar si la  $\beta_0$ y $\beta_1$ son significativas (solo con valor p) 
+  \item Intervalo de confianza al 95\% para $\beta_0$ y $\beta_1$ 
+   \item Prueba F 
+   \item Predicción media cuando x= 100. Intervalo de confianza para la predicción media cuando $x* = 100$
+   \item Intervalo de confianza para la predicción individual cuando x* = 100
+   \item Muestra el valor medio de los residuos es 0 ( $\sum_{i}\hat{\epsilon_i}=0$ ), x es ortogonal a residuo, $\hat{y}$  es ortogonal al residuo
+\end{enumerate}
+
+
+\textbf {Sección 2} 
+\text{ Dato atípico: } 
+\begin{enumerate}
+  \item Elimina el dato atípico y vuelve a cálcular las betas ($\beta_0$ y $\beta_1$)
+\end{enumerate}
+
+\textbf {Sección 3} 
+\begin{enumerate}
+  \item Aplica la prueba Jarque Bera para normalidad 
+\end{enumerate}
+
+
+
+\textbf{Bibliografía}
+Wackerly. (2008). Estadística Matemática con Aplicaciones (7.a ed.). Cengage Learning.
+
+
+
+\end{questions}
+\end{document}
+
