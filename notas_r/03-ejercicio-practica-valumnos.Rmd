@@ -24,17 +24,20 @@ data
 
 ######  6. Calcule analíticamente $\hat{\sigma^2}$, $\hat{V(\hat{\beta_0})}$, $\hat{V(\hat{\beta_1})}$
 
-######  7. Determine si el valor de los coeficientes es significativo (realice una prueba de hipótesis para cada uno)
+######  7. Determine si el valor de los coeficientes es significativo (realice una prueba de hipótesis para cada uno), determine su intervalo de confianza al 95%
 
-######  8. Determine si el de $R^2$ es significativo
+######  8. Determine si el de $R^2$ es significativo, calcula su intervalo de confianza al 95%
 
 ######  9. Comprueba que:
 a) Suma de residuales es igual a 0
 b) Residuos no están correlacionados a X
 c) Residuos no están correlacionados a $\hat{Y}$
 
+######  10. Calcula la predicción a la media para una edad 25 años. Calcule el IC al 95%.
 
+######  11. Calcula la predicción individual para un valor de 30 años. Calcule el IC al 95%.
 
+######  12. Determine con una prueba de hipótesis Jarque-Bera si es posible concluir que los datos se distribuyen normal.
 
 
 
