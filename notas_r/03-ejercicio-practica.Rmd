@@ -132,5 +132,25 @@ pf(Fest, df1 = 1, df2 = (n-2), lower.tail = F)
 El $valor-p$ es cercano a 0,por lo que podemos rechazar $H_0: \rho^2 = 0$ vs $H_1: \rho^2 > 0$.
 
 
+### Calcula la predicción a la media para una edad 25 años. Calcule el IC al 95%.
+
+```{r}
+yhat_25 <- B0+B1*25
+quantil_t = qt(.975, df = n-2)
+lim_inf = yhat_25 - quantil_t*sigmahat*sqrt(1/n + ((25-xbar)^2)/(sx2*(n-1)))
+lim_sup = yhat_25 + quantil_t*sigmahat*sqrt(1/n + ((25-xbar)^2)/(sx2*(n-1)))
+```
+IC para prediccion media de edad 25: (80.62294, 80.98196)
+
+
+### Calcula la predicción individual para un valor de 30 años. Calcule el IC al 95
+
+```{r}
+yhat_30 <- B0+B1*30
+quantil_t = qt(.975, df = n-2)
+lim_inf = yhat_30 - quantil_t*sigmahat*sqrt(1/n + ((30-xbar)^2)/(sx2*(n-1)))
+lim_sup = yhat_30 + quantil_t*sigmahat*sqrt(1/n + ((30-xbar)^2)/(sx2*(n-1)))
+```
+IC para prediccion individual de edad 30: (83.62626, 84.32828)
 
 

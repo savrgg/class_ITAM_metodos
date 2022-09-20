@@ -37,7 +37,6 @@ c) Residuos no están correlacionados a $\hat{Y}$
 
 ######  11. Calcula la predicción individual para un valor de 30 años. Calcule el IC al 95%.
 
-######  12. Determine con una prueba de hipótesis Jarque-Bera si es posible concluir que los datos se distribuyen normal.
 
 
 
