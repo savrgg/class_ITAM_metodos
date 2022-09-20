@@ -57,12 +57,83 @@ $$ \hat{y} = a + bx $$
  \text{o bien:} 
  
 $$ \hat{y} = \beta_0 + \beta_1x = 40.78424 + 0.76556x$$ 
-\item %Calcular el coeficiente de correlación 
+\item 
+\text{Sabemos que: }
+
+$ S_{xx} =S_{x^2}  = \sum{x_i^2} - \frac{\sum{x_i}^2}{n} = 274.88$  
+
+$ S_{xy} = \sum{x_iy_i} - \frac{\sum{x_i}\sum{y_i}}{n} = 210.44 $
+
+$ S_{yy}  = S_{y^2}= \sum{y_i^2} - \frac{\sum{y_i}^2}{n} = 228.44$  
+
+\text{Entonces: }
 
 
-\item %HACER LA PRUEBA DE HIPÓTESIS PARA EL COEFICIENTE DE CORRELACIÓN 
+$$ r = \frac{S_{xy}}{ \sqrt{S_{xx}S_{yy}}}$$ 
 
-\text{que "hay una relación lineal significativa entre las calificaciones esperadas y la puntuación final del examen.}
+\text{Entonces: }
+
+$r = \frac{210.44}{\sqrt{274.88*228.44}} = 0.8397 $ 
+
+
+
+\item Para realizar la prueba de hipótesis necesitamos: 
+\begin{itemize}
+\item Para $\beta_1$ 
+
+
+$ H_o:\beta_1 = 0 $ \text{contra: } $ H_a:\beta_1 \neq 0 $ 
+
+
+
+\text{ Bajo Ho el estadístico de prueba es: }  
+$ T_{\beta_1}= \frac{(\beta{_0}-0)}{\sqrt(\sigma^2_{\beta_0})} = 1.786 $ 
+
+\text{ El valor p : (en R) } 
+
+$ 2*(1-pt(T_B1, df = 5-2)) $ 
+
+$ valor p = 0.1720621 $ 
+
+
+
+\item Para $\beta_0$
+
+$ H_o:\beta_0 = 0 $ \text{contra: } $ H_a:\beta_0 \neq 0 $ 
+
+
+\text{ Bajo Ho el estadístico de prueba es: }  
+$ T_{\beta_0}= \frac{(\beta_1 - 0)}{\sqrt(\sigma^2_{\beta_1})} = 6.4164 $
+
+
+\text{ El valor p : (en R) } 
+
+$ 2*(1-pt(T_B0, df = 5-2)) $ 
+
+$ valor p = 0.007671261 $ 
+
+\end{itemize} 
+\item Se debe realizar una prueba de hipótesis para determinar si la correlación entre las variables es significativa : 
+
+
+$ H_o:\rho = 0 $ \text{contra: } $ H_a:\rho \neq 0 $ 
+
+\text{ Bajo Ho el estadístico de prueba es: }
+
+$ \rho = \frac{S_{xy}}{(\sqrt(S_{x^2})*\sqrt(S_{y^2}))} $
+
+\text{Sustituyendo tenemos: } 
+$ \rho = 0.8797 $ 
+
+\text{Entonces, el valor p } 
+
+$ T_{obs} = \frac{(\rho*\sqrt(5-2))}{\sqrt(1-\rho^2)} $
+
+  \text{con la formula en R } 
+$$2*(1-pt(T_{obs}, df = 5-2)) = 0.0751 $$
+
+
+\text{con concluimos que "hay una relación lineal significativa entre las calificaciones esperadas y la puntuación final del examen" dado que Rechazamos Ho .}
 
 \item Para estimar el promedio de las calificaciones cuyo aprovechamiento es de 50, con un intervalo de confianza debemos: 
 
@@ -89,7 +160,7 @@ $S_{xy} = 328 $
 
 $S_{yy} = 2610 $
 
-$$ r = \frac{S_{xy}}{ \sqrt{S_{xx}S_{yy}}} $$ 
+$$ r = \frac{S_{xy}}{ \sqrt{S_{xx}S_{yy}}}   $$ 
 
 \text{Entonces: }
 
@@ -291,7 +362,45 @@ $$ \hat{\beta_0} + \hat{\beta_1}x =  -1.056 + 2.563x $$
 
 \item Prueba de hipótesis para $\beta_1$ 
 
+\item Para realizar la prueba de hipótesis necesitamos: 
+\begin{itemize}
+\item Para $\beta_1$ 
 
+
+$ H_o:\beta_1 = 0 $ \text{contra: } $ H_a:\beta_1 \neq 0 $ 
+
+
+\text{ Bajo Ho el estadístico de prueba es: } 
+
+$ T_{\beta_1}= \frac{(\beta{_1}-0)}{\sqrt(\sigma^2_{\beta_1})} =  -9.8263 $ 
+
+\text{ El valor p : (en R) } 
+
+$ 2*(1-pt(T_{\beta_1}, df = 5-2)) $ 
+
+\text{ se obtiene : } 
+
+$ valor p = 1.9977 $ 
+
+\end{itemize}
+
+\item Para calcular intervalo de confianza para $\beta_1$ al $90\%$
+
+\text{Necesitamos: } 
+
+$ \beta_1  \epsilon  ( \hat{\beta_1} \pm t_{\alpha^2,n-2} * \sqrt{Var(\hat{\beta_1})} $  
+
+\text{Sustituyendo:  } 
+
+$ t_{-10/2,6-2} = 0.07510391$ 
+\text{cálculo de T  en R} 
+
+$pt(0.05,df = 4, lower.tail= false)$ 
+
+\text{El intervalo está dado por:  } 
+
+
+$ \beta_1  \epsilon (-1.0655 \pm 0.07510391 * \sqrt{0.1084} ) $ 
 
 \end{itemize}
 
