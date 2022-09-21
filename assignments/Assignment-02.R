@@ -193,8 +193,8 @@ data.frame(glance(lm_fit))
 # 4a) 
 B1 <- sxy/sx2
 B0 <- ybar - B1*xbar
-# \hat{beta_0} = 1
-# \hat{beta_1} = 0.7
+# \hat{beta_0} = -1.054389
+# \hat{beta_1} = 2.56056
 
 # 4b) 
 yhat <- predict(lm_fit, new_data = data %>% select(x))

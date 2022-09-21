@@ -15,132 +15,68 @@
 \begin{questions}
 
 
-\miquestion 
+\miquestion Se realizó una entrevista a 10 estudiantes acerca de sus calificaciones  esperadas y sus puntos finales en el primer parcial de matemáticas. 
+
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Estudiante ($i$) & Calificación esperada ($X_i$) & Puntos finales ($Y_i$) & $\hat{Y}$ & $(Y_i - \hat{Y_i})^2$ & $(Y_i - \bar{Y_i})^2$ & $(\hat{Y_i}-\bar{Y_i})^2$\\ \hline
+1 & 39 & 65 & 70.6 & 31.8216 & 121 & 28.7182\\
+2 & 43 & 78 & 73.7 & 18.4615 & 4 & 5.2748\\
+3 & 21  & 52 & 56.9 & 23.6289 & 576 & 366.3031\\ 
+4& 64 & 82 & 89.8 & 60.5302 & 36 & 189.8915\\ 
+5 & 57 & 92 & 84.4 &  57.4385 & 256 & 70.9163\\ 
+6 & 47 & 89 & 76.8 & 149.6815 & 169 & 0.5861\\ 
+7 & 28 & 73 & 62.2 & 116.2108 & 9 & 189.8915\\
+8 & 75 & 98 & 98.2 & 0.0405 & 484 & 492.8974\\ 
+9 & 34 & 56 & 66.8 & 116.9265 & 400 & 84.3962\\ 
+10 & 52 & 75 & 80.6 & 31.2858 & 1 & 21.0991\\ 
+\hline
+\end{tabular}
+
 \begin{itemize}
-\item 
-Sabemos que: 
+\item Encuentre la recta de predicción de mínimos cuadrados para los datos de las calificaciones del primer parcial de matemáticas.
 
-\text {Los estimadores de mínimos cuadrados de $\alpha$ y $\beta$ son}
+Se tiene que $\bar{x} = 46$, $ \bar{y} = 76$, $S_{x}^2 = 274.89$, $S_{y}^2 = 228.44$,  $S_{xy}=210.44$ $n = 10$,
 
-$$ b = \frac{S_{xy}}{S_{xx}} $$  \text {y} 
-$$a = \bar{y} - b\bar{x}$$
+$$ \beta_1 = \frac{S_{xy}}{S_{xx}} = 0.7656$$
+$$ \beta_0 = \bar{y} - \beta_0 \bar{x} = 40.7841$$
+$$ \hat{y} = \beta_0+\beta_1 x = 40.7841 + 0.7656x$$
 
-\text {Entonces, para encontrar la recta de predicción de mínimos cuadrados para los datos de la tabla: } 
+\item Determine el coeficiente de correlación
 
-\textbf {Paso 1: }
+$$ r_{xy} = \frac{S_{xy}}{S_{x} S_{y}} =  0.8398 $$
 
-$ S_{xx} = \sum{x_i^2} - \frac{\sum{x_i}^2}{n} = 23 634 - \frac{460^2}{10} = 2474$
+\item ¿La correlación es significativamente distinta de cero? 
+$$H_0: \rho_{xy} = 0 \qquad vs \qquad H_1 \neq 0$$
+$$T_{S_{xy}} = \frac{r_{xy}\sqrt{n-2}}{\sqrt{1-r_{xy}^2}} = 4.3750$$
+$$valorp = 0.0024$$
 
-$ S_{xy} = \sum{x_iy_i} - \frac{\sum{x_i}\sum{y_i}}{n} $
+\newpage
 
-$ = 36 854 - \frac{460*760}{10} = 1894 $ 
+\item Determine si hay una relación lineal significativa entre las calificaciones esperadas y los puntos finales. Nota: realize una prueba de hipótesis para $\beta_0$ y $\beta_1$
 
+Necesitamos calcular:
+$$ RSS = 606.03 \qquad ESS = 1449.98 \qquad TSS = 2056$$
+$$ \hat{\sigma^2} = \frac{606.03}{8} = 75.7532$$
+$$ \hat{\sigma_{\beta_0}^2}= \hat{\sigma^2}\left(\frac{1}{n}+\frac{\bar{x}^2}{S_x^2 (n-1)}\right)  = 72.3664$$
+$$ \hat{\sigma_{\beta_1}^2}= \frac{\hat{\sigma^2}}{S_x^2 (n-1)} = 0.03062$$
 
-$ \bar{y} = \frac{\sum{y_i}}{n} = \frac{760}{10} = 76 $ 
+Para $\beta_0$:
+$$ H_0:\beta_0 = 0  \qquad \text{vs} \qquad H_1:\beta_0 \neq 0 $$
+$$ T_{\beta_0} = \frac{\hat{\beta_{0}}-\beta_0}{\sqrt{\sigma^2_{\beta_0}}} = 4.7943$$ 
+$$ valorp = 0.0014 $$ 
+Para $\beta_1$:
+$$ H_0:\beta_1 = 0  \qquad \text{vs} \qquad H_1:\beta_1 \neq 0 $$
+$$ T_{\beta_1} = \frac{\hat{\beta_{1}}-\beta_1}{\sqrt{\sigma^2_{\beta_1}}} = 4.375015$$ 
+$$ valorp = 0.0024 $$
 
-$  \bar{x} = \frac{\sum{x_i}}{n} = \frac{460}{10} = 46$ 
+\item Estime el promedio de las calificaciones para estudiantes con una puntuación de aprovechamiento es 50, con un intervalo de confianza de 95%
 
+$$\hat{y_{50}} = \hat{\beta_0}+\hat{\beta_1}(50) = 79.0623$$
+$$ t_{.025, (8)} = 2.3060$$
+$$\left(\hat{y_{50}} \pm t_{.025, (8)}*\sqrt{\hat{\sigma^2}\left(\frac{1}{n}+\frac{(50-\bar{x})^2}{S_x^2 (n-1)}\right)}\right) = (72.51334, 85.61115)$$
 
-\textbf {Paso 2: }
-
-$ b = \frac{S_{xy}}{S_{xx}}  = \frac{1894}{2474} = 0.76556 $
-
-\text{y} 
-
-$$a = \bar{y} - b\bar{x} = 76 - (0.76556)(46) = 40.78424 $$
-
-\text{Entonces, la recta de regresión de mínimos cuadrados es:} 
-
-
-$$ \hat{y} = a + bx $$  
-
- \text{o bien:} 
- 
-$$ \hat{y} = \beta_0 + \beta_1x = 40.78424 + 0.76556x$$ 
-\item 
-\text{Sabemos que: }
-
-$ S_{xx} =S_{x^2}  = \sum{x_i^2} - \frac{\sum{x_i}^2}{n} = 274.88$  
-
-$ S_{xy} = \sum{x_iy_i} - \frac{\sum{x_i}\sum{y_i}}{n} = 210.44 $
-
-$ S_{yy}  = S_{y^2}= \sum{y_i^2} - \frac{\sum{y_i}^2}{n} = 228.44$  
-
-\text{Entonces: }
-
-
-$$ r = \frac{S_{xy}}{ \sqrt{S_{xx}S_{yy}}}$$ 
-
-\text{Entonces: }
-
-$r = \frac{210.44}{\sqrt{274.88*228.44}} = 0.8397 $ 
-
-
-
-\item Para realizar la prueba de hipótesis necesitamos: 
-\begin{itemize}
-\item Para $\beta_1$ 
-
-
-$ H_o:\beta_1 = 0 $ \text{contra: } $ H_a:\beta_1 \neq 0 $ 
-
-
-
-\text{ Bajo Ho el estadístico de prueba es: }  
-$ T_{\beta_1}= \frac{(\beta{_0}-0)}{\sqrt(\sigma^2_{\beta_0})} = 1.786 $ 
-
-\text{ El valor p : (en R) } 
-
-$ 2*(1-pt(T_B1, df = 5-2)) $ 
-
-$ valor p = 0.1720621 $ 
-
-
-
-\item Para $\beta_0$
-
-$ H_o:\beta_0 = 0 $ \text{contra: } $ H_a:\beta_0 \neq 0 $ 
-
-
-\text{ Bajo Ho el estadístico de prueba es: }  
-$ T_{\beta_0}= \frac{(\beta_1 - 0)}{\sqrt(\sigma^2_{\beta_1})} = 6.4164 $
-
-
-\text{ El valor p : (en R) } 
-
-$ 2*(1-pt(T_B0, df = 5-2)) $ 
-
-$ valor p = 0.007671261 $ 
-
-\end{itemize} 
-\item Se debe realizar una prueba de hipótesis para determinar si la correlación entre las variables es significativa : 
-
-
-$ H_o:\rho = 0 $ \text{contra: } $ H_a:\rho \neq 0 $ 
-
-\text{ Bajo Ho el estadístico de prueba es: }
-
-$ \rho = \frac{S_{xy}}{(\sqrt(S_{x^2})*\sqrt(S_{y^2}))} $
-
-\text{Sustituyendo tenemos: } 
-$ \rho = 0.8797 $ 
-
-\text{Entonces, el valor p } 
-
-$ T_{obs} = \frac{(\rho*\sqrt(5-2))}{\sqrt(1-\rho^2)} $
-
-  \text{con la formula en R } 
-$$2*(1-pt(T_{obs}, df = 5-2)) = 0.0751 $$
-
-
-\text{con concluimos que "hay una relación lineal significativa entre las calificaciones esperadas y la puntuación final del examen" dado que Rechazamos Ho .}
-
-\item Para estimar el promedio de las calificaciones cuyo aprovechamiento es de 50, con un intervalo de confianza debemos: 
-
-\text{La estimación puntual de}  $ E(y\mid x_0 = 50) $ \text{el promedio de calificación es: }
-
-$ \hat{y} = 40.78424 + 0.76556(50) = 79.06 $ 
-\end{itemize} 
+\end{itemize}
 
 \miquestion 
 \begin{itemize}
