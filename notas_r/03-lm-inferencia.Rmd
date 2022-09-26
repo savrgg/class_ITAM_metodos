@@ -3,6 +3,7 @@ title: "Ejemplo clase"
 output: html_notebook
 ---
 
+# Sección 1
 ## Introducción
 
 Este ejemplo es la versión en R del ejercicio visto en clase. Primero se guardan los datos en un data.frame llamado d: 
@@ -142,4 +143,107 @@ plot_data <-
 plot_data
 ```
 ### Inciso 9: Predicción individual
+```{r}
+
+```
+
+# Sección 2) Ejercicio
+## Introducción
+
+El problema presentado en este ejercicio es determinar si existe una relación lineal entre la edad de un niño y su altura. Se tiene la intuición que a mayor edad, más alto es. A continuación se presentan los datos de edad (meses) y altura (cm) en una muestra de 12 niños
+
+```{r}
+data <- read_csv("https://raw.githubusercontent.com/savrgg/class_ITAM_metodos/main/notas_r/ageandheight.csv")
+data
+```
+
+####  1. Determine por medio de una gráfica si es razonable pensar en que existe una relación lineal entre las variables (variable independiente: edad)
+```{r}
+
+```
+
+Al comparar gráficamente los datos, podemos observar que los datos si se ajustan por medio de una línea. 
+
+#### 2. Determine con una Prueba de Hipótesis si existe una relación lineal entre las variables.
+
+Para determinar si existe una relación lineal, se construye una Prueba de Hipótesis del coeficiente de correlación. Recordando, el coeficiente de correlación mide solamente la asociación lineal, mas no la pendiente de la linea
+
+Sea $H_0: \rho = 0$ y $H_1: \rho \neq 0$, entonces: 
+
+```{r}
+
+```
+
+El $valor-p$ es cercano a 0, entonces rechazamos $H_0: \rho = 0$, por lo que rechazamos que la correlación sea cero.
+
+#### 3. Utilicé tidymodels (lm) para realizar la regresión lineal, analice los resultados obtenidos
+```{r}
+
+```
+
+
+#### 4. Determine analíticamente los coeficientes $\hat{\beta}_0$ y $\hat{\beta}_1$
+```{r}
+
+```
+### 5. Calcule analíticamente TSS, ESS, RSS, $R^2$ y $adjR^2$
+
+```{r}
+
+```
+
+### 6. Calcule analíticametne $\hat{\sigma^2}$, $\hat{V(\hat{\beta_0})}$, $\hat{V(\hat{\beta_1})}$
+```{r}
+
+```
+
+### 7. Determine si el valor de los coeficientes es significativo (realice una prueba para cada uno)
+```{r}
+
+```
+
+El valor-p de ambas pruebas es cercano a 0, por lo que podemos rechazar que $H_0: \beta_1 = 0$ y $H_0: \beta_0 = 0$
+
+### 8. Comprueba que:
+a) Suma de residuales es igual a 0
+```{r}
+
+```
+
+b) Residuos no están correlacionados a X
+```{r}
+
+```
+
+c) Residuos no están correlacionados a $\hat{Y}$
+```{r}
+
+```
+
+### 9. Determine si el de $R^2$ es significativo
+```{r}
+
+```
+
+
+El $valor-p$ es cercano a 0,por lo que podemos rechazar $H_0: \rho^2 = 0$ vs $H_1: \rho^2 > 0$.
+
+
+### Calcula la predicción a la media para una edad 25 años. Calcule el IC al 95%.
+
+```{r}
+
+```
+IC para prediccion media de edad 25: (80.62294, 80.98196)
+
+
+### Calcula la predicción individual para un valor de 30 años. Calcule el IC al 95
+
+```{r}
+
+```
+IC para prediccion individual de edad 30: (83.62626, 84.32828)
+
+
+
 

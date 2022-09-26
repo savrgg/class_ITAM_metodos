@@ -7,6 +7,7 @@ output: html_notebook
 En esta práctica se construirá la función de regresión poblacional, posteriormente se sacarán múltiples muestras con las cuales se analizará la variabilidad de la muestra por medio de la función de regresión muestral. Es importante recalcar que comúnmente los datos poblacionaes no son conocidos, pero en este ejemplo supondremos que los datos que nos proporcionan son los poblacionales. 
 
 Se importan los datos de "marketing" que contienen datos de inversión en tres tipos de medios publicitarios y datos de las ventas:
+
 ```{r}
 library(datarium)
 library(tidymodels)  # package that imports useful packages for modeling

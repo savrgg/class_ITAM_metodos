@@ -16,7 +16,7 @@ library(dotwhisker)  # visualize regression results
 # 72 urchins ==
 # experimental feeding regime group
 urchins <-
-  read_csv("urchins.csv") %>% 
+  read_csv("https://raw.githubusercontent.com/savrgg/class_ITAM_metodos/main/notas_r/urchins.csv") %>% 
   setNames(c("food_regime", "initial_volume", "width")) %>% 
   mutate(food_regime = factor(food_regime, levels = c("Initial", "Low", "High")))
 
@@ -130,3 +130,4 @@ ess
 rse
 r2
 ```
+
