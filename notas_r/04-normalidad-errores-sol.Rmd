@@ -330,7 +330,6 @@ jarque.bera.test(residuo$.pred)
 ```
 Por lo tanto rechazamos que los datos sean normales. 
 
-#### 5.6) Comprueba que cov(errores), var(error), 
 
 
 

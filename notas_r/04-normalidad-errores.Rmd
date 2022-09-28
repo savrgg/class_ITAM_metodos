@@ -178,7 +178,7 @@ Recapitulando, cada punto en la gráfica representa una observación y la línea
 
 - En el caso de los puntos azules, vemos que en centro se parecen los datos a la línea, pero en una de las colas no coinciden. ¿Qué implicaría?:
 
-Imagen
+
 
 Por eso, de los métodos gráficos, el qqplot es de los que más utilidad nos generan, ya que no solo nos permite determinar si los datos tienen sesgo 0, si no además, que la varianza es equivalente a la varianza de una distribución normal.
 
@@ -260,20 +260,6 @@ Se usarán los datos de lecturas anteriores de house_rent. El modelo a ajustar e
 #### 5.1) Ajusta la regresión lineal y determina si la $\beta_0$, $\beta_1$ y $R^2$ son significativas:
 
 ```{r}
-library(tidymodels)
-library(readr)
-
-house_rent <- 
-  read_csv("house_rent.csv") %>% 
-  select(Rent, Size) %>% 
-  set_names(c("rent", "size"))
-
-lm_fit <- 
-  linear_reg() %>% 
-  fit(rent~size, data = house_rent)
-
-tidy(lm_fit)
-glance(lm_fit)
 ```
 
 Aunque $R^2 = 0.17$, vemos que el valorp es cercano a 0, por lo que podemos rechazar $H_0: P^2= 0$. Entonces si es significativa. La misma conclusión se puede derivar de $\beta_0$ y $\beta_1$.
@@ -281,56 +267,32 @@ Aunque $R^2 = 0.17$, vemos que el valorp es cercano a 0, por lo que podemos rech
 Los residuos los podemos calcular:
 
 ```{r}
-yhat <- predict(lm_fit, new_data = house_rent %>% select(size))
-residuo <- house_rent$rent-yhat
 ```
 
 
 #### 5.2) Realiza un histograma para mostrar la distribución de los errores de la regresión
 
 ```{r}
-residuo %>% 
-  ggplot(aes(x = .pred)) +
-  geom_histogram(fill = "blue")+
-  theme_minimal()+
-  theme(legend.position = "none")+
-  xlim(-100000,100000)
 ```
 Se puede observar que hay un ligero sesgo a la derecha, pero realmente con la gráfica no podemos concluir
 
 #### 5.3) Realiza un boxplot para mostrar la distribución de los errores de la regresión
 
 ```{r}
-residuo %>% 
-  ggplot(aes(x = .pred))+
-  geom_boxplot()+
-  coord_flip()+
-  theme_minimal()+
-  theme(legend.position = "none")+
-  xlim(-100000,100000)
 ```
 
 En esta gráfica es un poco más complicado determinar si hay un sesgo o incluso si corresponde a una varianza de una distribución normal
 
 #### 5.4) Realiza un qqplot para mostrar la distribución de los errores de la regresión
 ```{r}
-residuo %>% 
-  ggplot(aes(sample = .pred))+
-  stat_qq() + stat_qq_line()+
-  theme_minimal()+
-  theme(legend.position = "none")+
-  labs(x = "Quantiles normales teóricos",
-       y = "Quantiles normales empírico (datos)")
 ```
 Con la gráfica podemos observar que tiene colas más pesadas que una distribución normal, por lo que probablemente el supuesto de normalidad no se cumpla. 
 
 #### 5.5) Realiza una prueba Jarque-Bera para mostrar la distribución de los errores de la regresión
 ```{r}
-jarque.bera.test(residuo$.pred)
 ```
 Por lo tanto rechazamos que los datos sean normales. 
 
-#### 5.6) Comprueba que cov(errores), var(error), 
 
 
 
