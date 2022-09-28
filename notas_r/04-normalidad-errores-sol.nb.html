@@ -1758,343 +1758,6 @@ display: none;
 
 
 <!-- rnb-text-begin -->
-<div id="introducción" class="section level3">
-<h3>1) Introducción</h3>
-<p>El método estándar para construir los intervalos de confianza para la
-regresión lineal (y en general para conocer su distribución) recae en el
-supuesto de normalidad:</p>
-<ul>
-<li>Los errores de la regresión están distribuidos normal</li>
-<li>El número de observaciones es suficientemente grande, en cuyo caso,
-el estimador se distribuye normal (Teorema Central del Límite)</li>
-</ul>
-<p>Si se cumple el primer supuesto, entonces el estimador de <span class="math inline">\(\beta_1\)</span> se distribuye normal con la media
-y varianza vista en clase .</p>
-<p>Al realizar regresión lineal es importante determinar estos supuestos
-se cumplen, por lo que existen distintas técnicas para lograrlo. En este
-curso veremos dos tipos:</p>
-<ol style="list-style-type: lower-alpha">
-<li>Métodos Gráficos</li>
-<li>Pruebas de Hipótesis</li>
-</ol>
-</div>
-<div id="generación-de-datos" class="section level3">
-<h3>2) Generación de datos:</h3>
-<p>Previo a comenzar con los métodos gráficos y pruebas de hipótesis se
-generan datos provenientes de distintas distribuciones:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBMYSBmdW5jacOzbiBybm9ybSBnZW5lcmEgbXVlc3RyYXMgYWxlYXRvcmlhcyBub3JtYWxlcy4gVGllbmUgY29tbyBwYXLDoW1ldHJvczogXG4jIG49bsO6bWVybyBkZSBtdWVzdHJhcywgXG4jIG1lYW4gPSBtZWRpYSBkZSBsYSBkaXN0cmlidWNpb24gbm9ybWFsIFxuIyBzZCA9IGRlc3ZpYWNpb24gZXN0w6FuZGFyIGRlIGxhIGRpc3RyaWJ1Y2nDs24gbm9ybWFsXG5cbiMgcnQgZ2VuZXJhIG7Dum1lcm9zIGFsZWF0b3Jpb3MgcXVlIHByb3ZpZW5lbiBkZSB1bmEgZGlzdHJpYnVjacOzbiB0LXN0dWRlbnRcblxuIyByZXhwIGdlbmVyYSBuw7ptZXJvIGFsZWF0b3Jpb3MgcXVlIHByb3ZpZW5lbiBkZSBkaXN0cmlidWNpw7NuIGV4cG9uZW5jaWFsXG5cbmxpYnJhcnkodGlkeXZlcnNlKVxuc2V0LnNlZWQoNTMyKVxuXG5kYXRvcyA8LSBcbiAgZGF0YS5mcmFtZShcbiAgbm9ybWFsID0gcm5vcm0obiA9IDEwMDAsIG1lYW4gPSAwLCBzZCA9IDEpLFxuICB0c3R1ZGVudCA9IHJ0KG4gPSAxMDAwLCBkZiA9IDEwKSxcbiAgZXhwb25lbmNpYWwgPSByZXhwKG4gPSAxMDAwLCByYXRlID0gMC41KVxuKVxuXG5kYXRvcyAlPiUgXG4gIGdhdGhlcih2YXJpYWJsZSwgdmFsb3IpICU+JSBcbiAgZ2dwbG90KGFlcyh4ID12YWxvciwgY29sb3IgPSB2YXJpYWJsZSkpK1xuICBnZW9tX2RlbnNpdHkoKStcbiAgZmFjZXRfd3JhcCh+dmFyaWFibGUpK1xuICB0aGVtZV9taW5pbWFsKCkrXG4gIHRoZW1lKFxuICAgIGxlZ2VuZC5wb3NpdGlvbiA9IFwibm9uZVwiXG4gICkrXG4gIHhsaW0oLTUsIDUpXG5gYGAifQ== -->
-<pre class="r"><code># La función rnorm genera muestras aleatorias normales. Tiene como parámetros: 
-# n=número de muestras, 
-# mean = media de la distribucion normal 
-# sd = desviacion estándar de la distribución normal
-
-# rt genera números aleatorios que provienen de una distribución t-student
-
-# rexp genera número aleatorios que provienen de distribución exponencial
-
-library(tidyverse)
-set.seed(532)
-
-datos &lt;- 
-  data.frame(
-  normal = rnorm(n = 1000, mean = 0, sd = 1),
-  tstudent = rt(n = 1000, df = 10),
-  exponencial = rexp(n = 1000, rate = 0.5)
-)
-
-datos %&gt;% 
-  gather(variable, valor) %&gt;% 
-  ggplot(aes(x =valor, color = variable))+
-  geom_density()+
-  facet_wrap(~variable)+
-  theme_minimal()+
-  theme(
-    legend.position = &quot;none&quot;
-  )+
-  xlim(-5, 5)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Antes de comenzar, podemos observar que la distribución Normal y la
-t-student se asemejan, las dos son distribuciones simétricas, pero la
-distribución t-student tiene mayor varianza:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudmFyKGRhdG9zJG5vcm1hbClcbnZhcihkYXRvcyR0c3R1ZGVudClcbmBgYCJ9 -->
-<pre class="r"><code>var(datos$normal)
-var(datos$tstudent)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>A simple vista a veces se vuelve un poco complicado poder determinar
-solo con la gráfica que distribución es normal y cual no.</p>
-</div>
-<div id="métodos-gráficos" class="section level3">
-<h3>3) Métodos gráficos</h3>
-<p>Los métodos gráficos tienen ciertas ventajas, entre ellas que
-conocemos la distribución de los datos, los valores que toman, la
-frecuencia de cada rango de valores, etc. Entre sus desventajas es que
-la decisión de determinar normalidad se deja a la persona que lo esté
-analizando.</p>
-<div id="histograma" class="section level4">
-<h4>3.1) Histograma</h4>
-<p>El histograma representa la información en forma de barras, donde la
-superficie de cada barra implica la frecuencia de cada valor
-representado. Al igual que la gráfica de la sección 2, es facil
-identificar si tiene sesgo la distribución, pero se vuelve complicado
-saber si tiene la varianza es equivalente a la de una distribución
-normal.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGF0b3MgJT4lIFxuICBnYXRoZXIodmFyaWFibGUsIHZhbG9yKSAlPiUgXG4gIGdncGxvdChhZXMoeCA9IHZhbG9yLCBmaWxsID0gdmFyaWFibGUpKStcbiAgZ2VvbV9oaXN0b2dyYW0oKStcbiAgZmFjZXRfd3JhcCh+dmFyaWFibGUpK1xuICB0aGVtZV9taW5pbWFsKCkrXG4gIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbiA9IFwibm9uZVwiKStcbiAgeGxpbSgtNSw1KVxuYGBgIn0= -->
-<pre class="r"><code>datos %&gt;% 
-  gather(variable, valor) %&gt;% 
-  ggplot(aes(x = valor, fill = variable))+
-  geom_histogram()+
-  facet_wrap(~variable)+
-  theme_minimal()+
-  theme(legend.position = &quot;none&quot;)+
-  xlim(-5,5)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="boxplot" class="section level4">
-<h4>3.2 Boxplot</h4>
-<p>Los Boxplot nos permite conocer las principales estadísticas de los
-datos: mínimo, primer cuartil, mediana, tercer cuartil, máximo, datos
-atípicos. Con estos datos podemos determinar si la distribución de los
-datos es simétrica y tambien darnos una idea de que tanto varian. Por
-ejemplo, en la siguiente gráfica podemos notar:</p>
-<ul>
-<li>Los datos exponenciales no provienen de una distribución
-simétrica</li>
-<li>Es dificil determinar si la varianza es adecuada para una normal, o
-bien tiene colas más pesadas como la t-student</li>
-</ul>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGF0b3MgJT4lIFxuICBnYXRoZXIodmFyaWFibGUsIHZhbG9yKSAlPiUgXG4gIGdncGxvdChhZXMoeCA9IHZhbG9yLCBjb2xvciA9IHZhcmlhYmxlKSkrXG4gIGdlb21fYm94cGxvdCgpK1xuICBmYWNldF93cmFwKH52YXJpYWJsZSkrXG4gIGNvb3JkX2ZsaXAoKStcbiAgdGhlbWVfbWluaW1hbCgpK1xuICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSBcIm5vbmVcIikrXG4gIHhsaW0oLTUsNSlcbmBgYCJ9 -->
-<pre class="r"><code>datos %&gt;% 
-  gather(variable, valor) %&gt;% 
-  ggplot(aes(x = valor, color = variable))+
-  geom_boxplot()+
-  facet_wrap(~variable)+
-  coord_flip()+
-  theme_minimal()+
-  theme(legend.position = &quot;none&quot;)+
-  xlim(-5,5)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Por esto, el boxplot nos permite disernir si la distribución está
-sesgada, pero no es sencillo determinar si la varianza corresponde a una
-distribución normal.</p>
-</div>
-<div id="qqplot-quantile-quantile-plot" class="section level4">
-<h4>3.3 qqplot (quantile-quantile plot)</h4>
-<p>La intucion detrás del qqplot es que los cuantiles de nuestros datos
-(quantil empírico) deben estar “en linea” perfecta con los quantiles
-teóricos de una distribución normal. Para facilitar en entendimiento,
-veamos las siguientes gráficas:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGF0b3MgJT4lIFxuICBnYXRoZXIodmFyaWFibGUsIHZhbG9yKSAlPiUgXG4gIGdncGxvdChhZXMoc2FtcGxlID0gdmFsb3IsIGNvbG9yID0gdmFyaWFibGUpKStcbiAgc3RhdF9xcSgpICsgc3RhdF9xcV9saW5lKCkrXG4gIGZhY2V0X3dyYXAofnZhcmlhYmxlKStcbiAgdGhlbWVfbWluaW1hbCgpK1xuICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSBcIm5vbmVcIikrXG4gIGxhYnMoeCA9IFwiUXVhbnRpbGVzIG5vcm1hbGVzIHRlw7NyaWNvc1wiLFxuICAgICAgIHkgPSBcIlF1YW50aWxlcyBub3JtYWxlcyBlbXDDrXJpY28gKGRhdG9zKVwiKVxuYGBgIn0= -->
-<pre class="r"><code>datos %&gt;% 
-  gather(variable, valor) %&gt;% 
-  ggplot(aes(sample = valor, color = variable))+
-  stat_qq() + stat_qq_line()+
-  facet_wrap(~variable)+
-  theme_minimal()+
-  theme(legend.position = &quot;none&quot;)+
-  labs(x = &quot;Quantiles normales teóricos&quot;,
-       y = &quot;Quantiles normales empírico (datos)&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>En la gráfica aparece una línea y varios puntos. Cada uno de los
-puntos corresponde a un dato. ¿Cómo se lee esta gráfica? Agarremos un
-punto:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGF0b3MgJT4lIFxuICBnYXRoZXIodmFyaWFibGUsIHZhbG9yKSAlPiUgZmlsdGVyKHZhcmlhYmxlID09IFwiZXhwb25lbmNpYWxcIikgJT4lIFxuICBnZ3Bsb3QoYWVzKHNhbXBsZSA9IHZhbG9yLCBjb2xvciA9IHZhcmlhYmxlKSkrXG4gIHN0YXRfcXEoKSArIHN0YXRfcXFfbGluZSgpK1xuICBmYWNldF93cmFwKH52YXJpYWJsZSkrXG4gIHRoZW1lX21pbmltYWwoKStcbiAgZ2VvbV9obGluZSh5aW50ZXJjZXB0ID0gMCwgY29sb3IgPSBcImN5YW5cIikrXG4gIGdlb21fdmxpbmUoeGludGVyY2VwdCA9IC0zLjI4LCBjb2xvciA9IFwiY3lhblwiKStcbiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gXCJub25lXCIpK1xuICBsYWJzKHggPSBcIlF1YW50aWxlcyBub3JtYWxlcyB0ZcOzcmljb3NcIixcbiAgICAgICB5ID0gXCJRdWFudGlsZXMgbm9ybWFsZXMgZW1ww61yaWNvIChkYXRvcylcIilcbmBgYCJ9 -->
-<pre class="r"><code>datos %&gt;% 
-  gather(variable, valor) %&gt;% filter(variable == &quot;exponencial&quot;) %&gt;% 
-  ggplot(aes(sample = valor, color = variable))+
-  stat_qq() + stat_qq_line()+
-  facet_wrap(~variable)+
-  theme_minimal()+
-  geom_hline(yintercept = 0, color = &quot;cyan&quot;)+
-  geom_vline(xintercept = -3.28, color = &quot;cyan&quot;)+
-  theme(legend.position = &quot;none&quot;)+
-  labs(x = &quot;Quantiles normales teóricos&quot;,
-       y = &quot;Quantiles normales empírico (datos)&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>El dato señalado es el valor empírico 0.0016. Se debe encontrar en
-que posición estaría si ordenaramos los datos de menor a mayor, en este
-caso es el mínimo, entonces es el dato 1 de 1000. Ahora, hay que
-encontrar a que cuantil corresponde la probabilidad 1/1000 de una
-distribución normal:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBlbCBwcmltZXIgZGF0byBkZSBsb3MgZGF0b3MgZXhwb25lbmNpYWxlcywgcXVlIHF1YW50aWwgcmVwcmVzZW50YSBcbiMgZGUgZGF0b3Mgbm9ybWFsZXNcbnFub3JtKDEvMTAwMCkgIyAtMy4wOVxuXG4jIGNvb3JkZW5hZGE6ICgtMy4wOSwgMC4wMDE2KVxuYGBgIn0= -->
-<pre class="r"><code># el primer dato de los datos exponenciales, que quantil representa 
-# de datos normales
-qnorm(1/1000) # -3.09
-
-# coordenada: (-3.09, 0.0016)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>De esta manera, podemos generar la coordenada (-3.09, 0.0016), el
-primer dato corresponde al cuantil de la normal y el segundo al dato
-empírico. Veamos otro ejemplo:</p>
-<p>Tomemos un valor distinto al mínimo, por ejemplo ejemplo el valor
-0.48, que es el número 225 de 1000 ordenado de menor a mayor:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGF0b3MgJT4lIFxuICBnYXRoZXIodmFyaWFibGUsIHZhbG9yKSAlPiUgZmlsdGVyKHZhcmlhYmxlID09IFwiZXhwb25lbmNpYWxcIikgJT4lIFxuICBnZ3Bsb3QoYWVzKHNhbXBsZSA9IHZhbG9yLCBjb2xvciA9IHZhcmlhYmxlKSkrXG4gIHN0YXRfcXEoKSArIHN0YXRfcXFfbGluZSgpK1xuICBmYWNldF93cmFwKH52YXJpYWJsZSkrXG4gIHRoZW1lX21pbmltYWwoKStcbiAgZ2VvbV9obGluZSh5aW50ZXJjZXB0ID0gMC40OCkrXG4gIGdlb21fdmxpbmUoeGludGVyY2VwdCA9IC0wLjc2KStcbiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gXCJub25lXCIpK1xuICBsYWJzKHggPSBcIlF1YW50aWxlcyBub3JtYWxlcyB0ZcOzcmljb3NcIixcbiAgICAgICB5ID0gXCJRdWFudGlsZXMgbm9ybWFsZXMgZW1ww61yaWNvIChkYXRvcylcIilcbmBgYCJ9 -->
-<pre class="r"><code>datos %&gt;% 
-  gather(variable, valor) %&gt;% filter(variable == &quot;exponencial&quot;) %&gt;% 
-  ggplot(aes(sample = valor, color = variable))+
-  stat_qq() + stat_qq_line()+
-  facet_wrap(~variable)+
-  theme_minimal()+
-  geom_hline(yintercept = 0.48)+
-  geom_vline(xintercept = -0.76)+
-  theme(legend.position = &quot;none&quot;)+
-  labs(x = &quot;Quantiles normales teóricos&quot;,
-       y = &quot;Quantiles normales empírico (datos)&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucW5vcm0oMjI1LzEwMDApICMgLTAuNzZcbiMgY29vcmRlbmFkYTogKDAuNDgsIC0wLjc2KVxuYGBgIn0= -->
-<pre class="r"><code>qnorm(225/1000) # -0.76
-# coordenada: (0.48, -0.76)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Vemos que representa el cuantil 225/1000, que representa el quantil
-teórico normal de -0.04.</p>
-<p>Recapitulando, cada punto en la gráfica representa una observación y
-la línea en cada facet representa como se comportarían las observaciones
-de una distribución normal. Si los puntos se ajustan a la linea, quiere
-decir que se asemeja a una normal.</p>
-<ul>
-<li><p>En el caso de datos normales (línea verde), los puntos coinciden
-casi al 100% con la línea, lo que nos lleva a pensar que efectivamente
-se distribuyen normal</p></li>
-<li><p>En el caso de los puntos azules, vemos que en centro se parecen
-los datos a la línea, pero en una de las colas no coinciden. ¿Qué
-implicaría?:</p></li>
-</ul>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Por eso, de los métodos gráficos, el qqplot es de los que más
-utilidad nos generan, ya que no solo nos permite determinar si los datos
-tienen sesgo 0, si no además, que la varianza es equivalente a la
-varianza de una distribución normal.</p>
-</div>
-</div>
-<div id="pruebas-de-hipótesis" class="section level3">
-<h3>4) Pruebas de Hipótesis</h3>
-<div id="prueba-de-hipótesis-jarque-bera" class="section level4">
-<h4>4.1) Prueba de hipótesis Jarque-Bera</h4>
-<p>Los métodos anteriores son gráficos, pero ¿qué sucede si queremos una
-manera más estadística para llegar a una conclusión? R: aplicamos una
-prueba de hipótesis</p>
-<p>La prueba de hipótesis que aplicamos recibe el nombre de Jarque-Bera,
-la cual tiene como <span class="math inline">\(H_0:\)</span> Los datos
-se distribuyen normal vs <span class="math inline">\(H_1:\)</span> Los
-datos no se distribuyen normal. El estadístico lo llamaremos JB:</p>
-<p><span class="math display">\[ JB = \frac{n}{6}( S_k^2
-+\frac{1}{4}(K-3)^2) \]</span> Donde en este caso llamaremos <span class="math inline">\(S_k\)</span> al coeficiente de asimetría y <span class="math inline">\(K\)</span> a la curtosis.</p>
-<p><span class="math display">\[ S_k =
-\frac{E(X-\mu)^2}{\sigma^3}\]</span> <span class="math display">\[ K =
-\frac{E(X-\mu)^4}{(E(X-\mu)^2)^2}\]</span></p>
-<p>El estadístico JB se distribuye de como una <span class="math inline">\(JB \sim \chi^2_{2}\)</span> y siempre rechazamos
-para valores altos de la distribución.</p>
-<div id="cálculo-con-fórmulas" class="section level5">
-<h5>4.1.1) Cálculo con fórmulas:</h5>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KG1vbWVudHMpXG5saWJyYXJ5KHRzZXJpZXMpXG5cbiMgSmFycXVlLUJlcmEgXG5ucm93cyA9IG5yb3coZGF0b3MpXG5cbiMgbm9ybWFsXG5za2V3X25vcm1hbCA9IChzdW0oKGRhdG9zJG5vcm1hbC1tZWFuKGRhdG9zJG5vcm1hbCkpKiozKS9ucm93cykgLyAodmFyKGRhdG9zJG5vcm1hbCkqKG5yb3dzLTEpL25yb3dzKSoqKDMvMilcblxua3VydF9ub3JtYWwgPSAgKHN1bSgoZGF0b3Mkbm9ybWFsLW1lYW4oZGF0b3Mkbm9ybWFsKSkqKjQpL25yb3dzKSAvICh2YXIoZGF0b3Mkbm9ybWFsKSoobnJvd3MtMSkvbnJvd3MpKiooNC8yKVxuXG5KQl9ub3JtYWwgPSBucm93cyooKHNrZXdfbm9ybWFsXjIpLzYgKyAoa3VydF9ub3JtYWwtMykqKGt1cnRfbm9ybWFsLTMpLygyNCkpXG5wY2hpc3EoSkJfbm9ybWFsLCBsb3dlci50YWlsID0gRiwgZGYgPSAyKVxuIyB2YWxvcnAgPSAwLjk5IC0+IE5vIFJlY2hhemFtb3MgSDBcblxuIyB0LXN0dWRlbnRcbnNrZXdfdCA9IChzdW0oKGRhdG9zJHRzdHVkZW50LW1lYW4oZGF0b3MkdHN0dWRlbnQpKSoqMykvbnJvd3MpIC8gKHZhcihkYXRvcyR0c3R1ZGVudCkqKG5yb3dzLTEpL25yb3dzKSoqKDMvMilcblxua3VydF90ID0gIChzdW0oKGRhdG9zJHRzdHVkZW50LW1lYW4oZGF0b3MkdHN0dWRlbnQpKSoqNCkvbnJvd3MpIC8gKHZhcihkYXRvcyR0c3R1ZGVudCkqKG5yb3dzLTEpL25yb3dzKSoqKDQvMilcblxuSkJfdCA9IG5yb3dzKigoc2tld190XjIpLzYgKyAoa3VydF90LTMpKihrdXJ0X3QtMykvKDI0KSlcblxucGNoaXNxKEpCX3QsIGxvd2VyLnRhaWwgPSBGLCBkZiA9IDIpXG4jIHZhbG9ycCA9IDAuMDAwNyAtPiBSZWNoYXphbW9zIEgwXG5cbiMgZXhwb25lbmNpYWxcbnNrZXdfZXhwID0gc3VtKChkYXRvcyRleHBvbmVuY2lhbC1tZWFuKGRhdG9zJGV4cG9uZW5jaWFsKSkqKjMpL25yb3dzIC8gKHZhcihkYXRvcyRleHBvbmVuY2lhbCkqKG5yb3dzLTEpL25yb3dzKSoqKDMvMilcblxua3VydF9leHAgPSAgKHN1bSgoZGF0b3MkZXhwb25lbmNpYWwtbWVhbihkYXRvcyRleHBvbmVuY2lhbCkpKio0KS9ucm93cykgLyAodmFyKGRhdG9zJGV4cG9uZW5jaWFsKSoobnJvd3MtMSkvbnJvd3MpKiooNC8yKVxuXG5KQl9leHAgPSBucm93cyooKHNrZXdfZXhwXjIpLzYgKyAoa3VydF9leHAtMykqKGt1cnRfZXhwLTMpLygyNCkpIFxucGNoaXNxKEpCX2V4cCwgbG93ZXIudGFpbCA9IEYsIGRmID0gMilcblxuIyB2YWxvcnAgPSAwIC0+IFJlY2hhemFtb3MgSDBcbmBgYCJ9 -->
-<pre class="r"><code>library(tidyverse)
-library(moments)
-library(tseries)
-
-# Jarque-Bera 
-nrows = nrow(datos)
-
-# normal
-skew_normal = (sum((datos$normal-mean(datos$normal))**3)/nrows) / (var(datos$normal)*(nrows-1)/nrows)**(3/2)
-
-kurt_normal =  (sum((datos$normal-mean(datos$normal))**4)/nrows) / (var(datos$normal)*(nrows-1)/nrows)**(4/2)
-
-JB_normal = nrows*((skew_normal^2)/6 + (kurt_normal-3)*(kurt_normal-3)/(24))
-pchisq(JB_normal, lower.tail = F, df = 2)
-# valorp = 0.99 -&gt; No Rechazamos H0
-
-# t-student
-skew_t = (sum((datos$tstudent-mean(datos$tstudent))**3)/nrows) / (var(datos$tstudent)*(nrows-1)/nrows)**(3/2)
-
-kurt_t =  (sum((datos$tstudent-mean(datos$tstudent))**4)/nrows) / (var(datos$tstudent)*(nrows-1)/nrows)**(4/2)
-
-JB_t = nrows*((skew_t^2)/6 + (kurt_t-3)*(kurt_t-3)/(24))
-
-pchisq(JB_t, lower.tail = F, df = 2)
-# valorp = 0.0007 -&gt; Rechazamos H0
-
-# exponencial
-skew_exp = sum((datos$exponencial-mean(datos$exponencial))**3)/nrows / (var(datos$exponencial)*(nrows-1)/nrows)**(3/2)
-
-kurt_exp =  (sum((datos$exponencial-mean(datos$exponencial))**4)/nrows) / (var(datos$exponencial)*(nrows-1)/nrows)**(4/2)
-
-JB_exp = nrows*((skew_exp^2)/6 + (kurt_exp-3)*(kurt_exp-3)/(24)) 
-pchisq(JB_exp, lower.tail = F, df = 2)
-
-# valorp = 0 -&gt; Rechazamos H0</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="cálculo-con-paquetes" class="section level5">
-<h5>4.1.2) Cálculo con paquetes:</h5>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBmb3JtdWxhcyBwYXJhIHNlc2dvIHkga3VydG9zaXNcbnNrZXduZXNzKGRhdG9zJG5vcm1hbClcbmt1cnRvc2lzKGRhdG9zJG5vcm1hbClcbmBgYCJ9 -->
-<pre class="r"><code># formulas para sesgo y kurtosis
-skewness(datos$normal)
-kurtosis(datos$normal)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Jarque bera con función</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjb2luY2lkZW4gY29uIHZhbG9yZXMgZGUgYXJyaWJhXG5qYXJxdWUuYmVyYS50ZXN0KGRhdG9zJG5vcm1hbClcbmphcnF1ZS5iZXJhLnRlc3QoZGF0b3MkdHN0dWRlbnQpXG5qYXJxdWUuYmVyYS50ZXN0KGRhdG9zJGV4cG9uZW5jaWFsKVxuYGBgIn0= -->
-<pre class="r"><code># coinciden con valores de arriba
-jarque.bera.test(datos$normal)
-jarque.bera.test(datos$tstudent)
-jarque.bera.test(datos$exponencial)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-</div>
-</div>
 <div id="ejercicio" class="section level3">
 <h3>5) Ejercicio:</h3>
 <p>Se usarán los datos de lecturas anteriores de house_rent. El modelo a
@@ -2105,6 +1768,25 @@ casa.</p>
 <h4>5.1) Ajusta la regresión lineal y determina si la <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> y <span class="math inline">\(R^2\)</span> son significativas:</h4>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5bW9kZWxzKVxubGlicmFyeShyZWFkcilcbmxpYnJhcnkobW9tZW50cylcbmxpYnJhcnkodHNlcmllcylcbmxpYnJhcnkodGlkeXZlcnNlKVxuXG5ob3VzZV9yZW50IDwtIFxuICByZWFkX2NzdihcImhvdXNlX3JlbnQuY3N2XCIpICU+JSBcbiAgc2VsZWN0KFJlbnQsIFNpemUpICU+JSBcbiAgc2V0X25hbWVzKGMoXCJyZW50XCIsIFwic2l6ZVwiKSlcblxubG1fZml0IDwtIFxuICBsaW5lYXJfcmVnKCkgJT4lIFxuICBmaXQocmVudH5zaXplLCBkYXRhID0gaG91c2VfcmVudClcblxudGlkeShsbV9maXQpXG5nbGFuY2UobG1fZml0KVxuYGBgIn0= -->
+<pre class="r"><code>library(tidymodels)
+library(readr)
+library(moments)
+library(tseries)
+library(tidyverse)
+
+house_rent &lt;- 
+  read_csv(&quot;house_rent.csv&quot;) %&gt;% 
+  select(Rent, Size) %&gt;% 
+  set_names(c(&quot;rent&quot;, &quot;size&quot;))
+
+lm_fit &lt;- 
+  linear_reg() %&gt;% 
+  fit(rent~size, data = house_rent)
+
+tidy(lm_fit)
+glance(lm_fit)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Aunque <span class="math inline">\(R^2 = 0.17\)</span>, vemos que el
@@ -2113,6 +1795,10 @@ significativa. La misma conclusión se puede derivar de <span class="math inline
 <p>Los residuos los podemos calcular:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxueWhhdCA8LSBwcmVkaWN0KGxtX2ZpdCwgbmV3X2RhdGEgPSBob3VzZV9yZW50ICU+JSBzZWxlY3Qoc2l6ZSkpXG5yZXNpZHVvIDwtIGhvdXNlX3JlbnQkcmVudC15aGF0XG5gYGAifQ== -->
+<pre class="r"><code>yhat &lt;- predict(lm_fit, new_data = house_rent %&gt;% select(size))
+residuo &lt;- house_rent$rent-yhat</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -2121,6 +1807,14 @@ significativa. La misma conclusión se puede derivar de <span class="math inline
 errores de la regresión</h4>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVzaWR1byAlPiUgXG4gIGdncGxvdChhZXMoeCA9IC5wcmVkKSkgK1xuICBnZW9tX2hpc3RvZ3JhbShmaWxsID0gXCJibHVlXCIpK1xuICB0aGVtZV9taW5pbWFsKCkrXG4gIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbiA9IFwibm9uZVwiKStcbiAgeGxpbSgtMTAwMDAwLDEwMDAwMClcbmBgYCJ9 -->
+<pre class="r"><code>residuo %&gt;% 
+  ggplot(aes(x = .pred)) +
+  geom_histogram(fill = &quot;blue&quot;)+
+  theme_minimal()+
+  theme(legend.position = &quot;none&quot;)+
+  xlim(-100000,100000)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Se puede observar que hay un ligero sesgo a la derecha, pero
@@ -2131,6 +1825,15 @@ realmente con la gráfica no podemos concluir</p>
 de la regresión</h4>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVzaWR1byAlPiUgXG4gIGdncGxvdChhZXMoeCA9IC5wcmVkKSkrXG4gIGdlb21fYm94cGxvdCgpK1xuICBjb29yZF9mbGlwKCkrXG4gIHRoZW1lX21pbmltYWwoKStcbiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gXCJub25lXCIpK1xuICB4bGltKC0xMDAwMDAsMTAwMDAwKVxuYGBgIn0= -->
+<pre class="r"><code>residuo %&gt;% 
+  ggplot(aes(x = .pred))+
+  geom_boxplot()+
+  coord_flip()+
+  theme_minimal()+
+  theme(legend.position = &quot;none&quot;)+
+  xlim(-100000,100000)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>En esta gráfica es un poco más complicado determinar si hay un sesgo
@@ -2141,6 +1844,15 @@ o incluso si corresponde a una varianza de una distribución normal</p>
 de la regresión</h4>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVzaWR1byAlPiUgXG4gIGdncGxvdChhZXMoc2FtcGxlID0gLnByZWQpKStcbiAgc3RhdF9xcSgpICsgc3RhdF9xcV9saW5lKCkrXG4gIHRoZW1lX21pbmltYWwoKStcbiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gXCJub25lXCIpK1xuICBsYWJzKHggPSBcIlF1YW50aWxlcyBub3JtYWxlcyB0ZcOzcmljb3NcIixcbiAgICAgICB5ID0gXCJRdWFudGlsZXMgbm9ybWFsZXMgZW1ww61yaWNvIChkYXRvcylcIilcbmBgYCJ9 -->
+<pre class="r"><code>residuo %&gt;% 
+  ggplot(aes(sample = .pred))+
+  stat_qq() + stat_qq_line()+
+  theme_minimal()+
+  theme(legend.position = &quot;none&quot;)+
+  labs(x = &quot;Quantiles normales teóricos&quot;,
+       y = &quot;Quantiles normales empírico (datos)&quot;)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Con la gráfica podemos observar que tiene colas más pesadas que una
@@ -2152,6 +1864,9 @@ no se cumpla.</p>
 los errores de la regresión</h4>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuamFycXVlLmJlcmEudGVzdChyZXNpZHVvJC5wcmVkKVxuYGBgIn0= -->
+<pre class="r"><code>jarque.bera.test(residuo$.pred)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Por lo tanto rechazamos que los datos sean normales.</p>
@@ -2159,7 +1874,7 @@ los errores de la regresión</h4>
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OgogIGh0bWxfZG9jdW1lbnQ6CiAgICBkZl9wcmludDogcGFnZWQKICBodG1sX25vdGVib29rOiBkZWZhdWx0CiAgcGRmX2RvY3VtZW50OiBkZWZhdWx0Ci0tLQoKIyMjIDEpIEludHJvZHVjY2nDs24KCkVsIG3DqXRvZG8gZXN0w6FuZGFyIHBhcmEgY29uc3RydWlyIGxvcyBpbnRlcnZhbG9zIGRlIGNvbmZpYW56YSBwYXJhIGxhIHJlZ3Jlc2nDs24gbGluZWFsICh5IGVuIGdlbmVyYWwgcGFyYSBjb25vY2VyIHN1IGRpc3RyaWJ1Y2nDs24pIHJlY2FlIGVuIGVsIHN1cHVlc3RvIGRlIG5vcm1hbGlkYWQ6IAoKLSBMb3MgZXJyb3JlcyBkZSBsYSByZWdyZXNpw7NuIGVzdMOhbiBkaXN0cmlidWlkb3Mgbm9ybWFsCi0gRWwgbsO6bWVybyBkZSBvYnNlcnZhY2lvbmVzIGVzIHN1ZmljaWVudGVtZW50ZSBncmFuZGUsIGVuIGN1eW8gY2FzbywgZWwgZXN0aW1hZG9yIHNlIGRpc3RyaWJ1eWUgbm9ybWFsIChUZW9yZW1hIENlbnRyYWwgZGVsIEzDrW1pdGUpCgpTaSBzZSBjdW1wbGUgZWwgcHJpbWVyIHN1cHVlc3RvLCBlbnRvbmNlcyBlbCBlc3RpbWFkb3IgZGUgJFxiZXRhXzEkIHNlIGRpc3RyaWJ1eWUgbm9ybWFsIGNvbiBsYSBtZWRpYSB5IHZhcmlhbnphIHZpc3RhIGVuIGNsYXNlIC4KCkFsIHJlYWxpemFyIHJlZ3Jlc2nDs24gbGluZWFsIGVzIGltcG9ydGFudGUgZGV0ZXJtaW5hciBlc3RvcyBzdXB1ZXN0b3Mgc2UgY3VtcGxlbiwgcG9yIGxvIHF1ZSBleGlzdGVuIGRpc3RpbnRhcyB0w6ljbmljYXMgcGFyYSBsb2dyYXJsby4gRW4gZXN0ZSBjdXJzbyB2ZXJlbW9zIGRvcyB0aXBvczoKCmEpIE3DqXRvZG9zIEdyw6FmaWNvcwpiKSBQcnVlYmFzIGRlIEhpcMOzdGVzaXMKCiMjIyAyKSBHZW5lcmFjacOzbiBkZSBkYXRvczogCgpQcmV2aW8gYSBjb21lbnphciBjb24gbG9zIG3DqXRvZG9zIGdyw6FmaWNvcyB5IHBydWViYXMgZGUgaGlww7N0ZXNpcyBzZSBnZW5lcmFuIGRhdG9zIHByb3ZlbmllbnRlcyBkZSBkaXN0aW50YXMgZGlzdHJpYnVjaW9uZXM6CgpgYGB7cn0KIyBMYSBmdW5jacOzbiBybm9ybSBnZW5lcmEgbXVlc3RyYXMgYWxlYXRvcmlhcyBub3JtYWxlcy4gVGllbmUgY29tbyBwYXLDoW1ldHJvczogCiMgbj1uw7ptZXJvIGRlIG11ZXN0cmFzLCAKIyBtZWFuID0gbWVkaWEgZGUgbGEgZGlzdHJpYnVjaW9uIG5vcm1hbCAKIyBzZCA9IGRlc3ZpYWNpb24gZXN0w6FuZGFyIGRlIGxhIGRpc3RyaWJ1Y2nDs24gbm9ybWFsCgojIHJ0IGdlbmVyYSBuw7ptZXJvcyBhbGVhdG9yaW9zIHF1ZSBwcm92aWVuZW4gZGUgdW5hIGRpc3RyaWJ1Y2nDs24gdC1zdHVkZW50CgojIHJleHAgZ2VuZXJhIG7Dum1lcm8gYWxlYXRvcmlvcyBxdWUgcHJvdmllbmVuIGRlIGRpc3RyaWJ1Y2nDs24gZXhwb25lbmNpYWwKCmxpYnJhcnkodGlkeXZlcnNlKQpzZXQuc2VlZCg1MzIpCgpkYXRvcyA8LSAKICBkYXRhLmZyYW1lKAogIG5vcm1hbCA9IHJub3JtKG4gPSAxMDAwLCBtZWFuID0gMCwgc2QgPSAxKSwKICB0c3R1ZGVudCA9IHJ0KG4gPSAxMDAwLCBkZiA9IDEwKSwKICBleHBvbmVuY2lhbCA9IHJleHAobiA9IDEwMDAsIHJhdGUgPSAwLjUpCikKCmRhdG9zICU+JSAKICBnYXRoZXIodmFyaWFibGUsIHZhbG9yKSAlPiUgCiAgZ2dwbG90KGFlcyh4ID12YWxvciwgY29sb3IgPSB2YXJpYWJsZSkpKwogIGdlb21fZGVuc2l0eSgpKwogIGZhY2V0X3dyYXAofnZhcmlhYmxlKSsKICB0aGVtZV9taW5pbWFsKCkrCiAgdGhlbWUoCiAgICBsZWdlbmQucG9zaXRpb24gPSAibm9uZSIKICApKwogIHhsaW0oLTUsIDUpCmBgYAoKQW50ZXMgZGUgY29tZW56YXIsIHBvZGVtb3Mgb2JzZXJ2YXIgcXVlIGxhIGRpc3RyaWJ1Y2nDs24gTm9ybWFsIHkgbGEgdC1zdHVkZW50IHNlIGFzZW1lamFuLCBsYXMgZG9zIHNvbiBkaXN0cmlidWNpb25lcyBzaW3DqXRyaWNhcywgcGVybyBsYSBkaXN0cmlidWNpw7NuIHQtc3R1ZGVudCB0aWVuZSBtYXlvciB2YXJpYW56YTogCgpgYGB7cn0KdmFyKGRhdG9zJG5vcm1hbCkKdmFyKGRhdG9zJHRzdHVkZW50KQpgYGAKCkEgc2ltcGxlIHZpc3RhIGEgdmVjZXMgc2UgdnVlbHZlIHVuIHBvY28gY29tcGxpY2FkbyBwb2RlciBkZXRlcm1pbmFyIHNvbG8gY29uIGxhIGdyw6FmaWNhIHF1ZSBkaXN0cmlidWNpw7NuIGVzIG5vcm1hbCB5IGN1YWwgbm8uIAoKIyMjIDMpIE3DqXRvZG9zIGdyw6FmaWNvcwoKTG9zIG3DqXRvZG9zIGdyw6FmaWNvcyB0aWVuZW4gY2llcnRhcyB2ZW50YWphcywgZW50cmUgZWxsYXMgcXVlIGNvbm9jZW1vcyBsYSBkaXN0cmlidWNpw7NuIGRlIGxvcyBkYXRvcywgbG9zIHZhbG9yZXMgcXVlIHRvbWFuLCBsYSBmcmVjdWVuY2lhIGRlIGNhZGEgcmFuZ28gZGUgdmFsb3JlcywgZXRjLiBFbnRyZSBzdXMgZGVzdmVudGFqYXMgZXMgcXVlIGxhIGRlY2lzacOzbiBkZSBkZXRlcm1pbmFyIG5vcm1hbGlkYWQgc2UgZGVqYSBhIGxhIHBlcnNvbmEgcXVlIGxvIGVzdMOpIGFuYWxpemFuZG8uICAKCiMjIyMgMy4xKSBIaXN0b2dyYW1hIAoKRWwgaGlzdG9ncmFtYSByZXByZXNlbnRhIGxhIGluZm9ybWFjacOzbiBlbiBmb3JtYSBkZSBiYXJyYXMsIGRvbmRlIGxhIHN1cGVyZmljaWUgZGUgY2FkYSBiYXJyYSBpbXBsaWNhIGxhIGZyZWN1ZW5jaWEgZGUgY2FkYSB2YWxvciByZXByZXNlbnRhZG8uIEFsIGlndWFsIHF1ZSBsYSBncsOhZmljYSBkZSBsYSBzZWNjacOzbiAyLCBlcyBmYWNpbCBpZGVudGlmaWNhciBzaSB0aWVuZSBzZXNnbyBsYSBkaXN0cmlidWNpw7NuLCBwZXJvIHNlIHZ1ZWx2ZSBjb21wbGljYWRvIHNhYmVyIHNpIHRpZW5lIGxhIHZhcmlhbnphIGVzIGVxdWl2YWxlbnRlIGEgbGEgZGUgdW5hIGRpc3RyaWJ1Y2nDs24gbm9ybWFsLgoKYGBge3J9CmRhdG9zICU+JSAKICBnYXRoZXIodmFyaWFibGUsIHZhbG9yKSAlPiUgCiAgZ2dwbG90KGFlcyh4ID0gdmFsb3IsIGZpbGwgPSB2YXJpYWJsZSkpKwogIGdlb21faGlzdG9ncmFtKCkrCiAgZmFjZXRfd3JhcCh+dmFyaWFibGUpKwogIHRoZW1lX21pbmltYWwoKSsKICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSAibm9uZSIpKwogIHhsaW0oLTUsNSkKYGBgCgojIyMjIDMuMiBCb3hwbG90CgpMb3MgQm94cGxvdCBub3MgcGVybWl0ZSBjb25vY2VyIGxhcyBwcmluY2lwYWxlcyBlc3RhZMOtc3RpY2FzIGRlIGxvcyBkYXRvczogbcOtbmltbywgcHJpbWVyIGN1YXJ0aWwsIG1lZGlhbmEsIHRlcmNlciBjdWFydGlsLCBtw6F4aW1vLCBkYXRvcyBhdMOtcGljb3MuIENvbiBlc3RvcyBkYXRvcyBwb2RlbW9zIGRldGVybWluYXIgc2kgbGEgZGlzdHJpYnVjacOzbiBkZSBsb3MgZGF0b3MgZXMgc2ltw6l0cmljYSB5IHRhbWJpZW4gZGFybm9zIHVuYSBpZGVhIGRlIHF1ZSB0YW50byB2YXJpYW4uIFBvciBlamVtcGxvLCBlbiBsYSBzaWd1aWVudGUgZ3LDoWZpY2EgcG9kZW1vcyBub3RhcjoKCi0gTG9zIGRhdG9zIGV4cG9uZW5jaWFsZXMgbm8gcHJvdmllbmVuIGRlIHVuYSBkaXN0cmlidWNpw7NuIHNpbcOpdHJpY2EKLSBFcyBkaWZpY2lsIGRldGVybWluYXIgc2kgbGEgdmFyaWFuemEgZXMgYWRlY3VhZGEgcGFyYSB1bmEgbm9ybWFsLCBvIGJpZW4gdGllbmUgY29sYXMgbcOhcyBwZXNhZGFzIGNvbW8gbGEgdC1zdHVkZW50CgpgYGB7cn0KZGF0b3MgJT4lIAogIGdhdGhlcih2YXJpYWJsZSwgdmFsb3IpICU+JSAKICBnZ3Bsb3QoYWVzKHggPSB2YWxvciwgY29sb3IgPSB2YXJpYWJsZSkpKwogIGdlb21fYm94cGxvdCgpKwogIGZhY2V0X3dyYXAofnZhcmlhYmxlKSsKICBjb29yZF9mbGlwKCkrCiAgdGhlbWVfbWluaW1hbCgpKwogIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbiA9ICJub25lIikrCiAgeGxpbSgtNSw1KQpgYGAKUG9yIGVzdG8sIGVsIGJveHBsb3Qgbm9zIHBlcm1pdGUgZGlzZXJuaXIgc2kgbGEgZGlzdHJpYnVjacOzbiBlc3TDoSBzZXNnYWRhLCBwZXJvIG5vIGVzIHNlbmNpbGxvIGRldGVybWluYXIgc2kgbGEgdmFyaWFuemEgY29ycmVzcG9uZGUgYSB1bmEgZGlzdHJpYnVjacOzbiBub3JtYWwuCgojIyMjIDMuMyBxcXBsb3QgKHF1YW50aWxlLXF1YW50aWxlIHBsb3QpCgpMYSBpbnR1Y2lvbiBkZXRyw6FzIGRlbCBxcXBsb3QgZXMgcXVlIGxvcyBjdWFudGlsZXMgZGUgbnVlc3Ryb3MgZGF0b3MgKHF1YW50aWwgZW1ww61yaWNvKSBkZWJlbiBlc3RhciAiZW4gbGluZWEiIHBlcmZlY3RhIGNvbiBsb3MgcXVhbnRpbGVzIHRlw7NyaWNvcyBkZSB1bmEgZGlzdHJpYnVjacOzbiBub3JtYWwuIFBhcmEgZmFjaWxpdGFyIGVuIGVudGVuZGltaWVudG8sIHZlYW1vcyBsYXMgc2lndWllbnRlcyBncsOhZmljYXM6IAoKYGBge3J9CmRhdG9zICU+JSAKICBnYXRoZXIodmFyaWFibGUsIHZhbG9yKSAlPiUgCiAgZ2dwbG90KGFlcyhzYW1wbGUgPSB2YWxvciwgY29sb3IgPSB2YXJpYWJsZSkpKwogIHN0YXRfcXEoKSArIHN0YXRfcXFfbGluZSgpKwogIGZhY2V0X3dyYXAofnZhcmlhYmxlKSsKICB0aGVtZV9taW5pbWFsKCkrCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gIm5vbmUiKSsKICBsYWJzKHggPSAiUXVhbnRpbGVzIG5vcm1hbGVzIHRlw7NyaWNvcyIsCiAgICAgICB5ID0gIlF1YW50aWxlcyBub3JtYWxlcyBlbXDDrXJpY28gKGRhdG9zKSIpCmBgYApFbiBsYSBncsOhZmljYSBhcGFyZWNlIHVuYSBsw61uZWEgeSB2YXJpb3MgcHVudG9zLiBDYWRhIHVubyBkZSBsb3MgcHVudG9zIGNvcnJlc3BvbmRlIGEgdW4gZGF0by4gwr9Dw7NtbyBzZSBsZWUgZXN0YSBncsOhZmljYT8gQWdhcnJlbW9zIHVuIHB1bnRvOgoKYGBge3J9CmRhdG9zICU+JSAKICBnYXRoZXIodmFyaWFibGUsIHZhbG9yKSAlPiUgZmlsdGVyKHZhcmlhYmxlID09ICJleHBvbmVuY2lhbCIpICU+JSAKICBnZ3Bsb3QoYWVzKHNhbXBsZSA9IHZhbG9yLCBjb2xvciA9IHZhcmlhYmxlKSkrCiAgc3RhdF9xcSgpICsgc3RhdF9xcV9saW5lKCkrCiAgZmFjZXRfd3JhcCh+dmFyaWFibGUpKwogIHRoZW1lX21pbmltYWwoKSsKICBnZW9tX2hsaW5lKHlpbnRlcmNlcHQgPSAwLCBjb2xvciA9ICJjeWFuIikrCiAgZ2VvbV92bGluZSh4aW50ZXJjZXB0ID0gLTMuMjgsIGNvbG9yID0gImN5YW4iKSsKICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSAibm9uZSIpKwogIGxhYnMoeCA9ICJRdWFudGlsZXMgbm9ybWFsZXMgdGXDs3JpY29zIiwKICAgICAgIHkgPSAiUXVhbnRpbGVzIG5vcm1hbGVzIGVtcMOtcmljbyAoZGF0b3MpIikKYGBgCgpFbCBkYXRvIHNlw7FhbGFkbyBlcyBlbCB2YWxvciBlbXDDrXJpY28gMC4wMDE2LiBTZSBkZWJlIGVuY29udHJhciBlbiBxdWUgcG9zaWNpw7NuIGVzdGFyw61hIHNpIG9yZGVuYXJhbW9zIGxvcyBkYXRvcyBkZSBtZW5vciBhIG1heW9yLCBlbiBlc3RlIGNhc28gZXMgZWwgbcOtbmltbywgZW50b25jZXMgZXMgZWwgZGF0byAxIGRlIDEwMDAuIEFob3JhLCBoYXkgcXVlIGVuY29udHJhciBhIHF1ZSBjdWFudGlsIGNvcnJlc3BvbmRlIGxhIHByb2JhYmlsaWRhZCAxLzEwMDAgZGUgdW5hIGRpc3RyaWJ1Y2nDs24gbm9ybWFsOgoKYGBge3J9CiMgZWwgcHJpbWVyIGRhdG8gZGUgbG9zIGRhdG9zIGV4cG9uZW5jaWFsZXMsIHF1ZSBxdWFudGlsIHJlcHJlc2VudGEgCiMgZGUgZGF0b3Mgbm9ybWFsZXMKcW5vcm0oMS8xMDAwKSAjIC0zLjA5CgojIGNvb3JkZW5hZGE6ICgtMy4wOSwgMC4wMDE2KQpgYGAKCkRlIGVzdGEgbWFuZXJhLCBwb2RlbW9zIGdlbmVyYXIgbGEgY29vcmRlbmFkYSAoLTMuMDksIDAuMDAxNiksIGVsIHByaW1lciBkYXRvIGNvcnJlc3BvbmRlIGFsIGN1YW50aWwgZGUgbGEgbm9ybWFsIHkgZWwgc2VndW5kbyBhbCBkYXRvIGVtcMOtcmljby4gVmVhbW9zIG90cm8gZWplbXBsbzogCgoKVG9tZW1vcyB1biB2YWxvciBkaXN0aW50byBhbCBtw61uaW1vLCBwb3IgZWplbXBsbyBlamVtcGxvIGVsIHZhbG9yIDAuNDgsIHF1ZSBlcyBlbCBuw7ptZXJvIDIyNSBkZSAxMDAwIG9yZGVuYWRvIGRlIG1lbm9yIGEgbWF5b3I6CgpgYGB7cn0KZGF0b3MgJT4lIAogIGdhdGhlcih2YXJpYWJsZSwgdmFsb3IpICU+JSBmaWx0ZXIodmFyaWFibGUgPT0gImV4cG9uZW5jaWFsIikgJT4lIAogIGdncGxvdChhZXMoc2FtcGxlID0gdmFsb3IsIGNvbG9yID0gdmFyaWFibGUpKSsKICBzdGF0X3FxKCkgKyBzdGF0X3FxX2xpbmUoKSsKICBmYWNldF93cmFwKH52YXJpYWJsZSkrCiAgdGhlbWVfbWluaW1hbCgpKwogIGdlb21faGxpbmUoeWludGVyY2VwdCA9IDAuNDgpKwogIGdlb21fdmxpbmUoeGludGVyY2VwdCA9IC0wLjc2KSsKICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSAibm9uZSIpKwogIGxhYnMoeCA9ICJRdWFudGlsZXMgbm9ybWFsZXMgdGXDs3JpY29zIiwKICAgICAgIHkgPSAiUXVhbnRpbGVzIG5vcm1hbGVzIGVtcMOtcmljbyAoZGF0b3MpIikKYGBgCgpgYGB7cn0KcW5vcm0oMjI1LzEwMDApICMgLTAuNzYKIyBjb29yZGVuYWRhOiAoMC40OCwgLTAuNzYpCmBgYAoKVmVtb3MgcXVlIHJlcHJlc2VudGEgZWwgY3VhbnRpbCAyMjUvMTAwMCwgcXVlIHJlcHJlc2VudGEgZWwgcXVhbnRpbCB0ZcOzcmljbyBub3JtYWwgZGUgLTAuMDQuCgpSZWNhcGl0dWxhbmRvLCBjYWRhIHB1bnRvIGVuIGxhIGdyw6FmaWNhIHJlcHJlc2VudGEgdW5hIG9ic2VydmFjacOzbiB5IGxhIGzDrW5lYSBlbiBjYWRhIGZhY2V0IHJlcHJlc2VudGEgY29tbyBzZSBjb21wb3J0YXLDrWFuIGxhcyBvYnNlcnZhY2lvbmVzIGRlIHVuYSBkaXN0cmlidWNpw7NuIG5vcm1hbC4gU2kgbG9zIHB1bnRvcyBzZSBhanVzdGFuIGEgbGEgbGluZWEsIHF1aWVyZSBkZWNpciBxdWUgc2UgYXNlbWVqYSBhIHVuYSBub3JtYWwuIAoKLSBFbiBlbCBjYXNvIGRlIGRhdG9zIG5vcm1hbGVzIChsw61uZWEgdmVyZGUpLCBsb3MgcHVudG9zIGNvaW5jaWRlbiBjYXNpIGFsIDEwMCUgY29uIGxhIGzDrW5lYSwgbG8gcXVlIG5vcyBsbGV2YSBhIHBlbnNhciBxdWUgZWZlY3RpdmFtZW50ZSBzZSBkaXN0cmlidXllbiBub3JtYWwKCi0gRW4gZWwgY2FzbyBkZSBsb3MgcHVudG9zIGF6dWxlcywgdmVtb3MgcXVlIGVuIGNlbnRybyBzZSBwYXJlY2VuIGxvcyBkYXRvcyBhIGxhIGzDrW5lYSwgcGVybyBlbiB1bmEgZGUgbGFzIGNvbGFzIG5vIGNvaW5jaWRlbi4gwr9RdcOpIGltcGxpY2Fyw61hPzoKCmBgYHtyIGVjaG8gPSBGQUxTRSwgcmVzdWx0cyA9ICdhc2lzJ30KaW1hZ2UgPSAiaHR0cHM6Ly9naXRodWIuY29tL3NhdnJnZy9jbGFzc19JVEFNX21ldG9kb3MvYmxvYi9tYWluL25vdGFzX3IvaW1ncy8wNC1xcXBsb3QxLnBuZz9yYXc9dHJ1ZSIKY2F0KHBhc3RlMCgnPGNlbnRlcj48aW1nIHNyYz0iJywgaW1hZ2UsICAnIiB3aWR0aD0iNDAwIj48L2NlbnRlcj4nKSkKYGBgCgpgYGB7ciBlY2hvID0gRkFMU0UsIHJlc3VsdHMgPSAnYXNpcyd9CmltYWdlID0gImh0dHBzOi8vZ2l0aHViLmNvbS9zYXZyZ2cvY2xhc3NfSVRBTV9tZXRvZG9zL2Jsb2IvbWFpbi9ub3Rhc19yL2ltZ3MvMDQtcXFwbG90Mi5wbmc/cmF3PXRydWUiCmNhdChwYXN0ZTAoJzxjZW50ZXI+PGltZyBzcmM9IicsIGltYWdlLCAgJyIgd2lkdGg9IjQwMCI+PC9jZW50ZXI+JykpCmBgYAoKUG9yIGVzbywgZGUgbG9zIG3DqXRvZG9zIGdyw6FmaWNvcywgZWwgcXFwbG90IGVzIGRlIGxvcyBxdWUgbcOhcyB1dGlsaWRhZCBub3MgZ2VuZXJhbiwgeWEgcXVlIG5vIHNvbG8gbm9zIHBlcm1pdGUgZGV0ZXJtaW5hciBzaSBsb3MgZGF0b3MgdGllbmVuIHNlc2dvIDAsIHNpIG5vIGFkZW3DoXMsIHF1ZSBsYSB2YXJpYW56YSBlcyBlcXVpdmFsZW50ZSBhIGxhIHZhcmlhbnphIGRlIHVuYSBkaXN0cmlidWNpw7NuIG5vcm1hbC4KCiMjIyA0KSBQcnVlYmFzIGRlIEhpcMOzdGVzaXMKCiMjIyMgNC4xKSBQcnVlYmEgZGUgaGlww7N0ZXNpcyBKYXJxdWUtQmVyYQoKTG9zIG3DqXRvZG9zIGFudGVyaW9yZXMgc29uIGdyw6FmaWNvcywgcGVybyDCv3F1w6kgc3VjZWRlIHNpIHF1ZXJlbW9zIHVuYSBtYW5lcmEgbcOhcyBlc3RhZMOtc3RpY2EgcGFyYSBsbGVnYXIgYSB1bmEgY29uY2x1c2nDs24/IFI6IGFwbGljYW1vcyB1bmEgcHJ1ZWJhIGRlIGhpcMOzdGVzaXMKCkxhIHBydWViYSBkZSBoaXDDs3Rlc2lzIHF1ZSBhcGxpY2Ftb3MgcmVjaWJlIGVsIG5vbWJyZSBkZSBKYXJxdWUtQmVyYSwgbGEgY3VhbCB0aWVuZSBjb21vICRIXzA6JCBMb3MgZGF0b3Mgc2UgZGlzdHJpYnV5ZW4gbm9ybWFsIHZzICRIXzE6JCBMb3MgZGF0b3Mgbm8gc2UgZGlzdHJpYnV5ZW4gbm9ybWFsLiBFbCBlc3RhZMOtc3RpY28gbG8gbGxhbWFyZW1vcyBKQjogCgokJCBKQiA9IFxmcmFje259ezZ9KCBTX2teMiArXGZyYWN7MX17NH0oSy0zKV4yKSAkJApEb25kZSBlbiBlc3RlIGNhc28gbGxhbWFyZW1vcyAkU19rJCBhbCBjb2VmaWNpZW50ZSBkZSBhc2ltZXRyw61hIHkgJEskIGEgbGEgY3VydG9zaXMuIAoKJCQgU19rID0gXGZyYWN7RShYLVxtdSleMn17XHNpZ21hXjN9JCQgCiQkIEsgPSBcZnJhY3tFKFgtXG11KV40fXsoRShYLVxtdSleMileMn0kJCAKCkVsIGVzdGFkw61zdGljbyBKQiBzZSBkaXN0cmlidXllIGRlIGNvbW8gdW5hICRKQiBcc2ltIFxjaGleMl97Mn0kIHkgc2llbXByZSByZWNoYXphbW9zIHBhcmEgdmFsb3JlcyBhbHRvcyBkZSBsYSBkaXN0cmlidWNpw7NuLiAKCiMjIyMjIDQuMS4xKSBDw6FsY3VsbyBjb24gZsOzcm11bGFzOgpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkobW9tZW50cykKbGlicmFyeSh0c2VyaWVzKQoKIyBKYXJxdWUtQmVyYSAKbnJvd3MgPSBucm93KGRhdG9zKQoKIyBub3JtYWwKc2tld19ub3JtYWwgPSAoc3VtKChkYXRvcyRub3JtYWwtbWVhbihkYXRvcyRub3JtYWwpKSoqMykvbnJvd3MpIC8gKHZhcihkYXRvcyRub3JtYWwpKihucm93cy0xKS9ucm93cykqKigzLzIpCgprdXJ0X25vcm1hbCA9ICAoc3VtKChkYXRvcyRub3JtYWwtbWVhbihkYXRvcyRub3JtYWwpKSoqNCkvbnJvd3MpIC8gKHZhcihkYXRvcyRub3JtYWwpKihucm93cy0xKS9ucm93cykqKig0LzIpCgpKQl9ub3JtYWwgPSBucm93cyooKHNrZXdfbm9ybWFsXjIpLzYgKyAoa3VydF9ub3JtYWwtMykqKGt1cnRfbm9ybWFsLTMpLygyNCkpCnBjaGlzcShKQl9ub3JtYWwsIGxvd2VyLnRhaWwgPSBGLCBkZiA9IDIpCiMgdmFsb3JwID0gMC45OSAtPiBObyBSZWNoYXphbW9zIEgwCgojIHQtc3R1ZGVudApza2V3X3QgPSAoc3VtKChkYXRvcyR0c3R1ZGVudC1tZWFuKGRhdG9zJHRzdHVkZW50KSkqKjMpL25yb3dzKSAvICh2YXIoZGF0b3MkdHN0dWRlbnQpKihucm93cy0xKS9ucm93cykqKigzLzIpCgprdXJ0X3QgPSAgKHN1bSgoZGF0b3MkdHN0dWRlbnQtbWVhbihkYXRvcyR0c3R1ZGVudCkpKio0KS9ucm93cykgLyAodmFyKGRhdG9zJHRzdHVkZW50KSoobnJvd3MtMSkvbnJvd3MpKiooNC8yKQoKSkJfdCA9IG5yb3dzKigoc2tld190XjIpLzYgKyAoa3VydF90LTMpKihrdXJ0X3QtMykvKDI0KSkKCnBjaGlzcShKQl90LCBsb3dlci50YWlsID0gRiwgZGYgPSAyKQojIHZhbG9ycCA9IDAuMDAwNyAtPiBSZWNoYXphbW9zIEgwCgojIGV4cG9uZW5jaWFsCnNrZXdfZXhwID0gc3VtKChkYXRvcyRleHBvbmVuY2lhbC1tZWFuKGRhdG9zJGV4cG9uZW5jaWFsKSkqKjMpL25yb3dzIC8gKHZhcihkYXRvcyRleHBvbmVuY2lhbCkqKG5yb3dzLTEpL25yb3dzKSoqKDMvMikKCmt1cnRfZXhwID0gIChzdW0oKGRhdG9zJGV4cG9uZW5jaWFsLW1lYW4oZGF0b3MkZXhwb25lbmNpYWwpKSoqNCkvbnJvd3MpIC8gKHZhcihkYXRvcyRleHBvbmVuY2lhbCkqKG5yb3dzLTEpL25yb3dzKSoqKDQvMikKCkpCX2V4cCA9IG5yb3dzKigoc2tld19leHBeMikvNiArIChrdXJ0X2V4cC0zKSooa3VydF9leHAtMykvKDI0KSkgCnBjaGlzcShKQl9leHAsIGxvd2VyLnRhaWwgPSBGLCBkZiA9IDIpCgojIHZhbG9ycCA9IDAgLT4gUmVjaGF6YW1vcyBIMApgYGAKCgojIyMjIyA0LjEuMikgQ8OhbGN1bG8gY29uIHBhcXVldGVzOiAKYGBge3J9CiMgZm9ybXVsYXMgcGFyYSBzZXNnbyB5IGt1cnRvc2lzCnNrZXduZXNzKGRhdG9zJG5vcm1hbCkKa3VydG9zaXMoZGF0b3Mkbm9ybWFsKQpgYGAKCkphcnF1ZSBiZXJhIGNvbiBmdW5jacOzbgpgYGB7cn0KIyBjb2luY2lkZW4gY29uIHZhbG9yZXMgZGUgYXJyaWJhCmphcnF1ZS5iZXJhLnRlc3QoZGF0b3Mkbm9ybWFsKQpqYXJxdWUuYmVyYS50ZXN0KGRhdG9zJHRzdHVkZW50KQpqYXJxdWUuYmVyYS50ZXN0KGRhdG9zJGV4cG9uZW5jaWFsKQpgYGAKCiMjIyA1KSBFamVyY2ljaW86IApTZSB1c2Fyw6FuIGxvcyBkYXRvcyBkZSBsZWN0dXJhcyBhbnRlcmlvcmVzIGRlIGhvdXNlX3JlbnQuIEVsIG1vZGVsbyBhIGFqdXN0YXIgZXM6ICQkIHJlbnQgXHNpbSBzaXplICQkLiBFcyBkZWNpciBub3MgZ3VzdGFyw61hIHBvZGVyIGFqdXN0YXIgZWwgcHJlY2lvIHNvbGFtZW50ZSBjb24gZWwgdGFtYcOxbyBkZSBsYSBjYXNhLiAKCgojIyMjIDUuMSkgQWp1c3RhIGxhIHJlZ3Jlc2nDs24gbGluZWFsIHkgZGV0ZXJtaW5hIHNpIGxhICRcYmV0YV8wJCwgJFxiZXRhXzEkIHkgJFJeMiQgc29uIHNpZ25pZmljYXRpdmFzOgoKYGBge3J9CmBgYAoKQXVucXVlICRSXjIgPSAwLjE3JCwgdmVtb3MgcXVlIGVsIHZhbG9ycCBlcyBjZXJjYW5vIGEgMCwgcG9yIGxvIHF1ZSBwb2RlbW9zIHJlY2hhemFyICRIXzA6IFBeMj0gMCQuIEVudG9uY2VzIHNpIGVzIHNpZ25pZmljYXRpdmEuIExhIG1pc21hIGNvbmNsdXNpw7NuIHNlIHB1ZWRlIGRlcml2YXIgZGUgJFxiZXRhXzAkIHkgJFxiZXRhXzEkLgoKTG9zIHJlc2lkdW9zIGxvcyBwb2RlbW9zIGNhbGN1bGFyOgoKYGBge3J9CmBgYAoKCiMjIyMgNS4yKSBSZWFsaXphIHVuIGhpc3RvZ3JhbWEgcGFyYSBtb3N0cmFyIGxhIGRpc3RyaWJ1Y2nDs24gZGUgbG9zIGVycm9yZXMgZGUgbGEgcmVncmVzacOzbgoKYGBge3J9CmBgYApTZSBwdWVkZSBvYnNlcnZhciBxdWUgaGF5IHVuIGxpZ2VybyBzZXNnbyBhIGxhIGRlcmVjaGEsIHBlcm8gcmVhbG1lbnRlIGNvbiBsYSBncsOhZmljYSBubyBwb2RlbW9zIGNvbmNsdWlyCgojIyMjIDUuMykgUmVhbGl6YSB1biBib3hwbG90IHBhcmEgbW9zdHJhciBsYSBkaXN0cmlidWNpw7NuIGRlIGxvcyBlcnJvcmVzIGRlIGxhIHJlZ3Jlc2nDs24KCmBgYHtyfQpgYGAKCkVuIGVzdGEgZ3LDoWZpY2EgZXMgdW4gcG9jbyBtw6FzIGNvbXBsaWNhZG8gZGV0ZXJtaW5hciBzaSBoYXkgdW4gc2VzZ28gbyBpbmNsdXNvIHNpIGNvcnJlc3BvbmRlIGEgdW5hIHZhcmlhbnphIGRlIHVuYSBkaXN0cmlidWNpw7NuIG5vcm1hbAoKIyMjIyA1LjQpIFJlYWxpemEgdW4gcXFwbG90IHBhcmEgbW9zdHJhciBsYSBkaXN0cmlidWNpw7NuIGRlIGxvcyBlcnJvcmVzIGRlIGxhIHJlZ3Jlc2nDs24KYGBge3J9CmBgYApDb24gbGEgZ3LDoWZpY2EgcG9kZW1vcyBvYnNlcnZhciBxdWUgdGllbmUgY29sYXMgbcOhcyBwZXNhZGFzIHF1ZSB1bmEgZGlzdHJpYnVjacOzbiBub3JtYWwsIHBvciBsbyBxdWUgcHJvYmFibGVtZW50ZSBlbCBzdXB1ZXN0byBkZSBub3JtYWxpZGFkIG5vIHNlIGN1bXBsYS4gCgojIyMjIDUuNSkgUmVhbGl6YSB1bmEgcHJ1ZWJhIEphcnF1ZS1CZXJhIHBhcmEgbW9zdHJhciBsYSBkaXN0cmlidWNpw7NuIGRlIGxvcyBlcnJvcmVzIGRlIGxhIHJlZ3Jlc2nDs24KYGBge3J9CmBgYApQb3IgbG8gdGFudG8gcmVjaGF6YW1vcyBxdWUgbG9zIGRhdG9zIHNlYW4gbm9ybWFsZXMuIAoKCgoKCgoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OgogIGh0bWxfZG9jdW1lbnQ6CiAgICBkZl9wcmludDogcGFnZWQKICBodG1sX25vdGVib29rOiBkZWZhdWx0CiAgcGRmX2RvY3VtZW50OiBkZWZhdWx0Ci0tLQoKIyMjIDUpIEVqZXJjaWNpbzogClNlIHVzYXLDoW4gbG9zIGRhdG9zIGRlIGxlY3R1cmFzIGFudGVyaW9yZXMgZGUgaG91c2VfcmVudC4gRWwgbW9kZWxvIGEgYWp1c3RhciBlczogJCQgcmVudCBcc2ltIHNpemUgJCQuIEVzIGRlY2lyIG5vcyBndXN0YXLDrWEgcG9kZXIgYWp1c3RhciBlbCBwcmVjaW8gc29sYW1lbnRlIGNvbiBlbCB0YW1hw7FvIGRlIGxhIGNhc2EuIAoKCiMjIyMgNS4xKSBBanVzdGEgbGEgcmVncmVzacOzbiBsaW5lYWwgeSBkZXRlcm1pbmEgc2kgbGEgJFxiZXRhXzAkLCAkXGJldGFfMSQgeSAkUl4yJCBzb24gc2lnbmlmaWNhdGl2YXM6CgpgYGB7cn0KbGlicmFyeSh0aWR5bW9kZWxzKQpsaWJyYXJ5KHJlYWRyKQpsaWJyYXJ5KG1vbWVudHMpCmxpYnJhcnkodHNlcmllcykKbGlicmFyeSh0aWR5dmVyc2UpCgpob3VzZV9yZW50IDwtIAogIHJlYWRfY3N2KCJob3VzZV9yZW50LmNzdiIpICU+JSAKICBzZWxlY3QoUmVudCwgU2l6ZSkgJT4lIAogIHNldF9uYW1lcyhjKCJyZW50IiwgInNpemUiKSkKCmxtX2ZpdCA8LSAKICBsaW5lYXJfcmVnKCkgJT4lIAogIGZpdChyZW50fnNpemUsIGRhdGEgPSBob3VzZV9yZW50KQoKdGlkeShsbV9maXQpCmdsYW5jZShsbV9maXQpCmBgYAoKQXVucXVlICRSXjIgPSAwLjE3JCwgdmVtb3MgcXVlIGVsIHZhbG9ycCBlcyBjZXJjYW5vIGEgMCwgcG9yIGxvIHF1ZSBwb2RlbW9zIHJlY2hhemFyICRIXzA6IFBeMj0gMCQuIEVudG9uY2VzIHNpIGVzIHNpZ25pZmljYXRpdmEuIExhIG1pc21hIGNvbmNsdXNpw7NuIHNlIHB1ZWRlIGRlcml2YXIgZGUgJFxiZXRhXzAkIHkgJFxiZXRhXzEkLgoKTG9zIHJlc2lkdW9zIGxvcyBwb2RlbW9zIGNhbGN1bGFyOgoKYGBge3J9CnloYXQgPC0gcHJlZGljdChsbV9maXQsIG5ld19kYXRhID0gaG91c2VfcmVudCAlPiUgc2VsZWN0KHNpemUpKQpyZXNpZHVvIDwtIGhvdXNlX3JlbnQkcmVudC15aGF0CmBgYAoKCiMjIyMgNS4yKSBSZWFsaXphIHVuIGhpc3RvZ3JhbWEgcGFyYSBtb3N0cmFyIGxhIGRpc3RyaWJ1Y2nDs24gZGUgbG9zIGVycm9yZXMgZGUgbGEgcmVncmVzacOzbgoKYGBge3J9CnJlc2lkdW8gJT4lIAogIGdncGxvdChhZXMoeCA9IC5wcmVkKSkgKwogIGdlb21faGlzdG9ncmFtKGZpbGwgPSAiYmx1ZSIpKwogIHRoZW1lX21pbmltYWwoKSsKICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSAibm9uZSIpKwogIHhsaW0oLTEwMDAwMCwxMDAwMDApCmBgYApTZSBwdWVkZSBvYnNlcnZhciBxdWUgaGF5IHVuIGxpZ2VybyBzZXNnbyBhIGxhIGRlcmVjaGEsIHBlcm8gcmVhbG1lbnRlIGNvbiBsYSBncsOhZmljYSBubyBwb2RlbW9zIGNvbmNsdWlyCgojIyMjIDUuMykgUmVhbGl6YSB1biBib3hwbG90IHBhcmEgbW9zdHJhciBsYSBkaXN0cmlidWNpw7NuIGRlIGxvcyBlcnJvcmVzIGRlIGxhIHJlZ3Jlc2nDs24KCmBgYHtyfQpyZXNpZHVvICU+JSAKICBnZ3Bsb3QoYWVzKHggPSAucHJlZCkpKwogIGdlb21fYm94cGxvdCgpKwogIGNvb3JkX2ZsaXAoKSsKICB0aGVtZV9taW5pbWFsKCkrCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gIm5vbmUiKSsKICB4bGltKC0xMDAwMDAsMTAwMDAwKQpgYGAKCkVuIGVzdGEgZ3LDoWZpY2EgZXMgdW4gcG9jbyBtw6FzIGNvbXBsaWNhZG8gZGV0ZXJtaW5hciBzaSBoYXkgdW4gc2VzZ28gbyBpbmNsdXNvIHNpIGNvcnJlc3BvbmRlIGEgdW5hIHZhcmlhbnphIGRlIHVuYSBkaXN0cmlidWNpw7NuIG5vcm1hbAoKIyMjIyA1LjQpIFJlYWxpemEgdW4gcXFwbG90IHBhcmEgbW9zdHJhciBsYSBkaXN0cmlidWNpw7NuIGRlIGxvcyBlcnJvcmVzIGRlIGxhIHJlZ3Jlc2nDs24KYGBge3J9CnJlc2lkdW8gJT4lIAogIGdncGxvdChhZXMoc2FtcGxlID0gLnByZWQpKSsKICBzdGF0X3FxKCkgKyBzdGF0X3FxX2xpbmUoKSsKICB0aGVtZV9taW5pbWFsKCkrCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gIm5vbmUiKSsKICBsYWJzKHggPSAiUXVhbnRpbGVzIG5vcm1hbGVzIHRlw7NyaWNvcyIsCiAgICAgICB5ID0gIlF1YW50aWxlcyBub3JtYWxlcyBlbXDDrXJpY28gKGRhdG9zKSIpCmBgYApDb24gbGEgZ3LDoWZpY2EgcG9kZW1vcyBvYnNlcnZhciBxdWUgdGllbmUgY29sYXMgbcOhcyBwZXNhZGFzIHF1ZSB1bmEgZGlzdHJpYnVjacOzbiBub3JtYWwsIHBvciBsbyBxdWUgcHJvYmFibGVtZW50ZSBlbCBzdXB1ZXN0byBkZSBub3JtYWxpZGFkIG5vIHNlIGN1bXBsYS4gCgojIyMjIDUuNSkgUmVhbGl6YSB1bmEgcHJ1ZWJhIEphcnF1ZS1CZXJhIHBhcmEgbW9zdHJhciBsYSBkaXN0cmlidWNpw7NuIGRlIGxvcyBlcnJvcmVzIGRlIGxhIHJlZ3Jlc2nDs24KYGBge3J9CmphcnF1ZS5iZXJhLnRlc3QocmVzaWR1byQucHJlZCkKYGBgClBvciBsbyB0YW50byByZWNoYXphbW9zIHF1ZSBsb3MgZGF0b3Mgc2VhbiBub3JtYWxlcy4gCgoKCgoKCgo=</div>
 
 
 
@@ -2206,7 +1921,7 @@ $(document).ready(function () {
 <!-- code folding -->
 <script>
 $(document).ready(function () {
-  window.initializeSourceEmbed("04-normalidad-errores.Rmd");
+  window.initializeSourceEmbed("04-normalidad-errores-sol.Rmd");
   window.initializeCodeFolding("show" === "show");
 });
 </script>

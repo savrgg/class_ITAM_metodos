@@ -178,7 +178,15 @@ Recapitulando, cada punto en la gráfica representa una observación y la línea
 
 - En el caso de los puntos azules, vemos que en centro se parecen los datos a la línea, pero en una de las colas no coinciden. ¿Qué implicaría?:
 
+```{r echo = FALSE, results = 'asis'}
+image = "https://github.com/savrgg/class_ITAM_metodos/blob/main/notas_r/imgs/04-qqplot1.png?raw=true"
+cat(paste0('<center><img src="', image,  '" width="400"></center>'))
+```
 
+```{r echo = FALSE, results = 'asis'}
+image = "https://github.com/savrgg/class_ITAM_metodos/blob/main/notas_r/imgs/04-qqplot2.png?raw=true"
+cat(paste0('<center><img src="', image,  '" width="400"></center>'))
+```
 
 Por eso, de los métodos gráficos, el qqplot es de los que más utilidad nos generan, ya que no solo nos permite determinar si los datos tienen sesgo 0, si no además, que la varianza es equivalente a la varianza de una distribución normal.
 
