@@ -10,8 +10,9 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 ```{r}
 library(tidymodels)
 library(readr)
+library(gridExtra)
 
-datos <- read_csv("~/Repos/class_ITAM_metodos/notas_r/train.csv")
+datos <- read_csv("https://raw.githubusercontent.com/savrgg/class_ITAM_metodos/main/notas_r/train.csv")
 
 datos_o <- 
   datos %>% 
@@ -30,63 +31,152 @@ datos_o <-
            ),
          Title = gsub('(.*, )|(\\..*)', '', Name))
 
-var_p <- "Sex"
-#var_p <- "Pclass"
-#var_p <- "Age"
-#var_p <- "Title"
-
-
-datos_o %>% 
+plot_general <- function(var_p){
+  datos_o %>% 
   ggplot(aes(x = factor(!!sym(var_p)), fill = Survived))+
   geom_bar()+
   geom_text(aes(label = after_stat(count)), 
-            stat = "count", position = position_stack(), vjust = 1, color = "gray50", size = 3)+
+            stat = "count", position = position_stack(), vjust = 1, color = "gray50", size = 2)+
   scale_fill_brewer(palette = "Greens")+
   theme_minimal()+
-  theme(legend.position = "bottom")+
+  theme(legend.position = "bottom", text = element_text(size = 5))+
   labs(
     x = "",
     y = "Número de sobrevivientes",
-    title = "Número de sobrevivientes por género en el Titanic (1912)",
-    subtitle = "Número total de pasajeros en base explorada: 891. Porcentaje de Sobrevivencia: 38.4%",
+    title = "Número de sobrevivientes en Titanic",
+    subtitle = "891 pasajeros, 38.4% Sobreviven",
     caption = "Base extraída de: kaggle.com/competitions/titanic",
     fill = ""
-  )
+  )  
+}
 
-datos_o %>% 
+plot_general_norm <- function(var_p){
+  datos_o %>% 
   ggplot(aes(x = factor(!!sym(var_p)), fill = Survived))+
   geom_bar(position = "fill", aes(fill = Survived))+
   geom_text(aes(label = scales::percent(after_stat(count/tapply(count, x, sum)[x])), group = Survived), 
-            stat = "count", position = position_fill(), vjust = 2, color = "gray50", size = 3)+
+            stat = "count", position = position_fill(), vjust = 2, color = "gray50", size = 2)+
   scale_fill_brewer(palette = "Greens")+
   theme_minimal()+
   scale_y_continuous(labels = percent_format())+
-  theme(legend.position = "bottom")+
+  theme(legend.position = "bottom", text = element_text(size = 6))+
   labs(
     x = "",
     y = "Porcentaje de sobrevivientes",
-    title = "Porcentaje de sobrevivientes por género en el Titanic (1912)",
-    subtitle = "Número total de pasajeros en base explorada: 891. Porcentaje de Sobrevivencia: 38.4%",
+    title = "Porcentaje de sobrevivientes en Titanic",
+    subtitle = "891 pasajeros, 38.4% Sobreviven",
     caption = "Base extraída de: kaggle.com/competitions/titanic",
     fill = ""
   )
+}
+
+datos
+```
+
+```{r}
+var_p <- "Sex"
+grid.arrange(
+  plot_general(var_p),
+  plot_general_norm(var_p), ncol = 2
+)
+
+```
+```{r}
+lm_model <- 
+  linear_reg() %>% 
+  fit(Survived_prev ~ Sex, data = datos_o)
+
+tidy(lm_model)
+glance(lm_model)
+
+datos_o %>% 
+  group_by(Sex) %>% 
+  summarise(porc_survived = sum(Survived_prev)/n())
+```
+
+
+
+```{r}
+var_p <- "Pclass"
+grid.arrange(
+  plot_general(var_p),
+  plot_general_norm(var_p), ncol = 2
+)
+
+```
+
+
+
+```{r}
+lm_model <- 
+  linear_reg() %>% 
+  fit(Survived_prev  ~ factor(Pclass), data = datos_o)
+
+tidy(lm_model)
+glance(lm_model)
+
+datos_o %>% 
+  group_by(Pclass) %>% 
+  summarise(porc_survived = sum(Survived_prev)/n())
+```
+
+
+```{r}
+var_p <- "Age"
+plot_general(var_p)
+plot_general_norm(var_p)
+```
+```{r}
+lm_model <- 
+  linear_reg() %>% 
+  fit(Survived_prev  ~ Age, data = datos_o)
+
+tidy(lm_model)
+glance(lm_model)
+
+datos_o %>% 
+  group_by(Age) %>% 
+  summarise(porc_survived = sum(Survived_prev)/n())
+```
+
+
+```{r}
+var_p <- "Title"
+plot_general(var_p)
+plot_general_norm(var_p)
+```
+
+```{r}
+lm_model <- 
+  linear_reg() %>% 
+  fit(Survived_prev  ~ Title, data = datos_o)
+
+tidy(lm_model)
+glance(lm_model)
+
+datos_o %>% 
+  group_by(Title) %>% 
+  summarise(porc_survived = sum(Survived_prev)/n())
+```
+
+
+
+```{r}
+lm_model <- 
+  linear_reg() %>% 
+  fit(Survived_prev  ~ Sex+factor(Pclass)+Age, data = datos_o)
+
+tidy(lm_model)
+glance(lm_model)
 
 datos_o %>% 
   group_by(Sex, Pclass, Age) %>% 
-  summarise(num_pasajeros = n(), 
-            sobreviven = sum(Survived_prev),
-            porc_sobr = sobreviven/num_pasajeros) %>% 
-  arrange(desc(porc_sobr)) %>% data.frame()
-lm_model <- 
-  linear_reg() %>% 
-  fit(datos_o %>% select(Survived))
-
-
-
-
-
-
+  summarise(porc_survived = sum(Survived_prev)/n()) %>% 
+  arrange(desc(porc_survived)) %>% data.frame() %>% 
+  filter(Sex == "male", Pclass == 2, Age == "[45-65) \n Adultos Maduros")
 ```
+
+
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
