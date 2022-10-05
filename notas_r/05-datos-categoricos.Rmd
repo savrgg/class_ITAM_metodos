@@ -1,45 +1,140 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Práctica 05: RLS con variables categóricas"
+output:
+  pdf_document: default
+  html_notebook: default
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+## 1. Regresión Lineal Simple con una variable categórica
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+Los modelos de regresión simple (RLS) vistos hasta ahora incorporan *variables independientes continuas*, pero se puede expandir a regresiones con *variables independientes categóricas*. De hecho, en general se puede expandir a variables binarias, indicadoras, cualitativas o dummy. Estas variables muestran la presencia de cierto atributo en cada uno de sus niveles. 
+
+Por ejemplo, la variable categórica de grupos de edad la podemos ver como:
+
+```{r}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+# La función kable permite visualizar un data.frame como tabla dentro de un *.RMD 
+library(knitr)
+kable(
+  data.frame(
+    `Grupos de edad` = c("Bebes 0-3 años", 
+                    "Niños 3-10 años", 
+                    "Adolescentes 10-18 años",
+                    "Adultos Jóvenes 18-30 años",
+                    "Adultos Media Edad 30-45 años",
+                    "Adultos Maduros 45-65 años",
+                    "Tercera Edad 65+ años")
+    )
+  )
+```
+Cada uno de los valores de la variable categórica los conocemos como *niveles*. Si la variable cuenta con $n$ niveles, se puede codificar con $n-1$ variables binarias. Por ejemplo, la variable anterior cuenta con 7 niveles y la regresión se puede codificar con 6 variables binarias o dummy:
+
+$$\hat{y} = \hat{\beta_0} + \hat{\beta_1}dummy1 + \hat{\beta_2}dummy2+ \hat{\beta_3}dummy3+
+\hat{\beta_4}dummy4+\hat{\beta_5}dummy5 + \hat{\beta_6}dummy6$$
+
+\newpage
+
+**¿Qué valor debe tomar cada variable dummy de acuerdo a cada nivel de la variable categórica?**
+
+```{r}
+library(knitr)
+kable(data.frame(grupos_edad = c("Bebes 0-3 años", 
+                                 "Niños 3-10 años", 
+                                 "Adolescentes 10-18 años",
+                                 "Adultos Jóvenes 18-30 años",
+                                 "Adultos Media Edad 30-45 años",
+                                 "Adultos Maduros 45-65 años",
+                                 "Tercera Edad 65+ años"),
+                 dummy1 = c(0,1,0,0,0,0,0),
+                 dummy2 = c(0,0,1,0,0,0,0),
+                 dummy3 = c(0,0,0,1,0,0,0),
+                 dummy4 = c(0,0,0,0,1,0,0),
+                 dummy5 = c(0,0,0,0,0,1,0),
+                 dummy6 = c(0,0,0,0,0,0,1),
+                 descripción = c("Nivel Control", "","","","","","")))
+```
+De manera que cuando la variable categórica toma el valor de $Adolescentes$, la ecuación nos quedaría como:
+
+$$\hat{y} = \hat{\beta_0} + \hat{\beta_1}0 + \hat{\beta_2}1+ \hat{\beta_3}0+\hat{\beta_4}0+\hat{\beta_5}0 + \hat{\beta_6}0 = \hat{\beta_0}+\hat{\beta_2}$$
+Note que en la tabla un nivel tiene una etiqueta de Nivel Control. Cuando se toma ese nivel (Bebés), entonces todas las $\beta$s excepto $\beta_0$ se vuelven 0:
+
+$$\hat{y} = \hat{\beta_0} + \hat{\beta_1}0 + \hat{\beta_2}0+ \hat{\beta_3}0+\hat{\beta_4}0+\hat{\beta_5}0 + \hat{\beta_6}0 = \hat{\beta_0}$$
+\newpage
+
+## 2. Ejercicio clase Titanic:
+
+### 2.1 Introducción:
+
+El hundimiento del Titanic es uno de los accidentes marítimos con mayor fatalidad en la historia. En Abril de 1912 durante su primer viaje, el considerado imposible de hundir RMS Titanic, se hundió despues de colisionar con un iceberg. Desafortunadamente, no había suficientes botes salvavidas para todos en el barco, resultando en la muerte de 1502 de los 2224 pasajeros y tripulación. Aunque hubo factores de suerte involucrados para sobrevivir, parece ser que ciertos grupos de personas tenían mayores posibilidades de sobrevivir que otras. En el siguiente ejercicio, se busca evaluar como afectan cuatro variables categóricas en aumentar la posibilidad de sobrevivencia (Grupo de Edad, Género, Clase del boleto, Título de la persona)
+
+Para este ejercicio, solo se toman 891 registros del total de pasajeros. (Nota: La variable a predecir es una variable binaria, por lo que lo técnicamente correcto sería aplicar una regresión logística, pero para fines del ejercicio, supondremos continua la variable.)
+
+El dataset lo pueden encontrar en el website de *kaggle* y a continuación se presenta su diccionario de datos: 
+
+```{r}
+kable(data.frame(
+  variable = c("survival", "pclass", "sex", "age", "sibsp", 
+               "parch", "ticket", "fare", "cabin", "embarked"),
+  descripción = c("Sobrevivió", "Ticket class", "Sex", "Age in years", "# of siblings",
+                  "# of parents", "Ticket number", "Passenger Fare", "Cabin Number", 
+                  "Port of Embarkation"),
+  valores = c("0 = No, 1 = Yes", "1 = 1st, 2 = 2nd, 3 = 3rd", "", "", "", "",
+              "", "", "", "C = Cherbourg, Q = Queenstown, S = Southampton")
+))
+```
+
+\newpage 
+
+### 2.2 Preprocesamiento de datos y funciones para graficar:
+
+Lectura de datos: 
 
 ```{r}
 library(tidymodels)
 library(readr)
 library(gridExtra)
 
-datos <- read_csv("https://raw.githubusercontent.com/savrgg/class_ITAM_metodos/main/notas_r/train.csv")
+datos <- 
+  read_csv(
+    "https://raw.githubusercontent.com/savrgg/class_ITAM_metodos/main/notas_r/train.csv"
+    )
+```
 
+La variable Age viene en años, por lo que se agrupan en clases con la función *case_when*. Adicional, se extrae el título de la persona de su nombre: 
+
+```{r}
 datos_o <- 
   datos %>% 
   mutate(
     Survived_prev = Survived,
     Survived = factor(Survived, labels = c("No Sobrevivió", "Sobrevivió")),
-         Age = case_when(
-           Age < 3 ~ "[0-03) \n Bebés",
-           Age < 10 ~ "[03-10) \n Niños/Niñas",
-           Age < 18 ~ "[10-18) \n Adolescentes",
-           Age < 30 ~ "[18-30) \n Adultos Jóvenes",
-           Age < 45 ~ "[30-45) \n Adultos Media",
-           Age < 65 ~ "[45-65) \n Adultos Maduros",
-           Age < 120 ~ "[65+) \n Tercera Edad",
-           TRUE ~ "No proporcionado"
-           ),
-         Title = gsub('(.*, )|(\\..*)', '', Name))
+    Age = case_when(
+      Age < 3 ~ "[0-03) \n Bebés",
+      Age < 10 ~ "[03-10) \n Niños/Niñas",
+      Age < 18 ~ "[10-18) \n Adolescentes",
+      Age < 30 ~ "[18-30) \n Adultos Jóvenes",
+      Age < 45 ~ "[30-45) \n Adultos Media",
+      Age < 65 ~ "[45-65) \n Adultos Maduros",
+      Age < 120 ~ "[65+) \n Tercera Edad",
+      TRUE ~ "No proporcionado"
+      ),
+    Title = gsub('(.*, )|(\\..*)', '', Name)
+    )
+```
 
+Ahora, se procede a generar dos funciones auxiliares para graficar los datos (no es necesario que las examinen a detalle):
+
+```{r}
 plot_general <- function(var_p){
   datos_o %>% 
   ggplot(aes(x = factor(!!sym(var_p)), fill = Survived))+
   geom_bar()+
-  geom_text(aes(label = after_stat(count)), 
-            stat = "count", position = position_stack(), vjust = 1, color = "gray50", size = 2)+
+  geom_text(
+    aes(label = after_stat(count)), 
+    stat = "count", position = position_stack(), vjust = 1, color = "gray50", size = 3)+
   scale_fill_brewer(palette = "Greens")+
   theme_minimal()+
-  theme(legend.position = "bottom", text = element_text(size = 5))+
+  theme(legend.position = "bottom", text = element_text(size = 8))+
   labs(
     x = "",
     y = "Número de sobrevivientes",
@@ -49,17 +144,22 @@ plot_general <- function(var_p){
     fill = ""
   )  
 }
+```
 
+\newpage
+
+```{r}
 plot_general_norm <- function(var_p){
   datos_o %>% 
   ggplot(aes(x = factor(!!sym(var_p)), fill = Survived))+
   geom_bar(position = "fill", aes(fill = Survived))+
-  geom_text(aes(label = scales::percent(after_stat(count/tapply(count, x, sum)[x])), group = Survived), 
-            stat = "count", position = position_fill(), vjust = 2, color = "gray50", size = 2)+
+  geom_text(
+    aes(label = scales::percent(after_stat(count/tapply(count, x, sum)[x])), group = Survived), 
+    stat = "count", position = position_fill(), vjust = 2, color = "gray50", size = 3)+
   scale_fill_brewer(palette = "Greens")+
   theme_minimal()+
   scale_y_continuous(labels = percent_format())+
-  theme(legend.position = "bottom", text = element_text(size = 6))+
+  theme(legend.position = "bottom", text = element_text(size = 8))+
   labs(
     x = "",
     y = "Porcentaje de sobrevivientes",
@@ -69,18 +169,24 @@ plot_general_norm <- function(var_p){
     fill = ""
   )
 }
-
-datos
 ```
 
-```{r}
+\newpage
+
+### 2.3 Regresión lineal Survived~Sex
+
+Primero se realiza un EDA: 
+```{r, fig.width=10}
 var_p <- "Sex"
+# la función grid.arrange nos permite colocar dos o más gráficas en una
 grid.arrange(
   plot_general(var_p),
   plot_general_norm(var_p), ncol = 2
 )
 
 ```
+
+Ahora se realiza la regresión lineal 
 ```{r}
 lm_model <- 
   linear_reg() %>% 
@@ -89,14 +195,18 @@ lm_model <-
 tidy(lm_model)
 glance(lm_model)
 
-datos_o %>% 
-  group_by(Sex) %>% 
-  summarise(porc_survived = sum(Survived_prev)/n())
+# como comprobación podemos agrupar por Sex y sacar el promedio de sobrevivientes:
+# datos_o %>% 
+#   group_by(Sex) %>% 
+#   summarise(porc_survived = sum(Survived_prev)/n())
 ```
 
+\newpage
 
+### 2.4 Regresión lineal Survived~Pclass
 
-```{r}
+Primero se realiza un EDA: 
+```{r, fig.width=10}
 var_p <- "Pclass"
 grid.arrange(
   plot_general(var_p),
@@ -106,7 +216,7 @@ grid.arrange(
 ```
 
 
-
+Ahora se realiza la regresión lineal: 
 ```{r}
 lm_model <- 
   linear_reg() %>% 
@@ -115,17 +225,24 @@ lm_model <-
 tidy(lm_model)
 glance(lm_model)
 
-datos_o %>% 
-  group_by(Pclass) %>% 
-  summarise(porc_survived = sum(Survived_prev)/n())
+# como comprobación podemos agrupar por Pclass y sacar el promedio de sobrevivientes:
+# datos_o %>% 
+#   group_by(Pclass) %>% 
+#   summarise(porc_survived = sum(Survived_prev)/n())
 ```
 
+\newpage
 
-```{r}
+### 2.5 Regresión lineal Survived~Age
+
+Primero se realiza un EDA: 
+```{r, fig.width=10}
 var_p <- "Age"
 plot_general(var_p)
 plot_general_norm(var_p)
 ```
+
+Ahora se realiza la regresión lineal: 
 ```{r}
 lm_model <- 
   linear_reg() %>% 
@@ -134,17 +251,24 @@ lm_model <-
 tidy(lm_model)
 glance(lm_model)
 
+# como comprobación podemos agrupar por Age y sacar el promedio de sobrevivientes:
 datos_o %>% 
   group_by(Age) %>% 
   summarise(porc_survived = sum(Survived_prev)/n())
 ```
 
+\newpage
 
-```{r}
+### 2.6 Regresión lineal Survived~Age
+
+Primero se realiza un EDA: 
+```{r, fig.width=10}
 var_p <- "Title"
 plot_general(var_p)
 plot_general_norm(var_p)
 ```
+
+Ahora se realiza la regresión lineal: 
 
 ```{r}
 lm_model <- 
@@ -154,26 +278,103 @@ lm_model <-
 tidy(lm_model)
 glance(lm_model)
 
-datos_o %>% 
-  group_by(Title) %>% 
-  summarise(porc_survived = sum(Survived_prev)/n())
+# datos_o %>% 
+#   group_by(Title) %>% 
+#  summarise(porc_survived = sum(Survived_prev)/n())
 ```
 
+\newpage
 
+## 3. Ejercicio para clase
+
+Este toy dataset contiene variables que ayudan a predecir el precio de una casa. Factores como metros cuadrados del lote, metros cuadrados de construcción, número de recámaras, número de baños, alberca, etc influyen en el precio final de una casa. En el ejercicio que se realizará hoy se tomarán en cuenta solo las variables categóricas Street, House Style, Central Air, PoolArea:
 
 ```{r}
-lm_model <- 
-  linear_reg() %>% 
-  fit(Survived_prev  ~ Sex+factor(Pclass)+Age, data = datos_o)
+kable(
+  data.frame(
+    variable = c("Street", "HouseStyle", "CentralAir", "PoolArea"),
+    descripción = c("Tipo de acceso", "Número de Pisos", 
+                    "Cuenta con calefacción central", "Tiene alberca"),
+    valores = c("Grvl: Gravel, Pave: Paved", "1Story: One story, 2Story: Two story", 
+                "N: No, Y: Yes", "")
+  )  
+)
 
-tidy(lm_model)
-glance(lm_model)
-
-datos_o %>% 
-  group_by(Sex, Pclass, Age) %>% 
-  summarise(porc_survived = sum(Survived_prev)/n()) %>% 
-  arrange(desc(porc_survived)) %>% data.frame() %>% 
-  filter(Sex == "male", Pclass == 2, Age == "[45-65) \n Adultos Maduros")
 ```
 
+
+
+### 3.1 Carga y preprocesamiento de datos
+```{r}
+library(tidymodels)
+library(readr)
+library(gridExtra)
+
+datos <- 
+  read_csv("https://raw.githubusercontent.com/savrgg/class_ITAM_metodos/main/notas_r/HousePrice.csv")
+
+datos <- 
+  datos %>% 
+  select(Street, HouseStyle, CentralAir, 
+         PoolArea, SalePrice) %>% 
+  mutate(PoolArea = if_else(PoolArea > 0, "With-Pool", "No-Pool")) %>% 
+  filter(
+    !is.na(Street),
+    !is.na(HouseStyle),
+    !is.na(CentralAir),
+    !is.na(PoolArea),
+    !is.na(SalePrice),
+    HouseStyle %in% c("1Story", "2Story")
+  )
+datos %>% head(2)
+```
+
+\newpage
+
+### 3.2 SalePrice ~ Street
+
+*a) Realiza un análisis exploratorio para la variable independiente*
+
+*b) Construye la regresión lineal*
+
+*c) Interpreta los resultados*
+
+```{r}
+
+```
+### 3.3 SalePrice ~ HouseStyle
+
+*a) Realiza un análisis exploratorio para la variable independiente*
+
+*b) Construye la regresión lineal*
+
+*c) Interpreta los resultados*
+
+```{r}
+
+```
+
+### 3.4 SalePrice ~ CentralAir
+
+*a) Realiza un análisis exploratorio para la variable independiente*
+
+*b) Construye la regresión lineal*
+
+*c) Interpreta los resultados*
+
+```{r}
+
+```
+
+### 3.5 SalePrice ~ PoolArea
+
+*a) Realiza un análisis exploratorio para la variable independiente*
+
+*b) Construye la regresión lineal*
+
+*c) Interpreta los resultados*
+
+```{r}
+
+```
 
