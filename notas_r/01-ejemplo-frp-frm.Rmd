@@ -5,12 +5,18 @@ output:
   html_notebook: default
 ---
 
-## Introducción
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+
+## 1) Introducción
 En esta práctica se construirá la función de regresión poblacional, posteriormente se sacarán múltiples muestras con las cuales se analizará la variabilidad de la muestra por medio de la función de regresión muestral. Es importante recalcar que comúnmente los datos poblacionaes no son conocidos, pero en este ejemplo supondremos que los datos que nos proporcionan son los poblacionales. 
 
 Se importan los datos de "marketing" que contienen datos de inversión en tres tipos de medios publicitarios y datos de las ventas:
 
 ```{r}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 library(datarium)
 library(tidymodels)  # package that imports useful packages for modeling
 library(readr)       # for importing data
@@ -22,10 +28,11 @@ marketing <-
   marketing %>% 
   gather(company, investment, -sales) 
 
-marketing %>% data.frame()
+marketing %>% 
+  head(n=6)
 ```
 
-## Exploratory Data Analysis
+## 1.1 Exploratory Data Analysis
 Nos gustaría conocer como se comportan las ventas con respecto a la inversión en distintos medios. Para esto, es conveniente graficar en facets para cada medio:
 
 ```{r}
@@ -45,7 +52,7 @@ marketing %>%
   scale_color_viridis_d(option = "plasma", end = .7)
 ```
 
-## Regresión lineal para compañia de Youtube
+## 1.2 Regresión lineal para compañia de Youtube
 Por fines ilustrativos, se realizará la regresión lineal solo para datos de youtube. Para esto se ocupa la funciones de linear_reg() y fit():
 
 ```{r}
@@ -60,7 +67,7 @@ glance(lm_fit)
 tidy(lm_fit)
 ```
 
-## Funcion de Regresión Poblacional (FRP)
+## 1.3 Funcion de Regresión Poblacional (FRP)
 
 ¿Cómo se ve la recta de regresión lineal para distintos niveles de X? Para esto, se realiza un grid de 0 a 350 y se realiza la predicción usando el modelo lineal. Esto nos calculará para cada punto $x_i$ el valor de $\hat{y} = \beta_0 + \beta_1 x_i$
 
@@ -93,7 +100,7 @@ ggplot(plot_data, aes(x = investment)) +
 
 Recordemos que supondremos que los datos poblacionales son los datos poblacionales, estonces la recta obtenida es la Función de Regresión Poblacional.
 
-## Coeficientes de $\beta_0$ y $\beta_1$
+## 1.4 Coeficientes de $\beta_0$ y $\beta_1$
 
 Podemos calcular los coeficientes de $\beta_0$ y $\beta_1$ con las formulas:
 ```{r}
@@ -108,7 +115,7 @@ O obtenerlos directamente con la función de tidy()
 ```{r}
 tidy(lm_fit)
 ```
-## Función de Regresión Muestral (FRM)
+## 1.5 Función de Regresión Muestral (FRM)
 Ahora sacaremos una muestra de tamaño 30 y veremos la recta muestral ajustada. Si se ejecuta varias veces este código, se observará que la línea se mueve dependiendo la muestra obtenida. También, si modificamos el tamaño de muestra, se puede observar que entre más grande sea el tamaño de la muestra, menor variación de la recta de regresión muestral.
 
 ```{r}

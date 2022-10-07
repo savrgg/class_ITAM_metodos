@@ -1,8 +1,12 @@
 ---
 title: "Ejemplo clase"
-output: html_notebook
+output:
+  pdf_document: default
+  html_notebook: default
 ---
-
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
 # Sección 1
 ## Introducción
 

@@ -1,14 +1,22 @@
 ---
 title: "Alimentación en Erizos de Mar"
-output: html_notebook
+output:
+  pdf_document: default
+  html_notebook: default
 ---
 
-## Introducción
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+
+## 1. Introducción
 En esta práctica se calculará una regresión lineal en donde la variable dependiente es el ancho de las suturas de los erizos de mar y la variable independiente el tipo de alimentación y el peso inicial. Debido que hasta ahora solo se ha visto regresiones lineales con variables numéricas, se considerará unicamente en el análisis el peso inicial.
 
 Adicionalmente se calculará: TSS, ESS, RSS, $R^2$ y $\hat{\sigma}^2$
 
 ```{r}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 library(tidymodels)  # package that imports useful packages for modeling
 library(readr)       # for importing data
 library(dotwhisker)  # visualize regression results
@@ -23,7 +31,7 @@ urchins <-
 urchins
 ```
 
-## Exploratory Data Analysis
+## 1.1 Exploratory Data Analysis
 
 Como primer paso se realizará un análisis exploratorio de datos, donde se pondrá por tipo de alimentación los puntos entre volumen inicial y el peso del erizo: 
 
@@ -46,7 +54,7 @@ urchins %>%
 ```
 En este sentido vemos que la pendiente con alimentación alta es mayor, lo cual hace sentido debido a que mejor alimentación más ancho será la sutura, en cambio, para una alimentación baja, la pendiente es cercana a 0. 
 
-## Regresión lineal para width de erizos
+## 1.2 Regresión lineal para width de erizos
 
 Ahora se realizará la regresión con tidymodels: 
 
@@ -96,7 +104,7 @@ ggplot(plot_data, aes(x = initial_volume)) +
   theme_minimal()
 ```
 
-## Coeficientes de $\beta_0$ y $\beta_1$
+## 1.3 Coeficientes de $\beta_0$ y $\beta_1$
 
 Podemos calcular los coeficientes de $\beta_0$ y $\beta_1$ con las fórmulas:
 ```{r}
@@ -109,9 +117,10 @@ b0
 
 Ahora para poder calcular la $R^2$ necesitamos calcular:
 
-## TSS, ESS y RSS
+## 1.4 TSS, ESS y RSS
 
 ```{r}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 yhat <- predict(lm_fit, new_data = urchins %>% select(-width))
 
 # TSS (Total Sum of Squares)
