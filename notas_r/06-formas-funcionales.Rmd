@@ -21,7 +21,7 @@ $$ Y_i = \beta_0 + \beta_1 X_1 + e_i$$
 La $\beta_1$ mide el cambio en $Y$ con respecto al cambio de $X$, es decir $\frac{\Delta Y}{\Delta X}$ (la cual conocemos como pendiente). Es importante notar que esto es dependiente de las escalas originales de las variables:
 
 ```{r, fig.height=3}
-datos <- data.frame(x = c(0,1,2,3), y = c(5, 7,8,9))
+datos <- data.frame(x = c(1,1,2,3), y = c(5, 7,8,9))
 
 con_intercept <- 
   linear_reg() %>% 
@@ -143,7 +143,7 @@ Este modelo también recibe el nombre de modelo log-log, doble-log o log-lineal.
 
 
 ```{r echo = FALSE, results = 'asis'}
-image = "https://github.com/savrgg/class_ITAM_metodos/blob/main/notas_r/imgs/04-qqplot1.png?raw=true"
+image = "https://github.com/savrgg/class_ITAM_metodos/blob/main/notas_r/imgs/06-loglog.png?raw=true"
 cat(paste0('<center><img src="', image,  '" width="400"></center>'))
 ```
 
@@ -169,6 +169,7 @@ Esto es un cambio porcentual o tasa de crecimiento en Y ocasionada por un cambio
 \newpage
 
 ## 6. Modelo Lin-Log (Rendimientos decrecientes)
+
 A diferencia del modelo pasado, en este caso la variable que tiene logaritmo es la variable independiente:
 
 Sea el modelo:
@@ -177,5 +178,19 @@ $Y_i = \beta_0 + \beta_1 log(X_i)$
 Este modelo se conoce como **modelo lin-log**.
 
 Cuando se transforma el modelo de esta manera, la correspondiente $\beta_1$ mide el cambio absoluto de $Y$ vs el cambio porcentual de $X$, es decir:  $\frac{\Delta Y}{\Delta \%X}$
+
+## 7. Resumen
+
+```{r}
+knitr::kable(tibble(
+  Modelo = c("Lineal", "Lineal estandarizado", "log-log", "lin-log", "log-lin"),
+  `Si x aumenta` = c("1 unidad", "1 sd", "1%", "1%", "1 unidad"),
+  `Entonces y incrementa` = c("b1 unidades", "b1 sd", "b1 %", "b1 unidades", "b1%")
+))
+
+```
+
+
+
 
 
