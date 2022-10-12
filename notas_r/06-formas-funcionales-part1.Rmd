@@ -1,18 +1,17 @@
 ---
-title: "Formas Funcionales"
+title: "Formas Funcionales (parte 1)"
 output:
   pdf_document: default
   html_notebook: default
 ---
-
-
-## 1. Modelo Lineal Tradicional
 
 ```{r, warning=F, message=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 library(tidyverse)
 library(tidymodels)
 ```
+
+## 1. Modelo Lineal Tradicional
 
 Cuando la FRP de dos variables es de la forma:
 
@@ -21,28 +20,26 @@ $$ Y_i = \beta_0 + \beta_1 X_1 + e_i$$
 La $\beta_1$ mide el cambio en $Y$ con respecto al cambio de $X$, es decir $\frac{\Delta Y}{\Delta X}$ (la cual conocemos como pendiente). Es importante notar que esto es dependiente de las escalas originales de las variables:
 
 ```{r, fig.height=3}
-datos <- data.frame(x = c(1,1,2,3), y = c(5, 7,8,9))
+datos <- data.frame(horas_estudiadas = c(3,3,5,7), calificacion = c(5,6,8,9))
 
 con_intercept <- 
   linear_reg() %>% 
-  fit(y~x, data = datos)
+  fit(calificacion~horas_estudiadas, data = datos)
 
-# beta1_con <- cov(datos$x, datos$y)/var(datos$x)
-# beta0_con <- mean(datos$y)-beta1_con*mean(datos$x)
-
-datos %>% ggplot(aes(x = x, y = y))+
+datos %>% ggplot(aes(x = calificacion, y = horas_estudiadas))+
   geom_point()+
   geom_abline(intercept = con_intercept$fit$coefficients["(Intercept)"],
-              slope = con_intercept$fit$coefficients["x"], color = "chocolate3")+
+              slope = con_intercept$fit$coefficients["horas_estudiadas"], color = "chocolate3")+
   theme_minimal()+
-  labs(title = "Modelo con Intercept")+ ylim(0,10)
+  labs(title = "Modelo con Intercept")+
+  ylim(0,10)+xlim(0, 8)
 ```
+En este ejemplo el intercept es 2.9091 y la $\beta_1$ es 0.9091. Esto quiere decir que en promedio, un aumento de una hora estudiada refleja un aumento de 0.9091 en la calificación. Por otra parte, si se estudian 0 horas, la calificación esperada es de 2.9091. 
 
 ## 2. Modelo Regresión a través del origen
 
 Cuando la FRP de dos variables es de la forma:
 $$ Y_i = \beta_1 X_1 + e_i$$
-
 Es decir el término del intercepto es ausente o es cero, se conoce como regresión a través del origen. La estimación de $\beta_1$ cambia a la siguiente fórmula:
 
 $$\hat{\beta_1} = \frac{\sum X_i Y_i}{\sum X_i^2}$$
@@ -62,21 +59,18 @@ En este caso, hay que notar que el denominador esta $n-1$ en lugar de $n-2$.
 ```{r}
 sin_intercept <- 
   linear_reg() %>% 
-  fit(y~-1+x, data = datos)
-
-beta1_sin <- sum(datos$x*datos$y)/sum(datos$x*datos$x)
-beta0_sin <- 0
+  fit(calificacion~-1+horas_estudiadas, data = datos)
   
 datos %>% 
-  ggplot(aes(x = x, y = y))+
+  ggplot(aes(x = horas_estudiadas, y = calificacion))+
   geom_point()+
   geom_abline(intercept = 0, slope = sin_intercept$fit$coefficients, color = "dodgerblue4")+
   geom_abline(intercept = con_intercept$fit$coefficients["(Intercept)"],
-              slope = con_intercept$fit$coefficients["x"], color = "chocolate3")+
+              slope = con_intercept$fit$coefficients["horas_estudiadas"], color = "chocolate3")+
   theme_minimal()+
   labs(title = "Comparativa de modelo con/sin Intercept",
        subtitle = "En rojo con intercept, en azul sin intercept")+
-  ylim(0,10)
+  ylim(0,10)+xlim(0, 8)
 
 
 ```
@@ -103,94 +97,56 @@ Cuando se ajusta la regresión con variables estandarizadas, entonces el términ
 
 ¿Cuál es la ventaja del modelo estandarizado sobre el modelo tradicional? Se puede ver mejor en el caso múltiple, pero en general, al tener varios coeficientes, podemos observar cuales tienen mayor impacto en una misma escala. 
 
+calificacion~horas_estudiadas
+
 ```{r}
 # modelo estandarizado
 datos_est <- 
   datos %>% 
-  mutate(x_est = scale(x, center = T, scale = T),
-         y_est = scale(y, center = T, scale = T))
+  mutate(horas_estudiadas_est = scale(horas_estudiadas, center = T, scale = T),
+         calificacion_est = scale(calificacion, center = T, scale = T))
 
 estandarizados <- 
   linear_reg() %>% 
-  fit(y_est~x_est, data = datos_est)
+  fit(calificacion_est~horas_estudiadas_est, data = datos_est)
 
 datos_est %>% 
-  ggplot(aes(x = x_est, y = y_est))+
+  ggplot(aes(x = horas_estudiadas_est, y = calificacion_est))+
   geom_point()+
   geom_abline(intercept = estandarizados$fit$coefficients["(Intercept)"],
-              slope = estandarizados$fit$coefficients["x_est"], color = "chocolate3")+
+              slope = estandarizados$fit$coefficients["horas_estudiadas_est"], color = "chocolate3")+
   theme_minimal()+
   labs(title = "Modelo Estandarizado")+
   ylim(-5,5)+
   geom_point(x =0 , y = 0, color = "red")
 
 ```
-\newpage
-
-## 4. Modelo Log-Log (Elasticidad constante)
-
-Sea el modelo:
-
-$$Y_i = \beta_0 X_1^{\beta_1}\exp^{e_i}$$, 
-
-al aplicar logaritmo de ambos lados podemos transformarlo como: 
-
-$$ ln(Y_i) = ln(\beta_0) + \beta_1\ln(X_1) + e_i$$
-En particular podemos reescribir a $ln(\beta_0)$ como $alpha$, a $ln(Y_i)$ como $Y'$ y a $ln(X_i)$ como $X'$ y tendríamos un caso particular del modelo de regresión:
-
-$$ Y' = \alpha + \beta_1X'_1 + e_i$$
-Este modelo también recibe el nombre de modelo log-log, doble-log o log-lineal. Una caracteristica atractiva del modelo log-log es que el coeficiente de la pendiente $\beta_1$ mide la elasticidad de Y con respecto de X, es decir: $\frac{\Delta \%Y}{\Delta \%X}$. Una característica especiales del modelo log-log es que el modelo supone que el coeficiente de la elasticidad entre Y y X se mantiene contante en el tiempo (elasticidad constante).
+Si se estandarizan las dos variables (es decir se centran y dividen entre su desviación estándar), entonces la recta pasa por el origen (ya no hay intercepto) y la interpretación cambia. En este caso lo interpretamos como un cambio en una desviación estándar de la variable independiente impacta en $\beta_1$ desviaciones estándar de la variable dependiente. 
 
 
-```{r echo = FALSE, results = 'asis'}
-image = "https://github.com/savrgg/class_ITAM_metodos/blob/main/notas_r/imgs/06-loglog.png?raw=true"
-cat(paste0('<center><img src="', image,  '" width="400"></center>'))
-```
 
 \newpage
 
 
-## 5. Modelo Log-Lin (Crecimiento exponencial)
-Este es un modelo que comúnmente se llama semilogaritmico y busca medir la tasa de crecimiento. Suponga que el modelo sigue la forma:
+## 4. Ejercicio
 
-$$Y_t = Y_0 (1+r)^t$$
-donde $r$ es la tasa de crecimiento compuesta de $Y$, es decir a través del tiempo. Al aplicar logaritmo natural:
+Hay veces en las que ajustar una regresión lineal con datos crudos no es adecuado, por lo que se aplican transformaciones lineales y logaritmicas para poder interpretar el modelo. **Las transformaciones lineales no afectan el ajuste de un modelo de regresión y no afectan las predicciones**. Por otra parte, cambios en los inputs y coeficientes, **pueden mejorar la interpretabilidad** de los coeficientes y hacer el modelo más facil de interpretar. 
 
-$$log(Y_t) = log(Y_0)+tlog (1+r)$$
-Con $\beta_0 = log(Y_0)$ y $\beta_1 = log(1+r)$, podemos escribirlo como:
-
-$$log(Y_t) = \beta_0+ \beta_1 t$$
-
-Este modelo es lineal, pero la diferencia es que la variable dependiente tiene aplicado el logaritmo. Estos modelos se conocen como semilog porque solo una variable aparece en forma logaritmica. En este modelo, el coeficiente de la pendiente mide el cambio propocional constante relativo en Y para un cambio absoluto en el valor de la regresora:
-
-$$\beta_1 = \frac{\Delta \%  Y}{\Delta X}$$
-Esto es un cambio porcentual o tasa de crecimiento en Y ocasionada por un cambio absoluto en X ( en algunos libros se conoce como la semielasticidad)
-
-\newpage
-
-## 6. Modelo Lin-Log (Rendimientos decrecientes)
-
-A diferencia del modelo pasado, en este caso la variable que tiene logaritmo es la variable independiente:
-
-Sea el modelo:
-$Y_i = \beta_0 + \beta_1 log(X_i)$
-
-Este modelo se conoce como **modelo lin-log**.
-
-Cuando se transforma el modelo de esta manera, la correspondiente $\beta_1$ mide el cambio absoluto de $Y$ vs el cambio porcentual de $X$, es decir:  $\frac{\Delta Y}{\Delta \%X}$
-
-## 7. Resumen
-
-```{r}
-knitr::kable(tibble(
-  Modelo = c("Lineal", "Lineal estandarizado", "log-log", "lin-log", "log-lin"),
-  `Si x aumenta` = c("1 unidad", "1 sd", "1%", "1%", "1 unidad"),
-  `Entonces y incrementa` = c("b1 unidades", "b1 sd", "b1 %", "b1 unidades", "b1%")
-))
-
-```
+Los coeficientes de regresión $\beta_j$ representan la **diferencia promedio** de $y$ cuando el predictor $x_i$ cambia en una unidad. Es por esto, que al hablar de escalas originales, nos podemos dar cuenta que el coeficiente está relacionado con la escala del regresor. Analicemos el siguiente ejercicio:
 
 
+### Ejercicio 4.1: Se utilizarán datos de una encuensta de salarios en Estados Unidos que predice el salario basado en la altura de la persona (en pulgadas), para esto primero cargaremos los datos de la url:
 
+"https://raw.githubusercontent.com/Clark-Rhodes/INFO523/99c046debb9230fbfedaf08a67577a9a0c37e978/Intro-master/data/wages.csv"
+
+### Ejercicio 4.2: Convierta la variable de height para tenerla en centímetros y en metros
+
+### Ejercicio 4.3: Realice la regresión lineal de earn~height_cm y earn~height_m, Interprete. ¿Qué observa de los coeficientes?, ¿Por qué sucede esto? ¿Hace sentido tener un intercept cuando height_cm = 0 o height_m = 0?. ¿Cuál es la $R^2$ del modelo?
+
+### Ejercicio 4.4: Centre las variables height_cm, height_m, ajuste nuevamente y observe los resultados. ¿El valor de $\beta_0$ cambió? ¿Cómo interpreta este nuevo valor? ¿El valor de $\beta_1$ cambió? ¿Cómo lo interpreta? Concluya
+
+### Ejercicio 4.5: Centre y escale las variables height_cm, height_m, ajuste nuevamente y observe los resultados. ¿El valor de $\beta_0$ cambió? ¿Cómo interpreta este nuevo valor? ¿El valor de $\beta_1$ cambió? ¿Cómo lo interpreta? Concluya
+
+### Ejercicio 4.6: Realize una tabla comparativa de los modelos y su interpretación de los coeficientes.
 
 
