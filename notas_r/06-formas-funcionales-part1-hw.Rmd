@@ -1,0 +1,35 @@
+---
+title: "Formas Funcionales (parte 1)"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+```{r, warning=F, message=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+library(tidyverse)
+library(tidymodels)
+```
+
+## 4. Ejercicio
+
+Hay veces en las que ajustar una regresión lineal con datos crudos no es adecuado, por lo que se aplican transformaciones lineales y logaritmicas para poder interpretar el modelo. **Las transformaciones lineales no afectan el ajuste de un modelo de regresión y no afectan las predicciones**. Por otra parte, cambios en los inputs y coeficientes, **pueden mejorar la interpretabilidad** de los coeficientes y hacer el modelo más facil de interpretar. 
+
+Los coeficientes de regresión $\beta_j$ representan la **diferencia promedio** de $y$ cuando el predictor $x_i$ cambia en una unidad. Es por esto, que al hablar de escalas originales, nos podemos dar cuenta que el coeficiente está relacionado con la escala del regresor. Analicemos el siguiente ejercicio:
+
+
+### Ejercicio 4.1: Se utilizarán datos de una encuensta de salarios en Estados Unidos que predice el salario basado en la altura de la persona (en pulgadas), para esto primero cargaremos los datos de la url:
+
+"https://raw.githubusercontent.com/Clark-Rhodes/INFO523/99c046debb9230fbfedaf08a67577a9a0c37e978/Intro-master/data/wages.csv"
+
+### Ejercicio 4.2: Convierta la variable de height para tenerla en centímetros y en metros
+
+### Ejercicio 4.3: Realice la regresión lineal de earn~height_cm y earn~height_m, Interprete. ¿Qué observa de los coeficientes?, ¿Por qué sucede esto? ¿Hace sentido tener un intercept cuando height_cm = 0 o height_m = 0?. ¿Cuál es la $R^2$ del modelo?
+
+### Ejercicio 4.4: Centre las variables height_cm, height_m, ajuste nuevamente y observe los resultados. ¿El valor de $\beta_0$ cambió? ¿Cómo interpreta este nuevo valor? ¿El valor de $\beta_1$ cambió? ¿Cómo lo interpreta? Concluya
+
+### Ejercicio 4.5: Centre y escale las variables height_cm, height_m, ajuste nuevamente y observe los resultados. ¿El valor de $\beta_0$ cambió? ¿Cómo interpreta este nuevo valor? ¿El valor de $\beta_1$ cambió? ¿Cómo lo interpreta? Concluya
+
+### Ejercicio 4.6: Realize una tabla comparativa de los modelos y su interpretación de los coeficientes.
+
+

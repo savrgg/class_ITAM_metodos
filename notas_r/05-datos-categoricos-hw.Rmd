@@ -1,0 +1,103 @@
+---
+title: "Práctica 05: RLS con variables categóricas"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+```{r, warning=F, message=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+library(tidyverse)
+library(tidymodels)
+```
+
+## 3. Ejercicio para clase
+
+Este toy dataset contiene variables que ayudan a predecir el precio de una casa. Factores como metros cuadrados del lote, metros cuadrados de construcción, número de recámaras, número de baños, alberca, etc influyen en el precio final de una casa. En el ejercicio que se realizará hoy se tomarán en cuenta solo las variables categóricas Street, House Style, Central Air, PoolArea:
+
+```{r}
+knitr::kable(
+  data.frame(
+    variable = c("Street", "HouseStyle", "CentralAir", "PoolArea"),
+    descripción = c("Tipo de acceso", "Número de Pisos", 
+                    "Cuenta con calefacción central", "Tiene alberca"),
+    valores = c("Grvl: Gravel, Pave: Paved", "1Story: One story, 2Story: Two story", 
+                "N: No, Y: Yes", "")
+  )  
+)
+
+```
+
+
+### 3.1 Carga y preprocesamiento de datos
+```{r}
+library(tidymodels)
+library(readr)
+library(gridExtra)
+
+datos <- 
+  read_csv("https://raw.githubusercontent.com/savrgg/class_ITAM_metodos/main/notas_r/HousePrice.csv")
+
+datos <- 
+  datos %>% 
+  select(Street, HouseStyle, CentralAir, 
+         PoolArea, SalePrice) %>% 
+  mutate(PoolArea = if_else(PoolArea > 0, "With-Pool", "No-Pool")) %>% 
+  filter(
+    !is.na(Street),
+    !is.na(HouseStyle),
+    !is.na(CentralAir),
+    !is.na(PoolArea),
+    !is.na(SalePrice),
+    HouseStyle %in% c("1Story", "2Story")
+  )
+datos %>% head(2)
+```
+
+
+### 3.2 SalePrice ~ Street
+
+*a) Realiza un análisis exploratorio para la variable independiente*
+
+*b) Construye la regresión lineal*
+
+*c) Interpreta los resultados*
+
+```{r}
+
+```
+### 3.3 SalePrice ~ HouseStyle
+
+*a) Realiza un análisis exploratorio para la variable independiente*
+
+*b) Construye la regresión lineal*
+
+*c) Interpreta los resultados*
+
+```{r}
+
+```
+
+### 3.4 SalePrice ~ CentralAir
+
+*a) Realiza un análisis exploratorio para la variable independiente*
+
+*b) Construye la regresión lineal*
+
+*c) Interpreta los resultados*
+
+```{r}
+
+```
+
+### 3.5 SalePrice ~ PoolArea
+
+*a) Realiza un análisis exploratorio para la variable independiente*
+
+*b) Construye la regresión lineal*
+
+*c) Interpreta los resultados*
+
+```{r}
+
+```
+

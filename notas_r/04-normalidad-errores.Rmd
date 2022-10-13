@@ -6,8 +6,10 @@ output:
   html_document:
     df_print: paged
 ---
-```{r setup, include=FALSE} 
+```{r, warning=F, message=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+library(tidyverse)
+library(tidymodels)
 ```
 ### 1) Introducción
 
@@ -263,50 +265,3 @@ jarque.bera.test(datos$normal)
 jarque.bera.test(datos$tstudent)
 jarque.bera.test(datos$exponencial)
 ```
-
-### 5) Ejercicio: 
-Se usarán los datos de lecturas anteriores de house_rent. El modelo a ajustar es: $$ rent \sim size $$. Es decir nos gustaría poder ajustar el precio solamente con el tamaño de la casa. 
-
-
-#### 5.1) Ajusta la regresión lineal y determina si la $\beta_0$, $\beta_1$ y $R^2$ son significativas:
-
-```{r}
-```
-
-Aunque $R^2 = 0.17$, vemos que el valorp es cercano a 0, por lo que podemos rechazar $H_0: P^2= 0$. Entonces si es significativa. La misma conclusión se puede derivar de $\beta_0$ y $\beta_1$.
-
-Los residuos los podemos calcular:
-
-```{r}
-```
-
-
-#### 5.2) Realiza un histograma para mostrar la distribución de los errores de la regresión
-
-```{r}
-```
-Se puede observar que hay un ligero sesgo a la derecha, pero realmente con la gráfica no podemos concluir
-
-#### 5.3) Realiza un boxplot para mostrar la distribución de los errores de la regresión
-
-```{r}
-```
-
-En esta gráfica es un poco más complicado determinar si hay un sesgo o incluso si corresponde a una varianza de una distribución normal
-
-#### 5.4) Realiza un qqplot para mostrar la distribución de los errores de la regresión
-```{r}
-```
-Con la gráfica podemos observar que tiene colas más pesadas que una distribución normal, por lo que probablemente el supuesto de normalidad no se cumpla. 
-
-#### 5.5) Realiza una prueba Jarque-Bera para mostrar la distribución de los errores de la regresión
-```{r}
-```
-Por lo tanto rechazamos que los datos sean normales. 
-
-
-
-
-
-
-

@@ -1,0 +1,56 @@
+---
+title: "R Notebook"
+output:
+  pdf_document: default
+  html_notebook: default
+  html_document:
+    df_print: paged
+---
+```{r, warning=F, message=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+library(tidyverse)
+library(tidymodels)
+```
+
+### 5) Ejercicio: 
+Se usarán los datos de lecturas anteriores de house_rent. El modelo a ajustar es: $$ rent \sim size $$. Es decir nos gustaría poder ajustar el precio solamente con el tamaño de la casa. 
+
+
+#### 5.1) Ajusta la regresión lineal y determina si la $\beta_0$, $\beta_1$ y $R^2$ son significativas:
+
+```{r}
+house_rent <- 
+  read_csv("https://raw.githubusercontent.com/savrgg/class_ITAM_metodos/main/notas_r/house_rent.csv") %>% 
+  select(Rent, Size) %>% 
+  set_names(c("rent", "size"))
+
+house_rent %>% head
+```
+
+
+#### 5.2) Realiza un histograma para mostrar la distribución de los errores de la regresión
+
+```{r}
+```
+
+#### 5.3) Realiza un boxplot para mostrar la distribución de los errores de la regresión
+
+```{r}
+```
+
+
+#### 5.4) Realiza un qqplot para mostrar la distribución de los errores de la regresión
+```{r}
+```
+
+#### 5.5) Realiza una prueba Jarque-Bera para mostrar la distribución de los errores de la regresión
+```{r}
+```
+
+
+
+
+
+
+
+

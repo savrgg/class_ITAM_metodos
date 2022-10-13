@@ -4,8 +4,10 @@ output:
   pdf_document: default
   html_notebook: default
 ---
-```{r setup, include=FALSE} 
+```{r, warning=F, message=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+library(tidyverse)
+library(tidymodels)
 ```
 # Sección 1
 ## Introducción
@@ -167,87 +169,3 @@ data
 ```
 
 Al comparar gráficamente los datos, podemos observar que los datos si se ajustan por medio de una línea. 
-
-#### 2. Determine con una Prueba de Hipótesis si existe una relación lineal entre las variables.
-
-Para determinar si existe una relación lineal, se construye una Prueba de Hipótesis del coeficiente de correlación. Recordando, el coeficiente de correlación mide solamente la asociación lineal, mas no la pendiente de la linea
-
-Sea $H_0: \rho = 0$ y $H_1: \rho \neq 0$, entonces: 
-
-```{r}
-
-```
-
-El $valor-p$ es cercano a 0, entonces rechazamos $H_0: \rho = 0$, por lo que rechazamos que la correlación sea cero.
-
-#### 3. Utilicé tidymodels (lm) para realizar la regresión lineal, analice los resultados obtenidos
-```{r}
-
-```
-
-
-#### 4. Determine analíticamente los coeficientes $\hat{\beta}_0$ y $\hat{\beta}_1$
-```{r}
-
-```
-### 5. Calcule analíticamente TSS, ESS, RSS, $R^2$ y $adjR^2$
-
-```{r}
-
-```
-
-### 6. Calcule analíticametne $\hat{\sigma^2}$, $\hat{V(\hat{\beta_0})}$, $\hat{V(\hat{\beta_1})}$
-```{r}
-
-```
-
-### 7. Determine si el valor de los coeficientes es significativo (realice una prueba para cada uno)
-```{r}
-
-```
-
-El valor-p de ambas pruebas es cercano a 0, por lo que podemos rechazar que $H_0: \beta_1 = 0$ y $H_0: \beta_0 = 0$
-
-### 8. Comprueba que:
-a) Suma de residuales es igual a 0
-```{r}
-
-```
-
-b) Residuos no están correlacionados a X
-```{r}
-
-```
-
-c) Residuos no están correlacionados a $\hat{Y}$
-```{r}
-
-```
-
-### 9. Determine si el de $R^2$ es significativo
-```{r}
-
-```
-
-
-El $valor-p$ es cercano a 0,por lo que podemos rechazar $H_0: \rho^2 = 0$ vs $H_1: \rho^2 > 0$.
-
-
-### Calcula la predicción a la media para una edad 25 años. Calcule el IC al 95%.
-
-```{r}
-
-```
-IC para prediccion media de edad 25: (80.62294, 80.98196)
-
-
-### Calcula la predicción individual para un valor de 30 años. Calcule el IC al 95
-
-```{r}
-
-```
-IC para prediccion individual de edad 30: (83.62626, 84.32828)
-
-
-
-
