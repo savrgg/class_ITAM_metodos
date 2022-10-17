@@ -3,6 +3,71 @@ title: "Formas funcionales (parte 2)"
 output: html_document
 date: "2022-10-12"
 ---
+
+# ambas escaladas
+
+```{r}
+library(tidyverse)
+library(tidymodels)
+
+datos <- data.frame(horas_estudiadas = c(3,3,5,7), calificacion = c(5,6,8,9))
+datos_est <- datos %>% 
+  mutate(horas_estudiadas_est = scale(horas_estudiadas, center = T, scale = T),
+         calificacion_est = scale(calificacion, center = T, scale = T))
+
+datos_est
+```
+```{r}
+sum(datos_est$horas_estudiadas_est*datos_est$calificacion_est)
+mean(datos_est$horas_estudiadas_est)
+mean(datos_est$calificacion_est)
+var(datos_est$horas_estudiadas_est)
+
+2.8603/4
+
+model_est <- 
+  linear_reg() %>% 
+  fit(calificacion_est ~ horas_estudiadas_est, data = datos_est)
+```
+
+# con logaritmo ambas
+
+```{r}
+datos_log <- datos %>% 
+  mutate(horas_estudiadas_log = log(horas_estudiadas),
+         calificacion_log = log(calificacion))
+
+datos_log
+
+model_est <- 
+  linear_reg() %>% 
+  fit(calificacion_log ~ horas_estudiadas_log, data= datos_log)
+```
+
+
+# con logaritmo una y otra
+```{r}
+datos_log1 <- datos %>% 
+  mutate(horas_estudiadas_log = log(horas_estudiadas))
+
+datos_log1
+
+model_est <- 
+  linear_reg() %>% 
+  fit(calificacion ~ horas_estudiadas_log, data= datos_log1)
+```
+
+```{r}
+datos_log2 <- datos %>% 
+  mutate(calificacion_log = log(calificacion))
+
+datos_log2
+
+model_est <- 
+  linear_reg() %>% 
+  fit(calificacion_log ~ horas_estudiadas, data= datos_log2)
+```
+
 ## 4. Modelo Log-Log (Elasticidad constante)
 
 Sea el modelo:
