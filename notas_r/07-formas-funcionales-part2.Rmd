@@ -1,74 +1,135 @@
 ---
 title: "Formas funcionales (parte 2)"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
 date: "2022-10-12"
 ---
 
-# ambas escaladas
+```{r, warning=F, message=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+library(tidyverse)
+library(tidymodels)
+```
+
+# 1.Lectura de datos
+
+Para este ejercicio se emplearán los datos obtenidos del libro Data Analysis using regression and multilevel/hierarchical models de Andrew Gelman. En estos datos se busca generar una regresión lineal que trata de modelar la altura de un niño (en cm) en términos de su edad en meses:
 
 ```{r}
 library(tidyverse)
 library(tidymodels)
+library(readr)
 
-datos <- data.frame(horas_estudiadas = c(3,3,5,7), calificacion = c(5,6,8,9))
-datos_est <- datos %>% 
-  mutate(horas_estudiadas_est = scale(horas_estudiadas, center = T, scale = T),
-         calificacion_est = scale(calificacion, center = T, scale = T))
+datos <- readr::read_csv("https://raw.githubusercontent.com/savrgg/class_ITAM_metodos/main/notas_r/ageandheight.csv")
 
-datos_est
-```
-```{r}
-sum(datos_est$horas_estudiadas_est*datos_est$calificacion_est)
-mean(datos_est$horas_estudiadas_est)
-mean(datos_est$calificacion_est)
-var(datos_est$horas_estudiadas_est)
+# log - log
+datos_loglog <- 
+  datos %>% 
+  mutate(age_log = log(age),
+         height_log = log(height))
 
-2.8603/4
-
-model_est <- 
-  linear_reg() %>% 
-  fit(calificacion_est ~ horas_estudiadas_est, data = datos_est)
-```
-
-# con logaritmo ambas
-
-```{r}
-datos_log <- datos %>% 
-  mutate(horas_estudiadas_log = log(horas_estudiadas),
-         calificacion_log = log(calificacion))
-
-datos_log
-
-model_est <- 
-  linear_reg() %>% 
-  fit(calificacion_log ~ horas_estudiadas_log, data= datos_log)
-```
-
-
-# con logaritmo una y otra
-```{r}
-datos_log1 <- datos %>% 
-  mutate(horas_estudiadas_log = log(horas_estudiadas))
-
-datos_log1
-
-model_est <- 
-  linear_reg() %>% 
-  fit(calificacion ~ horas_estudiadas_log, data= datos_log1)
+datos_loglog
 ```
 
 ```{r}
-datos_log2 <- datos %>% 
-  mutate(calificacion_log = log(calificacion))
+datos %>% 
+  ggplot(aes( x= age, y = height))+
+  geom_point()+
+  theme_minimal()
+```
+\newpage
+# 2.Modelo lineal tradicional:
 
-datos_log2
-
+```{r, fig.height=3}
 model_est <- 
   linear_reg() %>% 
-  fit(calificacion_log ~ horas_estudiadas, data= datos_log2)
+  fit(height ~ age, data = datos_loglog)
+
+tidy(model_est)
+glance(model_est)
+
+datos_loglog %>% 
+  ggplot(aes( x= age, y = height)) +
+  geom_point()+
+  geom_smooth(method = "lm")+
+  geom_point(x = mean(datos_loglog$age), y = mean(datos_loglog$height), color = "red")+
+  geom_point(x = mean(datos_loglog$age)+1, y = mean(datos_loglog$height)+0.634965, color = "yellow")+
+  theme_minimal()
+```
+De esta regresión podemos ver que cuando se aumenta en 1 unidad la variable independiente (mes), entonces en promedio, la variable dependiente aumentará en 0.6449 unidades (cm).
+
+\newpage
+
+# 3.Modelo Log-Log
+Ahora, cuando aplicamos el modelo log-log, cambiará la interpretación. Por ejemplo: 
+```{r, fig.height=3}
+# log-log
+model_est <- 
+  linear_reg() %>% 
+  fit(height_log ~ age_log, data = datos_loglog)
+
+tidy(model_est)
+glance(model_est)
+
+datos_loglog %>% 
+  ggplot(aes( x= age, y = height)) +
+  geom_point()+
+  geom_smooth(method = "lm")+
+  geom_point(x = mean(datos_loglog$age), y = mean(datos_loglog$height), color = "red")+
+  geom_point(x = mean(datos_loglog$age)*1.01, y = mean(datos_loglog$height)*1.001839486, color = "yellow")+
+  theme_minimal()
+```
+Interpretación: Por cada 1\% de diferencia en la variable independiente (mes), en promedio la diferencia en la variable dependiente es 0.18\%. 
+
+\newpage
+# 4.Modelo Log-Lin
+```{r, fig.height=3}
+model_est <- 
+  linear_reg() %>% 
+  fit(height_log ~ age, data = datos_loglog)
+
+tidy(model_est)
+glance(model_est)
+
+datos_loglog %>% 
+  ggplot(aes( x= age, y = height)) +
+  geom_point()+
+  geom_smooth(method = "lm")+
+  geom_point(x = mean(datos_loglog$age), y = mean(datos_loglog$height), color = "red")+
+  geom_point(x = mean(datos_loglog$age)+1, y = mean(datos_loglog$height)*1.007956085, color = "yellow")+
+  theme_minimal()
 ```
 
-## 4. Modelo Log-Log (Elasticidad constante)
+Es decir, si aumentas en 1 unidad la variable independiente (mes), entonces en promedio la variable dependiente aumenta en 0.795%
+
+\newpage
+# 5.Modelo Lin-Log
+```{r, fig.height=3}
+model_est <- 
+  linear_reg() %>% 
+  fit(height ~ age_log, data = datos_loglog)
+
+tidy(model_est)
+glance(model_est)
+
+datos_loglog %>% 
+  ggplot(aes( x= age, y = height)) +
+  geom_point()+
+  geom_smooth(method = "lm")+
+  geom_point(x = mean(datos_loglog$age), y = mean(datos_loglog$height), color = "red")+
+  geom_point(x = mean(datos_loglog$age)*1.01, y = mean(datos_loglog$height)+0.146677, color = "yellow")+
+  theme_minimal()
+```
+
+
+Es decir, un aumento de 1\% en la variable independiente, aumenta en promedio 0.146676\% la dependiente (¿por que no sería en este caso 14.6676?)
+
+\newpage
+# 6.Teoria
+
+## 6.1. Modelo Log-Log (Elasticidad constante)
 
 Sea el modelo:
 
@@ -82,26 +143,29 @@ En particular podemos reescribir a $ln(\beta_0)$ como $alpha$, a $ln(Y_i)$ como 
 $$ Y' = \alpha + \beta_1X'_1 + e_i$$
 Este modelo también recibe el nombre de modelo log-log, doble-log o log-lineal. Una caracteristica atractiva del modelo log-log es que el coeficiente de la pendiente $\beta_1$ mide la elasticidad de Y con respecto de X, es decir: $\frac{\Delta \%Y}{\Delta \%X}$. Una característica especiales del modelo log-log es que el modelo supone que el coeficiente de la elasticidad entre Y y X se mantiene contante en el tiempo (elasticidad constante).
 
+Entonces tendríamos la elasticidad-edad
+
 
 ```{r echo = FALSE, results = 'asis'}
 image = "https://github.com/savrgg/class_ITAM_metodos/blob/main/notas_r/imgs/06-loglog.png?raw=true"
 cat(paste0('<center><img src="', image,  '" width="400"></center>'))
 ```
 
+
 \newpage
 
+## 6.2 Modelo Log-Lin (Crecimiento exponencial)
 
-## 5. Modelo Log-Lin (Crecimiento exponencial)
-Este es un modelo que comúnmente se llama semilogaritmico y busca medir la tasa de crecimiento. Suponga que el modelo sigue la forma:
+Este es un modelo que comúnmente se llama semilogaritmico y busca medir la tasa de crecimiento. Cuando tenemos modelos que involucran tasas de crecimiento de variables (por ejemplo población, PIB, oferta monetaria, empleo, productividad), tenemos un modelo del estilo:
 
 $$Y_t = Y_0 (1+r)^t$$
-donde $r$ es la tasa de crecimiento compuesta de $Y$, es decir a través del tiempo. Al aplicar logaritmo natural:
+
+En el caso de la población, $Y_0$ podriamos verla como la población en el año $t = 0$ y donde $r$ es la tasa de crecimiento compuesta. Por ejemplo, si en el año 2010 había 100 millones de habitantes en México, en el año 2011, con una tasa de crecimiento de $r = 0.02$,  $Y_1 = 100(1+.02)^1 = 102$ es decir en 2011 habría 102 millones de habitantes. Siguiendo el ejemplo, con la misma tasa de crecimiento en el año 2012 habría $Y_2 = 100(1+.02)^2 = 104.04$ millones de habitantes. De la fórmula presentada arriba, al aplicar logaritmo natural:
 
 $$log(Y_t) = log(Y_0)+tlog (1+r)$$
-Con $\beta_0 = log(Y_0)$ y $\beta_1 = log(1+r)$, podemos escribirlo como:
+Si nombramos $\beta_0 = log(Y_0)$ y $\beta_1 = log(1+r)$, podemos escribirlo como:
 
 $$log(Y_t) = \beta_0+ \beta_1 t$$
-
 Este modelo es lineal, pero la diferencia es que la variable dependiente tiene aplicado el logaritmo. Estos modelos se conocen como semilog porque solo una variable aparece en forma logaritmica. En este modelo, el coeficiente de la pendiente mide el cambio propocional constante relativo en Y para un cambio absoluto en el valor de la regresora:
 
 $$\beta_1 = \frac{\Delta \%  Y}{\Delta X}$$
@@ -109,7 +173,7 @@ Esto es un cambio porcentual o tasa de crecimiento en Y ocasionada por un cambio
 
 \newpage
 
-## 6. Modelo Lin-Log (Rendimientos decrecientes)
+## 6.3 Modelo Lin-Log (Rendimientos decrecientes)
 
 A diferencia del modelo pasado, en este caso la variable que tiene logaritmo es la variable independiente:
 
@@ -120,7 +184,40 @@ Este modelo se conoce como **modelo lin-log**.
 
 Cuando se transforma el modelo de esta manera, la correspondiente $\beta_1$ mide el cambio absoluto de $Y$ vs el cambio porcentual de $X$, es decir:  $\frac{\Delta Y}{\Delta \%X}$
 
-## 7. Resumen
+¿Cuándo es útil el modelo lin-log? Aunque no se ven aplicaciones inmediatas, hay casos particulares donde los podemos utilizar. Por ejemplo en el modelo de gasto de Engel se postuló que el gasto total que se dedica a los alimentos tiende a incrementarse en progresión aritmética, mientras que el gasto total en progresión geométrica
+
+\newpage
+## 6.4 Otras propiedades de aplicar logaritmo
+
+En general otro beneficio que tenemos de aplicar la transformación logarítmica es que se emplea para reducir la  heteroscedasticidad, así como la asimetria. 
+
+Por ejemplo:
+
+```{r, fig.height=3}
+library(gridExtra)
+library(moments)
+datos <- 
+  data.frame(sim = rgamma(10000, shape = 10, scale = 10)) %>% 
+  mutate(sim_log = log(sim))
+
+grid.arrange(
+datos %>% 
+  ggplot()+
+  geom_density(aes(x = sim), color = "red")+
+  theme_minimal(),
+datos %>% 
+  ggplot()+
+  geom_density(aes(x = sim_log), color = "blue")+
+  theme_minimal(), ncol = 2
+)
+
+moments::skewness(datos$sim)
+moments::skewness(datos$sim_log)
+
+  #geom_density(aes(x = sim_log), color = "red")
+```
+\newpage
+# 7. Resumen
 
 ```{r}
 knitr::kable(tibble(
@@ -130,6 +227,30 @@ knitr::kable(tibble(
 ))
 
 ```
+
+# 8.Ejercicio
+Utilizando los datos de House Price, busque predecir el precio de la casa $SalePrice$ usando el total de metros cuadrados construidos de la casa (TotalBsmtSF+X1stFlrSF+X1stFlrSF):
+
+```{r}
+datos <- 
+  read_csv("https://raw.githubusercontent.com/savrgg/class_ITAM_metodos/main/notas_r/HousePrice.csv") %>% 
+  data.frame() %>% 
+  select(SalePrice, TotalBsmtSF, X1stFlrSF, X2ndFlrSF)
+datos %>% head
+```
+
+### 1) Determine el modelo original, grafiquelo e interprételo
+
+### 2) Determine el modelo log-log, grafiquelo e interprételo
+
+### 3) Determine el modelo log-lin, grafiquelo e interprételo
+
+### 4) Determine el modelo lin-log, grafiquelo e interprételo
+
+### 5) Determine si la variable es normal (Jarque-Bera & qqplot) y si no lo es calcule el logaritmo para ver como mejora. 
+
+
+
 
 
 
