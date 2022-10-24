@@ -1,100 +1,244 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Regresión Lineal Múltiple (RLM)"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: 2
+  word_document:
+    toc: yes
+    toc_depth: '2'
+date: "2022-10-12"
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+\newpage
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+Carga de paquetes y configuración del pdf
 
-```{r}
+```{r, warning=F, message=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 library(tidyverse)
 library(tidymodels)
-library(readr)
-
-house_rent <- 
-  read_csv("notas_r/house_rent.csv") %>% 
-  set_names(tolower(names(.))) %>% 
-  select(rent, city) %>% 
-  filter(city %in% c("Kolkata", "Mumbai"))
-
-house_rent %>% 
-  ggplot(aes(x = city, y = rent))+
-  geom_boxplot()+
-  theme_minimal()+
-  ylim(c(0, 100000))
-
-# preprocess
-model_recipe <- 
-  house_rent %>% 
-  recipe(rent ~ city) %>% 
-  step_dummy(city)
-
-# model definition
-lm_fit <- 
-  linear_reg() 
-
-# workflow
-model_workflow <- 
-  workflow() %>% 
-  add_model(lm_fit) %>% 
-  add_recipe(model_recipe) %>% 
-  fit(data = house_rent)
-
-tidy(model_workflow)
-b1 <- cov(xx$rent, xx$city_Mumbai)/var(xx$city_Mumbai)
-b0 <- mean(xx$rent)-b1*mean(xx$city_Mumbai)
-
-# interpretacion 
-ciudades <- 
-  data.frame(city = house_rent$city %>% unique)
-
-predicciones <- 
-  predict(model_workflow, new_data = ciudades)
-
-bind_cols(
-  ciudades, 
-  predicciones
-) %>% arrange(city)
-
-house_rent %>% 
-  group_by(city) %>% 
-  summarise(rent = mean(rent))
-
-#xx <- model_recipe %>% prep() %>% bake(house_rent) %>% data.frame()
+write_matex2 <- function(x) {
+  begin <- "\\begin{bmatrix}"
+  end <- "\\end{bmatrix}"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  paste(c(begin, X, end), collapse = "")
+}
+```
 
 
+# 1. Operaciones con matrices
 
-# preprocess
-model_recipe <- 
-  house_rent %>% 
-  recipe(rent ~ city) %>% 
-  step_dummy(city)
+## 1.1 Definición de matriz
 
-# model definition
-lm_fit <- 
-  linear_reg() 
+Definamos una matriz como un arreglo bidimensional que contiene tanto renglones como columnas: 
 
-# workflow
-model_workflow <- 
-  workflow() %>% 
-  add_model(lm_fit) %>% 
-  add_recipe(model_recipe) %>% 
-  fit(data = house_rent)
+```{r}
+# Definamos en R la matriz: 
+A <- matrix(c(1,3,0,1,4,5,1,2,3),nrow = 3, ncol = 3)
+```
 
-# tidy
-tidy(model_workflow)
+Como se definen por renglones y columnas, decimos que es una $Matrix_{nxm}$ donde $n$ es el número de renglones y $m$ el número de columnas:
+$$
+`r write_matex2(A)`
+$$
 
-# predict
-predicciones <- 
-  predict(model_workflow, new_data = ciudades)
+## 1.2 Transpuesta de una matriz
 
+Al transponer una matriz, lo que buscamos es que ahora los renglones se vuelvan columnas y las columnas renglones, por ejemplo:
+
+```{r}
+A
+t(A)
+```
+
+$$
+`r write_matex2(t(A))` 
+$$
+
+## 1.3 Multiplicación de matrices
+
+Así como con números reales conocemos las multiplicaciones, para matrices también se puede multiplicar (en R con el comando %*%:
+
+```{r}
+B <- matrix(c(3,2,1,1,5,5,1,7,3),nrow = 3, ncol = 3)
+C = A %*% B
+C
+```
+
+$$
+`r write_matex2(A)` \times `r write_matex2(B)` =  `r write_matex2(C)`
+$$
+
+## 1.4 Matriz identidad
+
+La matriz identidad está dada por la matriz con 1 en la diagonal
+```{r}
+D <- matrix(c(1,0,0,0,1,0,0,0,1),nrow = 3, ncol = 3)
+D
+```
+
+$$
+`r write_matex2(D)`
+$$
+
+## 1.5 Inversa de matriz
+
+La inversa de una matriz es aquella matriz B' tal que multiplicada por B del lado derecho te devuelve la matriz identidad
+
+```{r}
+invB <- solve(B)
+round(B %*% invB, 1)
+```
+
+$$
+`r write_matex2(B)` \times `r write_matex2(round(invB, 1))` =  `r write_matex2(round(B %*% invB, 1))`
+$$
+
+# 2. Regresión Lineal Múltiple (RLM)
+
+
+## 2.1 Definición de RLM
+
+El modelo de regresión múltiple es una generalización del modelo de regresión simple, ahora en lugar de tener solo a $\beta_0$ y $\beta_1$, contamos con más variables independientes:
+
+$$
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k + e
+$$
+
+Generalmente denotamos con $n$ el número de observaciones que tenemos en los datos y con $k$ el número de regresores que tenemos. De la misma forma que el modelo simple, $\beta_0$ representa el intercepto y $\beta_1, \beta_2, ..., \beta_k$ representan los coeficientes de regresión asociados a las variables independientes $X_i$
+
+La interpretación de cada $\beta_i$ ahora es como cambia en promedio Y por unidad de cambio en la variable independiente, manteniendo todas las demas constantes. 
+
+
+## 2.2 Forma matricial
+
+Podemos expresar el modelo de regresión múltiple de forma matricial, por ejemplo, en el caso donde n = 5 y k = 3, podemos traducirlo de la siguiente forma:
+
+```{r}
+y <- matrix(c("Y1", "Y2", "Y3", "Y4", "Y5"), ncol = 1, nrow = 5)
+X <- matrix(c(1,"X11","X12", "X13",
+              1,"X21","X22", "X23",
+              1,"X31","X32", "X33",
+              1,"X41","X42", "X43",
+              1,"X51","X52", "X53"), ncol = 4, nrow = 5,byrow = T)
+betas <- matrix(c("Beta1", "Beta2", "Beta3", "Beta4", "Beta5"), ncol = 1, nrow = 5)
+error <- matrix(c("error1", "error2", "error3", "error4", "error5"), ncol = 1, nrow = 5)
+```
+
+$$
+`r write_matex2(y)` = `r write_matex2(X)` \times `r write_matex2(betas)`+ `r write_matex2(error)`
+$$
+
+Cuando lo vemos expresado en forma matricial podemos verlo como $Y = X\beta + \hat{e}$
+
+# 3. Mínimos Cuadrados Ordinarios para RLM
+
+## 3.1 Estimador de varianza poblacional
+
+$$
+\hat{\sigma^2} = \frac{\sum \hat{e^2}}{n-k-1} = \frac{e^Te}{n-k-1}
+$$
+
+## 3.2 Estimador de coeficientes de regresión
+
+Estimadores puntuales:
+
+$$
+\hat{\beta} = (X^TX)^{-1} X^TY
+$$
+De esta manera, podemos decir que los estimadores siguen una distribución: 
+
+$$
+\hat{\beta} \sim Normal(\beta, \sigma^2 (X^TX)^{-1})
+$$
+
+
+Se tiene como resultado que los estimadores también están distribuidos de manera normal y son un estimador insesgado. En particular a la matrix $(X^TX)\sigma^2$ se le conoce como la matriz de varianzas-covarianzas de $\hat{\beta}$
+
+
+Al igual que en caso simple, estimamos la varianza de las $\hat{\beta}$:
+
+$$
+\hat{\sigma_{\beta_i}^2} = \hat{\sigma^2} (X^TX)^{-1}
+$$
+
+
+## 3.3 Intervalos de confianza para los coeficientes de regresión
+
+Los IC de los coeficientes de regresión siguen una fórmula muy similar al caso simple. Al estar estimando la varianza poblacional, entonces no podemos utilizar la distribución normal, por lo que empleamos la t-student:
+
+IC para $\beta_i: (\hat{\beta_i} \pm t_{\alpha/2, n-k-1} \sqrt{\hat{\sigma_{\beta_i}^2}})$
+
+
+## 3.4 Anova para Regresión Lineal Múltiple
+
+\begin{table}[]
+\begin{tabular}{|c|l|l|l|}
+\hline
+\multicolumn{1}{|l|}{Fuente de variación} & Suma de Cuadrados               & Grados de libertad & Suma de cuadrados medios                  \\ \hline
+TSS                                       & $\sum{(y_i - \bar{y})^2}$       & $n-1$              & $\frac{\sum{(y_i - \bar{y})^2}}{n-1}$     \\ \hline
+RSS                                       & $\sum{(y_i - \hat{y})^2}$       & $n-k-1$            & $\frac{\sum{(y_i - \hat{y})^2}}{n-k-1}$   \\ \hline
+ESS                                       & $\sum{(\hat{y_i} - \bar{y})^2}$ & $k$                & $\frac{\sum{(\hat{y_i} - \bar{y})^2}}{k}$ \\ \hline
+\end{tabular}
+\end{table}
+
+
+## 3.5 Prueba de hipótesis sobre los coeficientes
+
+Sea el estadístico:
+
+$$
+t_{\beta_{i}} = \frac{\hat{\beta_i} - \beta_0}{\sqrt{\sigma^2_{\beta_i}}}
+$$
+Tendremos una prueba de hipótesis para cada variable independiente que contenga nuestro modelo + una por el intercept. En  este estadístico es común que el valor bajo $H_0: \beta_i = 0$, por que quisieramos probar si podemos rechazar que $\beta_i = 0$, es decir afirmar que toma otro valor. Esta prubea la realizaremos con la t-student de dos colas al igual que en caso simple. 
+
+De esta manera, utilizando el valor-p alcanzado, se concluiría. 
+
+
+
+## 3.6 Prueba F de Fisher
+
+Para la prueba de Fisher también se ajustará el estadístico:
+
+$$
+F = \frac{\frac{ESS}{k}}{\frac{RSS}{n-k-1}}
+$$
+El cual se distribuye $F_{k, n-k-1}$ 
+
+## 3.7 $R^2$ y $R^2$ ajustada
+
+La R^2 la podemos ver de la misma forma:
+
+$$
+R^2 = \frac{ESS}{TSS}
+$$
+y la $R^2_{adj}$:
+
+$$
+R^2_{adj} = 1 - \frac{(1-R^2)(n-1)}{n-k-1}
+$$
+$R^2_{adj}$ penaliza a $R^2$ de acuerdo al número de regresores
+
+## 3.8 Intervalo de confianza para valor de Y
+
+## 3.9 Intervalo de confianza para la predicción media
+
+# 4. Ejercicio de práctica
+```{r}
 
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+
+
+
 
