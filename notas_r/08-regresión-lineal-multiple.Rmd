@@ -233,6 +233,7 @@ $R^2_{adj}$ penaliza a $R^2$ de acuerdo al número de regresores
 # 4. Ejercicio de práctica
 ```{r}
 
+  
 ```
 
 

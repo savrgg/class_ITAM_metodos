@@ -1,0 +1,145 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(tidymodels)
+
+datos <- data.frame(
+  sales = c(140,155, 159, 179, 192,200, 212, 215),
+  youtube = c(60,62,67,70,71,72,75,78),
+  newspaper = c(22,25,24,20,15,14,14,11)
+)
+```
+
+```{r}
+mod <- 
+  linear_reg() %>% 
+  fit(sales~youtube+newspaper, data = datos)
+
+tidy(mod)
+glance(mod)
+```
+
+```{r}
+X <- as.matrix(
+  bind_cols(
+  intercept = rep(1, 8),
+  datos %>% select(youtube, newspaper)
+))
+  
+dim(X)
+y <- as.matrix(datos %>% select(sales))
+dim(y)
+betas <- solve(t(X)%*%X)%*%t(X)%*%y
+betas
+```
+
+varianza
+
+```{r}
+yhat <- X%*%betas
+error <- (yhat - datos$sales)
+sigmahat <- sqrt(sum(error^2)/(nrow(datos)-2-1))
+```
+
+matriz var-cov (varianza de betas)
+```{r}
+varcov <- (sigmahat^2)*(solve(t(X)%*%X))
+sd_b0 <- sqrt(varcov[1,1])
+sd_b1 <- sqrt(varcov[2,2])
+sd_b2 <- sqrt(varcov[3,3])
+```
+
+anova
+
+```{r}
+tss <- sum((datos$sales-mean(datos$sales))^2)
+ess <- sum((yhat-mean(datos$sales))^2)
+rss <- sum((datos$sales-yhat)^2)
+
+r2 <- ess/tss
+r2adj <- 1-((1-r2)*(nrow(datos)-1))/(nrow(datos)-2-1)
+```
+
+intervalos de confianza
+```{r}
+beta0_min <- (betas[1]-qt(0.975,(8-2-1))*sd_b0)
+beta0_max <- (betas[1]+qt(0.975,(8-2-1))*sd_b0)
+
+beta1_min <- (betas[2]-qt(0.975,(8-2-1))*sd_b1)
+beta1_max <- (betas[2]+qt(0.975,(8-2-1))*sd_b1)
+
+beta2_min <- (betas[3]-qt(0.975,(8-2-1))*sd_b2)
+beta2_max <- (betas[3]+qt(0.975,(8-2-1))*sd_b2)
+```
+
+pruebas de hipótesis
+```{r}
+b0_est <- pt((betas[1]-0)/sd_b0, df = 8-2-1, lower.tail = T)*2
+b1_est <- pt((betas[2]-0)/sd_b1, df = 8-2-1, lower.tail = F)*2
+b2_est <- pt((betas[3]-0)/sd_b2, df = 8-2-1, lower.tail = T)*2
+```
+
+fisher
+```{r}
+fest <- pf((ess/2)/(rss/5),df1 = 2, df2 = 8-2-1, lower.tail = F)
+```
+
+
+```{r}
+mod <- 
+  linear_reg() %>% 
+  fit(sales~youtube+newspaper, data = datos)
+
+tidy(mod)
+glance(mod)
+```
+```{r}
+datos <- 
+  read_csv("https://raw.githubusercontent.com/savrgg/class_ITAM_metodos/main/notas_r/HousePrice.csv") %>% 
+  data.frame()
+```
+```{r}
+
+datos2 <- 
+  datos %>% 
+  mutate(total_baths = BsmtFullBath+BsmtHalfBath*0.5+FullBath+HalfBath*0.5,
+         total_sf = X1stFlrSF+X2ndFlrSF+TotalBsmtSF) 
+mod <- 
+  linear_reg() %>% 
+  fit(SalePrice~LotArea+Street+total_baths+total_sf, data = datos2)
+
+tidy(mod)
+glance(mod)
+```
+Comparación de modelos
+```{r}
+mod <- 
+  linear_reg() %>% 
+  fit(SalePrice~LotArea+Street+total_baths+total_sf, data = datos2)
+```
+
+
+
+
+```{r}
+# estandarización
+
+datos3 <- 
+  datos %>% 
+  mutate(total_baths = BsmtFullBath+BsmtHalfBath*0.5+FullBath+HalfBath*0.5,
+         total_sf = X1stFlrSF+X2ndFlrSF+TotalBsmtSF) 
+mod <- 
+  linear_reg() %>% 
+  fit(SalePrice~LotArea+Street+total_baths+total_sf, data = datos2)
+
+tidy(mod)
+glance(mod)
+```
+
+
+
+
