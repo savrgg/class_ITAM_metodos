@@ -1,0 +1,85 @@
+
+%Example of use of oxmathproblems latex class for problem sheets
+%(un)comment this line to enable/disable output of any solutions in the file
+%\printanswers
+\documentclass{../oxmathproblems}
+\usepackage{blindtext}
+\usepackage{hyperref}
+\usepackage{geometry}
+%define the page header/title info
+\course{ITAM - Métodos Estadísticos para C.Pol y R.I.}
+\oxfordterm{Proyecto Otoño 2022}
+\sheetnumber{1}
+
+\newcommand{\SubItem}[1]{
+    {\setlength\itemindent{15pt} \item[-] #1}
+}
+
+
+\sheettitle{}
+
+\extrawidth{2cm}
+
+\begin{document}
+
+\textbf{Objetivo:} Realizar regresiones lineales basadas en el conjunto de datos \textit{House Prices}, que contiene datos que nos permiten estimar el precio de una casa basado en sus características.
+
+\qquad
+
+\textbf{Descripción:} Por cada integrante del proyecto se deberá entregar un modelo lineal que busque explicar el precio de las casas. Equipos de mínimo 2 integrantes y máximo 4.
+
+\qquad
+
+\textbf{Entregables:}
+
+\begin{itemize}
+
+\item \textbf{(60pts) Documento docx o pdf}: 
+\SubItem (20pts) Entre 2 y 3 hojas de introducción donde se realice un Exploratory Data Analysis (EDA) que nos permita identificar variables importantes.
+\SubItem (30pts) Entre 1 y 2 hojas explicativas por modelo. Debe explicar todos los componentes vistos de Regresión Lineal Múltiple: $\hat{\beta_i}$, IC de $\beta_i$, Pruebas de hipótesis de $\beta_i$, Matriz de Varianzas-Covarianzas, IC para predicción media, para predicción a futuro, $\hat{\sigma^2}$, etc. Es importante que las explicaciones estén en contexto del problema.
+\SubItem (10pts) 1 hoja de conclusión donde se comparen los modelos presentados y se concluya cual es el mejor modelo. Incluir su usuario dentro de plataforma Kaggle
+
+El reporte escrito no debe contener código, solamente los resultados (graficas, tablas comparativas, etc) 
+
+\item \textbf{(20 pts) Documento Rmd  y PDF:} Se debe incluir el Notebook (Rmd) con sus secciones que correspondan al reporte escrito
+
+\item \textbf{(20 pts) Puntuación en plataforma Kaggle}
+
+\item \textbf{Opcionales}: 
+\SubItem 5 pts al mejor nombre de equipo
+\SubItem 10 pts a la mejor puntuación de Kaggle
+\SubItem 5 pts a la segunda mejor puntuación de Kaggle
+
+\end{itemize}
+
+Nota: Todo el proyecto debe ser congruente en todo su contenido; por ejemplo, los resultados del modelo de regresión deben estar de acorde a lo concluido del EDA.
+
+\newpage
+
+\textbf{Intrucciones:}
+
+1. Acceda al proyecto en la plataforma de \href{https://www.kaggle.com/t/d0de518d6d7a41b8b367fa01bf92ce64}{Kaggle} y registre a su equipo e integrantes. 
+
+\qquad 
+
+2. Descargue los datos, son 4 archivos:
+\begin{itemize}
+\item train.csv: estos datos contienen todas las columnas, incluyendo la columna a predecir
+\item test.csv: estos datos contienen todas las columnas, excepto la columna a predecir. De estos datos se realizará la estimación del precio y se subirá a la plataforma
+\item data\_description.txt: descripción de las columnas 
+\item sample\_submission.csv: contiene el formato en que deben subir los datos (solo se suben esas dos columnas)
+\end{itemize}
+
+\qquad
+
+3. Desarrolle los modelos en R y elija el mejor
+
+\qquad
+
+4. Realize submit de las predicciones en el formato adecuado
+
+
+
+
+
+\end{document}
