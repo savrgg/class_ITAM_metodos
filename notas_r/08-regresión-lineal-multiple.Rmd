@@ -7,6 +7,10 @@ output:
   word_document:
     toc: yes
     toc_depth: '2'
+  html_document:
+    toc: yes
+    toc_depth: '2'
+    df_print: paged
 date: "2022-10-12"
 ---
 
@@ -179,7 +183,7 @@ IC para $\beta_i: (\hat{\beta_i} \pm t_{\alpha/2, n-k-1} \sqrt{\hat{\sigma_{\bet
 
 ## 3.4 Anova para Regresión Lineal Múltiple
 
-\begin{table}[]
+\begin{table}[h]
 \begin{tabular}{|c|l|l|l|}
 \hline
 \multicolumn{1}{|l|}{Fuente de variación} & Suma de Cuadrados               & Grados de libertad & Suma de cuadrados medios                  \\ \hline
@@ -230,12 +234,22 @@ $R^2_{adj}$ penaliza a $R^2$ de acuerdo al número de regresores
 $$
 \hat{Y} \pm t_{\alpha/2, n-k-1}\sqrt{\sigma^2x_0^T(X^TX)^{-1}x_0}
 $$
+
 ## 3.9 Intervalo de confianza para la predicción:
+
 $$
 \hat{Y} \pm t_{\alpha/2, n-k-1}\sqrt{\sigma^2(1+x_0^T(X^TX)^{-1}x_0)}
 $$
+
 ## 4.0 Análisis de regresión polinomial 
-# 4. Ejercicio de práctica
+
+Utilizando los siguientes datos, realice las siguientes regresiones lineales múltiples:
+
+- Modelo1 <- precio~metros_cuadrados+pisos
+- Modelo2 <- precio~metros_cuadrados+num_autos
+- Modelo3 <- precio~metros_cuadrados+num_autos+pisos
+- Compare y elija el mejor modelo
+
 ```{r}
 X = data.frame(
   metros_cuadrados = c(70,100,120,180),
@@ -247,20 +261,6 @@ y = data.frame(
   precio = c(2265, 3474, 4076, 5816)
 )
 
-#Modelo1<- precio~metros_cuadrados+pisos
-#Modelo2<- precio~metros_cuadrados+num_autos
-#Modelo3<- precio~metros_cuadrados+num_autos+pisos
-
-
-```
-
-
-
-```{R}
-metros_cuadrados <- c(70,100,120,180)
-pisos <- c(1,1,2,2)
-num_autos <- c(1,2,2,3)
-y <- round(100+20*metros_cuadrados+300*pisos+500*num_autos+50.0*rnorm(n = 4,mean = 0, sd = 1.000),digits = 0)
 ```
 
 
